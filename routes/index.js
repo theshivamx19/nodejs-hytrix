@@ -37,7 +37,7 @@ router.get('/login-page', function (req, res) {
 
 const authentication = function (req, res, next) {
   const token = req.cookies['x-api-key']
-  console.log(token);
+  // console.log(token);
   if (!token) {
     return res.status(400).send({ status: false, message: 'Token must be present' })
   }
@@ -68,6 +68,29 @@ router.post('/user-login', async function (req, res) {
 router.get('/get-users', authentication, async function (req, res) {
   const users = await userModel.find()
   res.render('userList', userData = users)
+})
+
+
+router.get('/delete-user/:id', async function(req, res){
+  try {
+  const userId = req.params.id
+  // console.log(userId);
+  if(!userId){
+    return res.status(400).send({status : false, message : "User id is required"})
+  }
+  const checkUser = await userModel.findOne({_id : userId})
+  // console.log(checkUser);
+  if(!checkUser){
+    return res.status(404).send({status : false, message : 'No such user exists'})
+  }
+  const deletedUser = await userModel.findByIdAndDelete({_id : userId})
+  // console.log(deletedUser);
+  return res.status(200).redirect('/get-users')
+  // return res.status(200).send({status : true, message : "User deleted successfully", data : deletedUser})
+  }
+  catch(err){
+    return res.status(500).send({status:false, message : err.message})
+  }
 })
 
 module.exports = router;
