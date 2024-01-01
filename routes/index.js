@@ -6,10 +6,10 @@ const mongoose = require('mongoose')
 
 
 mongoose.connect('mongodb+srv://Admin:Admin123@cluster0.ngpjs.mongodb.net/testing', {
-    useNewUrlParser:true
+  useNewUrlParser: true
 })
-.then(()=>console.log('MongoDb connected successfully'))
-.catch(err => console.log(err))
+  .then(() => console.log('MongoDb connected successfully'))
+  .catch(err => console.log(err))
 
 
 /* GET home page. */
@@ -62,7 +62,7 @@ router.post('/user-login', async function (req, res) {
   }, 'secretkey')
   res.cookie('x-api-key', token)
   // console.log(req.headers);
-  return res.status(200).render('dashboard',{ status: true, message: "Logged In successfull", data: token })
+  return res.status(200).render('dashboard', { status: true, message: "Logged In successfull", data: token })
 })
 
 router.get('/get-users', authentication, async function (req, res) {
@@ -71,26 +71,53 @@ router.get('/get-users', authentication, async function (req, res) {
 })
 
 
-router.get('/delete-user/:id', async function(req, res){
+router.get('/delete-user/:id', async function (req, res) {
   try {
-  const userId = req.params.id
-  // console.log(userId);
-  if(!userId){
-    return res.status(400).send({status : false, message : "User id is required"})
+    const userId = req.params.id
+    // console.log(userId);
+    if (!userId) {
+      return res.status(400).send({ status: false, message: "User id is required" })
+    }
+    const checkUser = await userModel.findOne({ _id: userId })
+    // console.log(checkUser);
+    if (!checkUser) {
+      return res.status(404).send({ status: false, message: 'No such user exists' })
+    }
+    const deletedUser = await userModel.findByIdAndDelete({ _id: userId })
+    // console.log(deletedUser);
+    return res.status(200).redirect('/get-users')
+    // return res.status(200).send({status : true, message : "User deleted successfully", data : deletedUser})
   }
-  const checkUser = await userModel.findOne({_id : userId})
-  // console.log(checkUser);
-  if(!checkUser){
-    return res.status(404).send({status : false, message : 'No such user exists'})
-  }
-  const deletedUser = await userModel.findByIdAndDelete({_id : userId})
-  // console.log(deletedUser);
-  return res.status(200).redirect('/get-users')
-  // return res.status(200).send({status : true, message : "User deleted successfully", data : deletedUser})
-  }
-  catch(err){
-    return res.status(500).send({status:false, message : err.message})
+  catch (err) {
+    return res.status(500).send({ status: false, message: err.message })
   }
 })
+
+router.get('/update-page/:id', async (req, res)=>{
+  return res.render('updateUser')
+})
+
+router.get('/update-user/:id', async function (req, res) {
+  try {
+    const userId = req.params.id
+    const data = req.body
+    if (!userId) {
+      return res.status(400).send({ status: false, message: "User id is required" })
+    }
+    const checkUser = await userModel.findOne({ _id: userId })
+    // console.log(checkUser);
+    if (!checkUser) {
+      return res.status(404).send({ status: false, message: 'No such user exists' })
+    }
+    const updatedUser = await userModel.findByIdAndUpdate({ _id: userId }, data, {new : true})
+    // console.log(deletedUser);
+    return res.status(200).redirect('/get-users')
+    // return res.status(200).send({status : true, message : "User deleted successfully", data : deletedUser})
+  }
+  catch (err) {
+    return res.status(500).send({ status: false, message: err.message })
+  }
+})
+
 
 module.exports = router;
