@@ -93,11 +93,11 @@ router.get('/delete-user/:id', async function (req, res) {
   }
 })
 
-router.get('/update-page/:id', async (req, res)=>{
+router.get('/update-page/:id', async (req, res) => {
   return res.render('updateUser')
 })
 
-router.get('/update-user/:id', async function (req, res) {
+router.post('/update-user/:id', async function (req, res) {
   try {
     const userId = req.params.id
     const data = req.body
@@ -109,7 +109,7 @@ router.get('/update-user/:id', async function (req, res) {
     if (!checkUser) {
       return res.status(404).send({ status: false, message: 'No such user exists' })
     }
-    const updatedUser = await userModel.findByIdAndUpdate({ _id: userId }, data, {new : true})
+    const updatedUser = await userModel.findByIdAndUpdate({ _id: userId }, data, { new: true })
     // console.log(deletedUser);
     return res.status(200).redirect('/get-users')
     // return res.status(200).send({status : true, message : "User deleted successfully", data : deletedUser})
