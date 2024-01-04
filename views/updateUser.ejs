@@ -20,29 +20,29 @@
   </style>
   </head>
   <body>
-    <h1><%=userData%></h1>
+    <!-- <h1><%=users%></h1> -->
       <div class="container mt-4 p-5" style="width: 30%;">
         <h3 class="text-center mb-5">User Registration Form</h3>
-        <form action="/update-user/<%=userData._id%>" method="post">
+        <form action="/update-user/<%=users._id%>" method="post">
           <div class="form-group">
             <input type="text"
-              class="form-control" name="name" value="<%=userData[0].name%>" aria-describedby="helpId" placeholder="Name">
+              class="form-control" name="name" value="<%=users.name%>" aria-describedby="helpId" placeholder="Name">
           </div>
           <div class="form-group">
             <input type="email"
-              class="form-control" name="email" value="" aria-describedby="helpId" placeholder="Email">
+              class="form-control" name="email" value="<%=users.email%>" aria-describedby="helpId" placeholder="Email">
           </div>
           <div class="form-group">
             <input type="text"
-              class="form-control" name="phone" value="" aria-describedby="helpId" placeholder="Phone">
+              class="form-control" name="phone" value="<%=users.phone%>" aria-describedby="helpId" placeholder="Phone">
           </div>
           <div class="form-group">
             <input type="password"
-              class="form-control" name="password" value="" aria-describedby="helpId" placeholder="Password">
+              class="form-control" name="password" value="<%=users.password%>" aria-describedby="helpId" placeholder="Password">
           </div>
           <div class="form-group">
             <input type="text"
-              class="form-control" name="address" value="" aria-describedby="helpId" placeholder="Address">
+              class="form-control" name="address" value="<%=users.address%>" aria-describedby="helpId" placeholder="Address">
           </div>
           <button type="submit" class="btn btn-primary" style="width: 100%;">Update User</button>
         </form>

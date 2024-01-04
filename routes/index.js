@@ -70,7 +70,6 @@ router.get('/get-users', authentication, async function (req, res) {
   res.render('userList', userData = users)
 })
 
-
 router.get('/delete-user/:id', async function (req, res) {
   try {
     const userId = req.params.id
@@ -94,7 +93,19 @@ router.get('/delete-user/:id', async function (req, res) {
 })
 
 router.get('/update-page/:id', async (req, res) => {
-  return res.render('updateUser')
+  try {
+    const userId = req.params.id
+    const users = await userModel.findOne({ _id: userId })
+    if (!users) {
+      return res.status(404).send({ status: false, message: 'No such user exists' })
+    }
+    else {
+      return res.render('updateUser', {users})
+    }
+  }
+  catch (err) {
+    return res.status(500).send({ status: false, messgae: err.message })
+  }
 })
 
 router.post('/update-user/:id', async function (req, res) {
@@ -118,6 +129,5 @@ router.post('/update-user/:id', async function (req, res) {
     return res.status(500).send({ status: false, message: err.message })
   }
 })
-
 
 module.exports = router;
