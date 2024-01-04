@@ -3,14 +3,16 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const mongoose = require('mongoose')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var indexRouter = require('./src/routes/index');
+var usersRouter = require('./src/routes/users');
 
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+console.log(__dirname);
+app.set('views', path.join(__dirname, 'src/views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
@@ -26,6 +28,11 @@ app.use('/users', usersRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+mongoose.connect('mongodb+srv://Admin:Admin123@cluster0.ngpjs.mongodb.net/my_panel_db', {
+  useNewUrlParser : true,
+})
+.then(()=>console.log('MongoDb connected'))
+.catch((err)=>console.log(err.message))
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -38,4 +45,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+// app.listen(5000, ()=>{
+//   console.log('Server listening port 5000');
+// })
 module.exports = app;
