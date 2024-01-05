@@ -1,9 +1,9 @@
 
 
-const home = (req, res) => {
+const dashboard = (req, res) => {
     return res.render('admin/index')
 }
 
 
 
-module.exports = { home }
+module.exports = { dashboard }
