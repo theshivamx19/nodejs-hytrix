@@ -1,15 +1,34 @@
 import Admin from '../models/Admin.js'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+const emailRgx = /^([a-zA-Z0-9_.]+@[a-z]+\.[a-z]{2,3})?$/
 const salt = 10
 
 
 const adminRegistration = async (req, res) => {
     try {
         const data = req.body;
-        let hashedPass;
-        console.log(data);
-        let { password } = data
+        data.image = req.file.path
+
+        if (Object.keys(data).length === 0) {
+            return res.status(400).send({ status: false, message: "Data is required to register user" })
+        }
+        let { name, email, mobile, password, status, userType, image } = data
+        if (!name) {
+            return res.status(400).send({ status: false, message: "Name is required" })
+        }
+        if (!email) {
+            return res.status(400).send({ status: false, message: "Email is required" })
+        }
+        if(!emailRgx.test(email)){
+            return res.status(400).send({ status: false, message: "Enter valid email id" })
+        }
+        if (!password) {
+            return res.status(400).send({ status: false, message: "Password is required" })
+        }
+        if (!mobile) {
+            return res.status(400).send({ status: false, message: "Mobile no. is required" })
+        }
         if (password) {
             const encryptedPass = await bcrypt.hash(password, salt)
             data['password'] = encryptedPass
@@ -26,13 +45,18 @@ const login = async (req, res) => {
     try {
         const data = req.body
         const { email, password } = data
-        if(!email){
+        if (Object.keys(data).length === 0) {
+            return res.status(400).send({ status: false, message: "Data is required to login user" })
+        }
+        if (!email) {
             return res.status(400).send({ status: false, message: "User id is required" })
         }
-        if(!password){
+        if(!emailRgx.test(email)){
+            return res.status(400).send({ status: false, message: "Enter valid email id" })
+        }
+        if (!password) {
             return res.status(400).send({ status: false, message: "Password id is required" })
         }
-
         const checkAdmin = await Admin.findOne({ email })
         if (!checkAdmin) {
             return res.status(404).send({ status: false, message: "Invalid credentials/Admin not found" })
@@ -49,10 +73,4 @@ const login = async (req, res) => {
     }
 }
 
-const imageUpload = async (req, res)=>{
-    const image = req.image;
-    console.log(image);
-}
-
-
-export default { adminRegistration, login, imageUpload };
+export default { adminRegistration, login };
