@@ -58,18 +58,24 @@ const login = async (req, res) => {
             return res.status(400).send({ status: false, message: "Password id is required" })
         }
         const checkAdmin = await Admin.findOne({ email })
+
         if (!checkAdmin) {
             return res.status(404).send({ status: false, message: "Invalid credentials/Admin not found" })
         }
+        const decryptedPass = checkAdmin.password
+        const pass = await bcrypt.compare(password, decryptedPass)
+        if(!pass){
+            return res.status(400).send({status : false, message : "Password is incorrect"})
+        }
         const token = jwt.sign({
-            userId: checkAdmin.email
+            userId: checkAdmin._id
         }, 'secretKey')
         console.log(token);
         res.cookie('x-api-key', token)
-        return res.status(200).send({ status: true, message: "Admin logged in successfully" })
+        return res.status(200).send({ status: true, message: "Admin logged in successfully", data: token })
     }
     catch (err) {
-        return res.status(500).send({ status: false, mesage: err.mesage })
+        return res.status(500).send({ status: false, mesage: err.message })
     }
 }
 
