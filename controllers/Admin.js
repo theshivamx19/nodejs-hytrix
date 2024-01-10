@@ -9,6 +9,8 @@ const AdminReg = async (req, res) => {
     try {
         const data = req.body;
         data.image = req.file.path
+        console.log(req.file);
+        // console.log(data.image);
         if(!req.file){
             res.status(400).json("file is required")
         }
@@ -36,11 +38,12 @@ const AdminReg = async (req, res) => {
             const encryptedPass = await bcrypt.hash(password, salt)
             data['password'] = encryptedPass
         }
+        console.log(data);
         await Admin.create(data)
-        res.status(201).json("Admin created successfully")
+        return res.status(201).json("Admin created successfully")
     }
     catch (err) {
-        res.status(500).json({ messager: err.message })
+        res.status(500).json({ message: err.message })
     }
 }
 
