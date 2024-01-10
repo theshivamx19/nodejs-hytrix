@@ -9,6 +9,9 @@ const adminRegistration = async (req, res) => {
     try {
         const data = req.body;
         data.image = req.file.path
+        if(!req.file){
+            res.status(400).json("file is required")
+        }
 
         if (Object.keys(data).length === 0) {
             res.status(400).json("Data is required to register user")
