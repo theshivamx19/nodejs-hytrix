@@ -1,6 +1,6 @@
 import express from 'express';
 import route from './routes/route.js';
-import './db/connection.js'
+import './db/Connection.js'
 import dotenv from 'dotenv'
 dotenv.config()
 // const router = express.Router();

@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
-import adminController from '../controllers/adminController.js'
-import { upload } from '../middlewares/multerMiddleware.js';
+import adminController from '../controllers/Admin.js'
+import { upload } from '../middlewares/MulterMiddleware.js';
 
 
 router.post('/admin-registration', upload.single('image'), adminController.adminRegistration)
