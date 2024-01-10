@@ -5,7 +5,7 @@ const emailRgx = /^([a-zA-Z0-9_.]+@[a-z]+\.[a-z]{2,3})?$/
 const salt = 10
 
 
-const adminRegistration = async (req, res) => {
+const AdminReg = async (req, res) => {
     try {
         const data = req.body;
         data.image = req.file.path
@@ -36,7 +36,7 @@ const adminRegistration = async (req, res) => {
             const encryptedPass = await bcrypt.hash(password, salt)
             data['password'] = encryptedPass
         }
-        const createAdmin = await Admin.create(data)
+        await Admin.create(data)
         res.status(201).json("Admin created successfully")
     }
     catch (err) {
@@ -82,4 +82,4 @@ const login = async (req, res) => {
     }
 }
 
-export default { adminRegistration, login };
+export default { AdminReg, login };
