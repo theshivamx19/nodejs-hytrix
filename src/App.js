@@ -32,6 +32,57 @@
 
 // export default Intro;
 
+// import React, { useState } from "react";
+// import {
+//   APIProvider,
+//   Map,
+//   AdvancedMarker,
+//   Pin,
+//   InfoWindow,
+// } from "@vis.gl/react-google-maps";
+
+// const Intro = () => {
+//   const initialPosition = { lat: 53.54, lng: 10 };
+//   const [open, setOpen] = useState(false);
+
+//   // Array of marker positions
+//   const markerPositions = [
+//     { lat: 53.54, lng: 10 },
+//     { lat: 53.55, lng: 10.1 },
+//     { lat: 53.56, lng: 10.2 },
+//     // Add more marker positions as needed
+//   ];
+
+//   return (
+//     <APIProvider apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+//       <div style={{ height: "100vh", width: "100%" }}>
+//         <Map zoom={9} center={initialPosition} mapId={process.env.REACT_APP_MAP_ID}>
+//           {markerPositions.map((position, index) => (
+//             <AdvancedMarker
+//               key={index}
+//               position={position}
+//               onClick={() => setOpen(true)}
+//             >
+//               <Pin background={"red"} borderColor={"green"} glyphColor={"purple"} />
+//             </AdvancedMarker>
+//           ))}
+
+//           {open && (
+//             <InfoWindow
+//               position={initialPosition} onCloseClick={() => setOpen(false)}>
+//               <p>I'm in Hamburg</p>
+            
+//             </InfoWindow>
+//           )}
+//         </Map>
+//       </div>
+//     </APIProvider>
+//   );
+// };
+
+// export default Intro;
+
+
 import React, { useState } from "react";
 import {
   APIProvider,
@@ -45,35 +96,38 @@ const Intro = () => {
   const initialPosition = { lat: 53.54, lng: 10 };
   const [open, setOpen] = useState(false);
 
-  // Array of marker positions
-  const markerPositions = [
-    { lat: 53.54, lng: 10 },
-    { lat: 53.55, lng: 10.1 },
-    { lat: 53.56, lng: 10.2 },
-    // Add more marker positions as needed
+  // Array of marker positions with names
+  const markers = [
+    { position: { lat: 53.54, lng: 10 }, name: "Vibhuti Khand" },
+    { position: { lat: 53.55, lng: 10.1 }, name: "Viraj Khand" },
+    { position: { lat: 53.56, lng: 10.2 }, name: "Vinay Khand" },
+    // Add more markers with names as needed
   ];
+
+  const handleMarkerClick = () => {
+    setOpen(true);
+  };
 
   return (
     <APIProvider apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
       <div style={{ height: "100vh", width: "100%" }}>
         <Map zoom={9} center={initialPosition} mapId={process.env.REACT_APP_MAP_ID}>
-          {markerPositions.map((position, index) => (
-            <AdvancedMarker
-              key={index}
-              position={position}
-              onClick={() => setOpen(true)}
-            >
-              <Pin background={"red"} borderColor={"green"} glyphColor={"purple"} />
-            </AdvancedMarker>
-          ))}
+          {markers.map((marker, index) => (
+            <React.Fragment key={index}>
+              <AdvancedMarker position={marker.position} onClick={handleMarkerClick}>
+                <Pin background={"red"} borderColor={"green"} glyphColor={"purple"} />
+              </AdvancedMarker>
 
-          {open && (
-            <InfoWindow
-              position={initialPosition} onCloseClick={() => setOpen(false)}>
-              <p>I'm in Hamburg</p>
-            
-            </InfoWindow>
-          )}
+              {open && (
+                <InfoWindow
+                  position={marker.position}
+                  onCloseClick={() => setOpen(false)}
+                >
+                  <p>{marker.name}</p>
+                </InfoWindow>
+              )}
+            </React.Fragment>
+          ))}
         </Map>
       </div>
     </APIProvider>
