@@ -5,7 +5,9 @@ import { upload } from '../middlewares/multerConfig.js';
 
 
 router.post('/admin-registration', upload.single('image'), adminController.AdminReg)
-router.post('/login', adminController.login)
+router.post('/login', adminController.Login)
+router.post('/create-category', adminController.CreateCategory)
+router.get('/jsonApi', adminController.jsonApi)
 
 // router.post('/imageUpload', adminController.imageUpload)
 
