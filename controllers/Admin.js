@@ -1,9 +1,11 @@
 import Admin from '../models/Admin.js';
 import Category from '../models/Category.js';
+
 import bcryptsjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { createError } from '../utils/error.js';
 import generateToken from '../utils/generateToken.js';
+import Compliance from '../models/Compliances.js';
 
 export const login = async (req, res, next) => {
     try {
@@ -97,6 +99,9 @@ export const catEditById = async (request, response, next) => {
 export const complianceCreate = async (request, response, next) => {
     try {
         const data = request.body
+
+        console.log(data);
+        
         const compliance = {
             state: data.state,
             act: data.act,
@@ -113,7 +118,7 @@ export const complianceCreate = async (request, response, next) => {
             status: data.status,
         }
 
-        const newCompliance = new Category(compliance);
+        const newCompliance = new Compliance(compliance);
         await newCompliance.save();
         response.status(201).json(newCompliance);
     } catch (error) {

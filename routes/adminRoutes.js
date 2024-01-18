@@ -17,6 +17,6 @@ router.put('/catEditById/:id',protectRoute,catEditById);
 // router.get('/confirmuser/:token',confirmuser);       
 // router.delete('/delete/:id',deleteUsers);
 
-router.post('/complianceCreate', protectRoute, complianceCreate )
+router.post('/complianceCreate', complianceCreate )
 
 export default router;
