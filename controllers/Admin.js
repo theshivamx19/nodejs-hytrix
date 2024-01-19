@@ -126,3 +126,13 @@ export const complianceCreate = async (request, response, next) => {
         next(error);
     }
 }
+
+export const complianceGetting = async (request, response, next) =>{
+    try {
+        const compliance = await Compliance.find({}).populate("category")
+        response.status(201).json(compliance)
+    }
+    catch(error) {
+        next(error)
+    }
+}
