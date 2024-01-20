@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 const complianceschema = new mongoose.Schema({
     state: {                        ////Specify the geographical region or state to which the compliance entry pertains
-        type: String,
+        type: [String],
         required: true,
         min: 6,
         max: 30,
