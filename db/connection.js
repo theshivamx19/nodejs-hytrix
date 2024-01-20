@@ -4,7 +4,8 @@ const connection = (username,password,PORT) => {
     try {
       //https://www.mongodb.com/cloud/atlas     //connection with mongo db using mongoose on port 5000
       //console.log(username+'-'+password+'-'+PORT);
-      const DB_URL = `mongodb+srv://${username}:${password}@cluster0.xx7bo1e.mongodb.net/matrix?retryWrites=true&w=majority`;
+      // const DB_URL = `mongodb+srv://${username}:${password}@cluster0.xx7bo1e.mongodb.net/matrix?retryWrites=true&w=majority`;
+      const DB_URL = `mongodb://127.0.0.1:27017/matrix`;
   
      mongoose.connect(DB_URL,{useNewUrlParser: true, useUnifiedTopology:true})
                                  .then(response => {

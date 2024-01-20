@@ -1,11 +1,13 @@
 import Admin from '../models/Admin.js';
 import Category from '../models/Category.js';
 
-import bcryptsjs from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { createError } from '../utils/error.js';
 import generateToken from '../utils/generateToken.js';
 import Compliance from '../models/Compliances.js';
+import { response } from 'express';
+import User from '../models/User.js';
 
 export const login = async (req, res, next) => {
     try {
@@ -98,10 +100,7 @@ export const catEditById = async (request, response, next) => {
 
 export const complianceCreate = async (request, response, next) => {
     try {
-        const data = request.body
-
-        console.log(data);
-        
+        const data = request.body        
         const compliance = {
             state: data.state,
             act: data.act,
@@ -131,6 +130,39 @@ export const complianceGetting = async (request, response, next) =>{
     try {
         const compliance = await Compliance.find({}).populate("category")
         response.status(201).json(compliance)
+    }
+    catch(error) {
+        next(error)
+    }
+}
+
+// ----------------------User Creation ------------------>
+
+export const userCreate = async (request, response, next)=>{
+    try {
+        const data = request.body
+        const user = {
+            firstName : data.firstName,
+            lastName : data.lastName,
+            email : data.email,
+            role : data.role,
+            password : data.password,
+        }
+        const hashedPass = await bcrypt.hash(data.password, 10)
+        user.password = hashedPass;
+        const newUser = new User(user)
+        await newUser.save()
+        response.status(201).json(newUser)
+    }
+    catch(error){
+        next(error)
+    }
+}
+
+export const userGetting = async (request, response, next) =>{
+    try {
+        const user = await User.find({})
+        response.status(201).json(user)
     }
     catch(error) {
         next(error)
