@@ -25,7 +25,8 @@ const companySchema = new mongoose.Schema({
         index:true
     },
     executiveId: {
-        type: String,
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Executive",
         index:true
     },
     status  : { 
