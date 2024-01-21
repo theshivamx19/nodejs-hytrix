@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const stateSchema = new mongoose.Schema({
     name : {
-        type : [String],
+        type : String,
         required : true,
         trim : true,
         index : true
