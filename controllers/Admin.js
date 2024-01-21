@@ -1,6 +1,6 @@
 import Admin from '../models/Admin.js';
 import Category from '../models/Category.js';
-
+import State from '../models/State.js'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { createError } from '../utils/error.js';
@@ -165,6 +165,21 @@ export const userGetting = async (request, response, next) =>{
         response.status(201).json(user)
     }
     catch(error) {
+        next(error)
+    }
+}
+
+
+// -----------------Create State ----------------
+
+export const stateCreate = async (request, response, next)=>{
+    try {
+        const data = request.body
+        const newState = new State(data);
+        await newState.save()
+        response.status(201).json(newState)
+    }
+    catch(error){
         next(error)
     }
 }

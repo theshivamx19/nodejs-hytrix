@@ -1,7 +1,7 @@
 import express from "express";
 import { isAdmin,protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
-import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting} from '../controllers/Admin.js';
+import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate} from '../controllers/Admin.js';
 const router = express.Router();
 
 router.post('/login',login); 
@@ -23,4 +23,10 @@ router.get('/complianceGetting', complianceGetting )
 // --------- User Route ----------
 router.post('/userCreate', userCreate )
 router.get('/userGetting', userGetting )
+
+// --------State Route : -----------
+router.get('/stateCreate', stateCreate )
+
+
+
 export default router;
