@@ -8,6 +8,7 @@ import generateToken from '../utils/generateToken.js';
 import Compliance from '../models/Compliances.js';
 import { response } from 'express';
 import User from '../models/User.js';
+import CheckList from '../models/CheckList.js';
 
 export const login = async (req, res, next) => {
     try {
@@ -100,7 +101,7 @@ export const catEditById = async (request, response, next) => {
 
 export const complianceCreate = async (request, response, next) => {
     try {
-        const data = request.body        
+        const data = request.body
         const compliance = {
             state: data.state,
             act: data.act,
@@ -126,27 +127,27 @@ export const complianceCreate = async (request, response, next) => {
     }
 }
 
-export const complianceGetting = async (request, response, next) =>{
+export const complianceGetting = async (request, response, next) => {
     try {
         const compliance = await Compliance.find({}).populate("category")
         response.status(201).json(compliance)
     }
-    catch(error) {
+    catch (error) {
         next(error)
     }
 }
 
 // ----------------------User Creation ------------------>
 
-export const userCreate = async (request, response, next)=>{
+export const userCreate = async (request, response, next) => {
     try {
         const data = request.body
         const user = {
-            firstName : data.firstName,
-            lastName : data.lastName,
-            email : data.email,
-            role : data.role,
-            password : data.password,
+            firstName: data.firstName,
+            act: data.act,
+            rule: data.rule,
+            role: data.role,
+            password: data.password,
         }
         const hashedPass = await bcrypt.hash(data.password, 10)
         user.password = hashedPass;
@@ -154,17 +155,17 @@ export const userCreate = async (request, response, next)=>{
         await newUser.save()
         response.status(201).json(newUser)
     }
-    catch(error){
+    catch (error) {
         next(error)
     }
 }
 
-export const userGetting = async (request, response, next) =>{
+export const userGetting = async (request, response, next) => {
     try {
         const user = await User.find({})
         response.status(201).json(user)
     }
-    catch(error) {
+    catch (error) {
         next(error)
     }
 }
@@ -172,14 +173,53 @@ export const userGetting = async (request, response, next) =>{
 
 // -----------------Create State ----------------
 
-export const stateCreate = async (request, response, next)=>{
+export const stateCreate = async (request, response, next) => {
     try {
         const data = request.body
         const newState = new State(data);
         await newState.save()
         response.status(201).json(newState)
     }
-    catch(error){
+    catch (error) {
+        next(error)
+    }
+}
+
+// ---------------Create CheckList-------------------
+
+export const checkListCreate = async (request, response, next) => {
+    try {
+        const data = request.body
+        const checklist = {
+            state: data.state,
+            act: data.act,
+            rule: data.rule,
+            category: data.category,
+            status: data.status,
+            form: data.form,
+            document: data.document,
+        }
+        const newCheckList = new CheckList(checklist)
+        await newCheckList.save()
+        response.status(201).json(newCheckList)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+export const checkListGetting = async (request, response, next) => {
+    try {
+        const aggResult = await CheckList.aggregate([
+            {
+                $match: {
+                    status: true
+                }
+            }
+        ])
+        response.status(201).json(aggResult)
+    }
+    catch (error) {
         next(error)
     }
 }
