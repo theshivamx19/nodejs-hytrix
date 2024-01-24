@@ -32,6 +32,6 @@ router.get('/stateCreate', stateCreate )
 // -------------Checklist Route --------------
 router.post('/checkListCreate', upload.single('document'), checkListCreate)
 router.get('/checkListGetting', checkListGetting)
-router.get('/checkListFilter/:state/:created_At', checkListFilter)
+router.get('/checkListFilter/:state/:createdAt', checkListFilter)
 
 export default router;
