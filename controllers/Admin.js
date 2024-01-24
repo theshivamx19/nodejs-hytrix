@@ -228,18 +228,24 @@ export const checkListGetting = async (request, response, next) => {
 
 export const checkListFilter = async (request, response, next) => {
     try {
-        console.log(request);
-        const stateFilter = request.params.state;
+        // console.log(request);
+        // const stateFilter = request.params.state;
         const dateFilter = request.params.createdAt;
-        const dateToFilter = new Date(dateFilter);
+        // const dateToFilter = new Date(dateFilter);
 
-        console.log(stateFilter, dateToFilter);
+
+        console.log(dateFilter);
 
         const matchStage = {};
-        if (stateFilter) {
-            matchStage.state = stateFilter;
-        }
-        if (dateToFilter) {
+        // if (stateFilter) {
+        //     matchStage.state = stateFilter;
+        // }
+
+        if (dateFilter) {
+            const dateObj = new Date(dateFilter);
+            // const dateToFilter = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 0, 0, 0, 0);
+            const dateToFilter = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() + 1, 0, 0, 0, 0);
+
             matchStage.date = {
                 $eq: dateToFilter,
             };
