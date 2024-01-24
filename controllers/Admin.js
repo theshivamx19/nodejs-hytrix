@@ -229,7 +229,7 @@ export const checkListGetting = async (request, response, next) => {
 export const checkListFilter = async (request, response, next) => {
     try {
         const stateFilter = request.params.state;
-        const dateFilter = request.params.created_At;
+        const dateFilter = request.params.createdAt;
         const dateToFilter = new Date(dateFilter);
 
         console.log(stateFilter, dateToFilter);
