@@ -98,7 +98,7 @@ export const catEditById = async (request, response, next) => {
         next(error);
     }
 }
-
+// ------------------------ Create Compliance --------------------
 export const complianceCreate = async (request, response, next) => {
     try {
         const data = request.body
@@ -144,8 +144,8 @@ export const userCreate = async (request, response, next) => {
         const data = request.body
         const user = {
             firstName: data.firstName,
-            act: data.act,
-            rule: data.rule,
+            lastName: data.lastName,
+            email: data.email,
             role: data.role,
             password: data.password,
         }
@@ -210,16 +210,29 @@ export const checkListCreate = async (request, response, next) => {
 
 export const checkListGetting = async (request, response, next) => {
     try {
-        const aggResult = await CheckList.aggregate([
-            {
-                $match: {
-                    status: true
-                }
-            }
-        ])
-        response.status(201).json(aggResult)
+        const checklist = await CheckList.find({})
+        response.status(201).json(checklist)
     }
     catch (error) {
         next(error)
     }
 }
+
+export const checkListFilter = async (request, response, next) => {
+    try {
+        // const data = req.params
+        const filter = await CheckList.aggregate[{
+            $lookup : {
+                from : "categories",
+                localField : "category",
+                foreignField : "_id",
+                as : "dataresult"
+            }
+        }]
+    response.status(201).json(filter)    
+    }
+    catch (error) {
+        next(error)
+    }
+}
+

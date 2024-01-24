@@ -26,8 +26,8 @@ const checkListSchema = new mongoose.Schema({
         index : true
     },
     status : {
-        type : Boolean,
-        default : false,
+        type : Number,
+        enum : [0, 1],
         trim : true,
         index : true
     },

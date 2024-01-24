@@ -20,13 +20,13 @@ const complianceschema = new mongoose.Schema({
         trim: true,
         index:true
     },
-    category: [{                     ////Categorize the compliance entry based on relevant criteria, facilitating easy sorting and reporting
+    category: {                     ////Categorize the compliance entry based on relevant criteria, facilitating easy sorting and reporting
         type: mongoose.Schema.Types.ObjectId,
         ref : "Category",
         required: true,
         trim: true,
         index:true
-    }],
+    },
     questiondesc: {             //////Provide a detailed description of the compliance question or requirement
         type: String,
         required: true,
