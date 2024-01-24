@@ -2,11 +2,13 @@ import express from "express";
 import { isAdmin,protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
 import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter} from '../controllers/Admin.js';
+import { upload } from "../middlewares/multerConfig.js";
+
 const router = express.Router();
 
 router.post('/login',login); 
 router.get('/logout',logout);
-router.post('/catCreate',protectRoute,catCreate);
+router.post('/catCreate',catCreate);
 router.get('/catGettting',protectRoute,catGettting);
 // router.post('/add-user',createUsers); //router.route('/add-user').post(protectRoute,createUsers); both the ways will work
 // router.route('/user-profile/:id').get(protectRoute,usersProfileById);  //this way of request routes is also be taken 
@@ -28,8 +30,8 @@ router.get('/userGetting', userGetting )
 router.get('/stateCreate', stateCreate )
 
 // -------------Checklist Route --------------
-router.post('/checkListCreate', checkListCreate)
+router.post('/checkListCreate', upload.single('document'), checkListCreate)
 router.get('/checkListGetting', checkListGetting)
-router.get('/checkListFilter', checkListFilter)
+router.get('/checkListFilter/:state/:created_At', checkListFilter)
 
 export default router;

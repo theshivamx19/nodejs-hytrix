@@ -190,6 +190,14 @@ export const stateCreate = async (request, response, next) => {
 export const checkListCreate = async (request, response, next) => {
     try {
         const data = request.body
+        console.log(data);
+        data.document = request.file.path
+        console.log(request.file);
+        // console.log(data.image);
+        if (!request.file) {
+            response.status(400).json("file is required")
+        }
+
         const checklist = {
             state: data.state,
             act: data.act,
@@ -220,19 +228,43 @@ export const checkListGetting = async (request, response, next) => {
 
 export const checkListFilter = async (request, response, next) => {
     try {
-        // const data = req.params
-        const filter = await CheckList.aggregate[{
-            $lookup : {
-                from : "categories",
-                localField : "category",
-                foreignField : "_id",
-                as : "dataresult"
-            }
-        }]
-    response.status(201).json(filter)    
+        const stateFilter = request.params.state;
+        const dateFilter = request.params.created_At;
+        const dateToFilter = new Date(dateFilter);
+
+        console.log(stateFilter, dateToFilter);
+
+        const matchStage = {};
+        if (stateFilter) {
+            matchStage.state = stateFilter;
+        }
+        if (dateToFilter) {
+            matchStage.date = {
+                $eq: dateToFilter,
+            };
+        }
+
+        const filter = await CheckList.aggregate([
+            {
+                $match: matchStage,
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "dataresult",
+                },
+            },
+            {
+                $unwind: "$dataresult",
+            },
+        ]);
+
+        response.status(201).json(filter);
+    } catch (error) {
+        next(error);
     }
-    catch (error) {
-        next(error)
-    }
-}
+};
+
 
