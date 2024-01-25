@@ -230,21 +230,24 @@ export const checkListFilter = async (request, response, next) => {
     try {
         const stateFilter = request.params.state;
         const dateFilter = request.params.createdAt;
-        console.log(dateFilter);
 
+        console.log(request.params);
         const matchStage = {};
-        if (stateFilter) {
-            matchStage.state = stateFilter;
+
+        if (stateFilter !== undefined) {
+            matchStage['state'] = stateFilter;
         }
-        if (dateFilter) {
+
+        if (dateFilter !== undefined) {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage.createdAt = {
+            matchStage['createdAt'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
         }
+
         const filter = await CheckList.aggregate([
             {
                 $match: matchStage,
