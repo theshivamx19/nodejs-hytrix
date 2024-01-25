@@ -1,7 +1,7 @@
 import express from "express";
 import { isAdmin,protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
-import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter} from '../controllers/Admin.js';
+import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, findByDate} from '../controllers/Admin.js';
 import { upload } from "../middlewares/multerConfig.js";
 
 const router = express.Router();
@@ -32,6 +32,7 @@ router.get('/stateCreate', stateCreate )
 // -------------Checklist Route --------------
 router.post('/checkListCreate', upload.single('document'), checkListCreate)
 router.get('/checkListGetting', checkListGetting)
-router.get('/checkListFilter/:state', checkListFilter)
+router.get('/checkListFilter/:createdAt/:state', checkListFilter)
+router.get('/findByDate/:id', findByDate)
 
 export default router;

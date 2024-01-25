@@ -228,28 +228,23 @@ export const checkListGetting = async (request, response, next) => {
 
 export const checkListFilter = async (request, response, next) => {
     try {
-        // console.log(request);
         const stateFilter = request.params.state;
         const dateFilter = request.params.createdAt;
-        // const dateToFilter = new Date(dateFilter);
-
-
-        console.log(dateFilter, stateFilter);
+        console.log(dateFilter);
 
         const matchStage = {};
         if (stateFilter) {
             matchStage.state = stateFilter;
         }
         if (dateFilter) {
-            const dateObj = new Date(dateFilter);
-            // const dateToFilter = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 0, 0, 0, 0);
-            const dateToFilter = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() + 1, 0, 0, 0, 0);
-
-            matchStage.date = {
-                $eq: dateToFilter,
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage.createdAt = {
+                $gte: dateObject,
+                $lt: nextDay
             };
         }
-
         const filter = await CheckList.aggregate([
             {
                 $match: matchStage,
@@ -272,5 +267,22 @@ export const checkListFilter = async (request, response, next) => {
         next(error);
     }
 };
+
+export const findByDate = async (request, response, next) => {
+    const dateString = request.params.id;
+    const dateObject = new Date(dateString);
+    const nextDay = new Date(dateObject);
+    nextDay.setDate(dateObject.getDate() + 1);
+
+    const filter = await CheckList.find({
+        createdAt: {
+            $gte: dateObject,
+            $lt: nextDay
+        }
+    });
+    response.json(filter)
+
+
+}
 
 
