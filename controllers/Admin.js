@@ -226,6 +226,65 @@ export const checkListGetting = async (request, response, next) => {
     }
 }
 
+// export const checkListFilter = async (request, response, next) => {
+//     try {
+//         const stateFilter = request.params.state;
+//         const dateFilter = request.params.createdAt;
+
+//         // console.log(request.params);
+//         const matchStage = {};
+
+//         if (stateFilter !== undefined) {
+//             matchStage['state'] = stateFilter;
+//         }
+
+//         if (dateFilter !== undefined) {
+//             const dateObject = new Date(dateFilter);
+//             const nextDay = new Date(dateObject);
+//             nextDay.setDate(dateObject.getDate() + 1);
+//             matchStage['createdAt'] = {
+//                 $gte: dateObject,
+//                 $lt: nextDay
+//             };
+//         }
+//         else {
+//             if (stateFilter && dateFilter) {
+//                 matchStage['state'] = stateFilter;
+//                 const dateObject = new Date(dateFilter);
+//                 const nextDay = new Date(dateObject);
+//                 nextDay.setDate(dateObject.getDate() + 1);
+//                 matchStage['createdAt'] = {
+//                     $gte: dateObject,
+//                     $lt: nextDay
+//                 }
+//             }
+//             console.log(matchStage);
+//         }
+//         const filter = await CheckList.aggregate([
+//             {
+//                 $match: matchStage,
+//             },
+//             {
+//                 $lookup: {
+//                     from: "categories",
+//                     localField: "category",
+//                     foreignField: "_id",
+//                     as: "dataresult",
+//                 },
+//             },
+//             {
+//                 $unwind: "$dataresult",
+//             },
+//         ]);
+
+//         response.status(201).json(filter);
+//     } catch (error) {
+//         next(error);
+//     }
+// };
+
+
+
 export const checkListFilter = async (request, response, next) => {
     try {
         const stateFilter = request.params.state;
@@ -234,11 +293,22 @@ export const checkListFilter = async (request, response, next) => {
         console.log(request.params);
         const matchStage = {};
 
-        if (stateFilter !== undefined) {
+        if (stateFilter !== undefined && dateFilter !== undefined) {
+            // Both state and createdAt are provided
             matchStage['state'] = stateFilter;
-        }
-
-        if (dateFilter !== undefined) {
+            
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['createdAt'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        } else if (stateFilter !== undefined && dateFilter === undefined) {
+            // Only state is provided
+            matchStage['state'] = stateFilter;
+        } else if (dateFilter !== undefined && stateFilter === undefined) {
+            // Only createdAt is provided
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
@@ -270,6 +340,9 @@ export const checkListFilter = async (request, response, next) => {
         next(error);
     }
 };
+
+
+
 
 export const findByDate = async (request, response, next) => {
     const dateString = request.params.id;
