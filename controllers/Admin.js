@@ -284,13 +284,12 @@ export const checkListGetting = async (request, response, next) => {
 // };
 
 
-
 export const checkListFilter = async (request, response, next) => {
     try {
-        const stateFilter = request.params.state;
-        const dateFilter = request.params.createdAt;
+        const stateFilter = request.query.state;
+        const dateFilter = request.query.createdAt;
 
-        console.log(request.params);
+        console.log(request.query);
         const matchStage = {};
 
         if (stateFilter !== undefined && dateFilter !== undefined) {
@@ -304,10 +303,10 @@ export const checkListFilter = async (request, response, next) => {
                 $gte: dateObject,
                 $lt: nextDay
             };
-        } else if (stateFilter !== undefined && dateFilter === undefined) {
+        } else if (stateFilter !== undefined) {
             // Only state is provided
             matchStage['state'] = stateFilter;
-        } else if (dateFilter !== undefined && stateFilter === undefined) {
+        } else if (dateFilter !== undefined) {
             // Only createdAt is provided
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
@@ -316,7 +315,7 @@ export const checkListFilter = async (request, response, next) => {
                 $gte: dateObject,
                 $lt: nextDay
             };
-        }
+        } 
 
         const filter = await CheckList.aggregate([
             {
@@ -340,8 +339,6 @@ export const checkListFilter = async (request, response, next) => {
         next(error);
     }
 };
-
-
 
 
 export const findByDate = async (request, response, next) => {
