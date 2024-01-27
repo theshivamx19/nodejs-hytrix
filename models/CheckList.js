@@ -66,7 +66,7 @@ const checkListSchema = new mongoose.Schema({
     },
     approvedate:{
         type : String,
-        required : true,
+        // required : true,
         trim : true,
         index : true
     },
