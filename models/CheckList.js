@@ -13,6 +13,10 @@ const checkListSchema = new mongoose.Schema({
         trim : true,
         index : true
     },
+    branchname: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Executive"
+    },
     rule : {
         type : String,
         required : true,
@@ -32,16 +36,16 @@ const checkListSchema = new mongoose.Schema({
         index : true
     },
     form : {
-        type : String,
-        required : true,
-        trim : true,
+        type : Object,
         index : true
     },
-    document : {
-        type : Object,
-        required : true,
-        trim : true,
-        index : true
+    executive: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Executive"
+    },
+    approvedate:{
+        type: Date, 
+        default: Date.now 
     }
 
 }, {timestamps : true})
