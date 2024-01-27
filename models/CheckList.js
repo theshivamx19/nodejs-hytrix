@@ -44,16 +44,38 @@ const checkListSchema = new mongoose.Schema({
         type : Object,
         index : true
     },
+    document : {
+        type : Object,
+        index : true
+    },
     executive: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Executive"
     },
+    compliances:{
+        type : String,
+        required : true,
+        trim : true,
+        index : true
+    },
+    risk :{
+        type : String,
+        required : true,
+        trim : true,
+        index : true
+    },
     approvedate:{
+        type : String,
+        required : true,
+        trim : true,
+        index : true
+    },
+    date : { 
         type: Date, 
-        default: Date.now 
-    }
-
-}, {timestamps : true})
+        default: Date.now, 
+        index: true 
+    },
+})
 
 const CheckList =   mongoose.model('CheckList', checkListSchema)
 export default CheckList;
