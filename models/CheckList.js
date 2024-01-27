@@ -35,7 +35,12 @@ const checkListSchema = new mongoose.Schema({
         trim : true,
         index : true
     },
-    form : {
+    description : {
+        type : String,
+        trim : true,
+        index : true
+    },
+    image : {
         type : Object,
         index : true
     },
