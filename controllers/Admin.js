@@ -204,7 +204,7 @@ export const checkListCreate = async (request, response, next) => {
             rule: data.rule,
             category: data.category,
             status: data.status,
-            form: data.form,
+            image: data.image,
             document: data.document,
         }
         const newCheckList = new CheckList(checklist)
