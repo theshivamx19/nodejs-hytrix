@@ -2,7 +2,6 @@ import multer from 'multer';
 import path from 'path';
 // import v4:uuidv4 from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
-// import { log } from 'winston';
 
 
 const storage = multer.diskStorage({
@@ -13,11 +12,9 @@ const storage = multer.diskStorage({
       file.mimetype === 'image/jpg' ||
       file.mimetype === 'image/jpeg'
     ) {
-      console.log('inside image');
       cb(null, './public/images/')
     }
     else if (file.mimetype === 'application/pdf') {
-      console.log('inside document');
       cb(null, './public/docs/')
     }
   },

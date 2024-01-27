@@ -190,14 +190,14 @@ export const stateCreate = async (request, response, next) => {
 export const checkListCreate = async (request, response, next) => {
     try {
         const data = request.body
-        console.log(data);
-        // let {document, image} = data
-        // document = request.files.path
-        // image = request.files.path
-        let document = request.file.path
-        let image = request.file.path
-        console.log(data.document);
-        // console.log(data.image);
+        // console.log(data);
+        let {document, image} = data
+        image = request.files.image[0].path
+        document = request.files.document[0].path
+    
+        // let document = request.files.document[0].path
+        // let image = request.files.image[0].path
+        // console.log(request.files);
         if (!request.files) {
             response.status(400).json("file is required")
         }
@@ -207,15 +207,12 @@ export const checkListCreate = async (request, response, next) => {
             rule: data.rule,
             category: data.category,
             status: data.status,
-            // image: data.image,
-            // document: data.document,
+            image: image,
+            document: document,
             form : data.form,
             compliances : data.compliances,
             risk : data.risk
         }
-        checklist.image = image
-        checklist.document = document
-        console.log(checklist.image);
         const newCheckList = new CheckList(checklist)
         await newCheckList.save()
         response.status(201).json(newCheckList)
