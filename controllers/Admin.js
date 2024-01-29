@@ -191,14 +191,13 @@ export const checkListCreate = async (request, response, next) => {
     try {
         const data = request.body
         // console.log(data);
-        let {document, image} = data
+        let { document, image } = data
         image = request.files.image[0].path
         document = request.files.document[0].path
-    
+
         let imageBase64 = fs.readFileSync(image, 'base64')
         let documentBase64 = fs.readFileSync(document, 'base64')
 
-        console.log(image.mimetype + imageBase64);
         // let document = request.files.document[0].path
         // let image = request.files.image[0].path
         // console.log(request.files);
@@ -213,9 +212,9 @@ export const checkListCreate = async (request, response, next) => {
             status: data.status,
             image: imageBase64,
             document: documentBase64,
-            form : data.form,
-            compliances : data.compliances,
-            risk : data.risk
+            form: data.form,
+            compliances: data.compliances,
+            risk: data.risk
         }
         const newCheckList = new CheckList(checklist)
         await newCheckList.save()
@@ -305,7 +304,7 @@ export const checkListFilter = async (request, response, next) => {
         if (stateFilter !== undefined && dateFilter !== undefined) {
             // Both state and createdAt are provided
             matchStage['state'] = stateFilter;
-            
+
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
@@ -325,7 +324,7 @@ export const checkListFilter = async (request, response, next) => {
                 $gte: dateObject,
                 $lt: nextDay
             };
-        } 
+        }
 
         const filter = await CheckList.aggregate([
             {
@@ -369,3 +368,55 @@ export const findByDate = async (request, response, next) => {
 }
 
 
+
+
+export const createPosts = async (req, res) => {
+
+    // console.log(req.file,'-----'); return;
+    const email = await postMessages.findOne({ email: req.body.email });
+    if (email) {
+        return res.send("409");
+    }
+    const requestBody = req.body;
+    const salt = await bcryptsjs.genSaltSync(10);
+    const passhash = await bcryptsjs.hashSync(requestBody.Password, salt);
+    try {
+        /* let uploadRes = '';
+         if(requestBody.Image !== ''){
+             
+             uploadRes = await Cloudinary.uploader.upload(requestBody.Image,{
+                 upload_preset:"Mern_upload",
+             });
+         }*/
+        const url = req.protocol + '://' + req.get('host');
+        const formattedFileName = Date.now() + req.file.originalname.split(' ').join('-'); //replace space with -
+
+
+        fs.access('./data/uploads', (err) => {
+            if (err) {
+                fs.mkdirSync('./data/uploads', { recursive: true });// {recursive: true}, (err) => {});   //it will creates './data/uploads' folder
+            }
+        });
+
+        await sharp(req.file.buffer).resize({ width: 600 }).toFile('./data/uploads/' + formattedFileName);
+        const profileImage = url + '/' + formattedFileName;
+        const user = {
+            Name: requestBody.Name,
+            Occupation: requestBody.Occupation,
+            Email: requestBody.Email,
+            Password: passhash,
+            Phone: requestBody.Phone,
+            Description: requestBody.Description,
+            isAdmin: requestBody.isAdmin,
+            //  Image:requestBody.Email+'-'+req.file.originalname    ////from cloudinary cloud
+            Image: profileImage
+        };
+        //console.log(requestBody); return;
+        const newUser = new postMessages(user);
+        await newUser.save();
+        res.status(201).json(newUser);   ////if data saved properly then code 201
+    } catch (error) {
+        res.status(409).json({ message: error.message }); ////if data saved fails  then code 409
+    }
+
+}

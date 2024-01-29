@@ -12,10 +12,10 @@ const storage = multer.diskStorage({
       file.mimetype === 'image/jpg' ||
       file.mimetype === 'image/jpeg'
     ) {
-      cb(null, './public/images/')
+      cb(null, "./public/images/")
     }
     else if (file.mimetype === 'application/pdf') {
-      cb(null, './public/docs/')
+      cb(null, "./public/docs/")
     }
   },
   filename: function (req, file, cb) {
