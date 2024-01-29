@@ -42,11 +42,9 @@ const checkListSchema = new mongoose.Schema({
     },
     image : {
         type : Object,
-        index : true
     },
     document : {
         type : Object,
-        index : true
     },
     executive: {
         type: mongoose.Schema.Types.ObjectId,
@@ -79,3 +77,4 @@ const checkListSchema = new mongoose.Schema({
 
 const CheckList =   mongoose.model('CheckList', checkListSchema)
 export default CheckList;
+

@@ -9,7 +9,7 @@ import Compliance from '../models/Compliances.js';
 import { response } from 'express';
 import User from '../models/User.js';
 import CheckList from '../models/CheckList.js';
-
+import fs from 'node:fs';
 export const login = async (req, res, next) => {
     try {
         const user = await Admin.findOne({ email: req.body.email });
@@ -195,6 +195,10 @@ export const checkListCreate = async (request, response, next) => {
         image = request.files.image[0].path
         document = request.files.document[0].path
     
+        let imageBase64 = fs.readFileSync(image, 'base64')
+        let documentBase64 = fs.readFileSync(document, 'base64')
+
+        console.log(image.mimetype + imageBase64);
         // let document = request.files.document[0].path
         // let image = request.files.image[0].path
         // console.log(request.files);
@@ -207,8 +211,8 @@ export const checkListCreate = async (request, response, next) => {
             rule: data.rule,
             category: data.category,
             status: data.status,
-            image: image,
-            document: document,
+            image: imageBase64,
+            document: documentBase64,
             form : data.form,
             compliances : data.compliances,
             risk : data.risk
