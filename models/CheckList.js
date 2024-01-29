@@ -41,11 +41,11 @@ const checkListSchema = new mongoose.Schema({
         index : true
     },
     image : {
-        type : Object,
+        type : String,
         index : true
     },
     document : {
-        type : Object,
+        type : String,
         index : true
     },
     executive: {
