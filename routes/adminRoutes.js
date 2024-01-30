@@ -3,7 +3,8 @@ import { isAdmin,protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
 import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, findByDate} from '../controllers/Admin.js';
 import { upload } from "../middlewares/multerConfig.js";
-
+// import multer from "multer";
+// import path from "path";
 const router = express.Router();
 
 router.post('/login',login); 
@@ -18,7 +19,9 @@ router.put('/catEditById/:id',protectRoute,catEditById);
 // router.post('/searchUsersRecords/:id',protectRoute,isAdmin,searchUsersRecordsNav);
 // router.get('/confirmuser/:token',confirmuser);       
 // router.delete('/delete/:id',deleteUsers);
-
+// const storage = multer.memoryStorage();
+  
+// var upload = multer({ storage: storage })
 router.post('/complianceCreate', complianceCreate )
 router.get('/complianceGetting', complianceGetting )
 
@@ -30,7 +33,7 @@ router.get('/userGetting', userGetting )
 router.get('/stateCreate', stateCreate )
 
 // -------------Checklist Route --------------
-router.post('/checkListCreate', upload, checkListCreate)
+router.post('/checkListCreate', upload.fields([{ name: 'image' }, { name: 'document' }]), checkListCreate)
 router.get('/checkListGetting', checkListGetting)
 // router.get('/checkListFilter/:state/:createdAt', checkListFilter)
 router.get('/checkListFilter', checkListFilter)

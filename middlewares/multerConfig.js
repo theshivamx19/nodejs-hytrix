@@ -4,50 +4,42 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    console.log(file);
-    if (
-      file.mimetype === 'image/png' ||
-      file.mimetype === 'image/jpg' ||
-      file.mimetype === 'image/jpeg'
-    ) {
-      cb(null, "./public/images/")
-    }
-    else if (file.mimetype === 'application/pdf') {
-      cb(null, "./public/docs/")
-    }
-  },
-  filename: function (req, file, cb) {
-    const unique = uuidv4();
-    cb(null, unique + path.extname(file.originalname))
-  }
+const storage = multer.memoryStorage({
+  
+  // destination: function (req, file, cb) {
+  //   console.log('i hre');
+  //   if (
+  //     file.mimetype === 'image/png' ||
+  //     file.mimetype === 'image/jpg' ||
+  //     file.mimetype === 'image/jpeg'
+  //   ) {
+  //     // sharp(req.file).resize({ width: 600 });
+  //     cb(null, "./public/images/")
+  //   }
+  //   else if (file.mimetype === 'application/pdf') {
+  //     // sharp(req.file);
+  //     cb(null, "./public/docs/")
+  //   }
+  // },
+  // filename: function (req, file, cb) {
+  //   const unique = uuidv4();
+  //   cb(null, unique + path.extname(file.originalname))
+  // }
 })
-const fileFilter = function (req, file, cb) {
-  if (file.filename === 'document') {
-    if (file.mimetype === 'application/pdf') {
-      return cb(new Error('Only pdf doc is allowed!'), false)
-    }
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, 'image');
+  } else if (file.mimetype === 'application/pdf') {
+    cb(null, 'document');
+  } else {
+    cb(new Error('Invalid file type'), false);
   }
-  else
-    if (file.filename === 'image') {
-      if (file.mimetype === 'image/png' ||
-        file.mimetype === 'image/jpg' ||
-        file.mimetype === 'image/jpeg'
-      ) {
-        // if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
-        // req.fileValidationError = 'Only image files are allowed!';
-        return cb(new Error('Only image files are allowed!'), false);
-      }
-
-    }
-  cb(null, true);
 };
-
+// var upload = multer({ storage: storage })
 
 export const upload = multer({
   storage, fileFilter,
   limits: {
     fileSize: 5 * 1024 * 1024, // 5 MB limit
   }
-}).fields([{ name: 'document', maxCount: 5 }, { name: 'image', maxCount: 5 }])
+})

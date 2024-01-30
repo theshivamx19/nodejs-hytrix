@@ -10,6 +10,7 @@ import { response } from 'express';
 import User from '../models/User.js';
 import CheckList from '../models/CheckList.js';
 import fs from 'node:fs';
+import sharp from 'sharp';
 export const login = async (req, res, next) => {
     try {
         const user = await Admin.findOne({ email: req.body.email });
@@ -191,31 +192,65 @@ export const checkListCreate = async (request, response, next) => {
     try {
         const data = request.body
         // console.log(data);
-        let { document, image } = data
-        image = request.files.image[0].path
-        document = request.files.document[0].path
+        // console.log(request.file.path);
+        // let { image, document } = data
+        const documentFile = request.files.document[0];
+        const imageFile = request.files.image[0];
+        console.log(request.files);
+        const url = request.protocol + '://' + request.get('host');
 
-        let imageBase64 = fs.readFileSync(image, 'base64')
-        let documentBase64 = fs.readFileSync(document, 'base64')
+        // image = request.file.path
+        // const image = request.file
+        // document = request.files.document[0].path
 
-        // let document = request.files.document[0].path
-        // let image = request.files.image[0].path
-        // console.log(request.files);
-        if (!request.files) {
-            response.status(400).json("file is required")
-        }
+        const formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
+        const formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+
+
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+        const documentDirectory = 'documents/';
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the documents directory exists
+        fs.access(uploadsDirectory + documentDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
+            }
+        });
+        // await sharp(request.file.buffer).resize({ width: 600 }).toFile('./data/uploads/' + formattedFileName);
+        // const profileImage = url + '/' + formattedFileName;
+
+        await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+        const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+        const documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+
+        // }
         const checklist = {
             state: data.state,
             act: data.act,
             rule: data.rule,
             category: data.category,
             status: data.status,
-            image: imageBase64,
-            document: documentBase64,
+            image: imageUrl,
+            document: documentUrl,
             form: data.form,
             compliances: data.compliances,
             risk: data.risk
         }
+        // console.log(checklist); return
         const newCheckList = new CheckList(checklist)
         await newCheckList.save()
         response.status(201).json(newCheckList)
@@ -235,62 +270,54 @@ export const checkListGetting = async (request, response, next) => {
     }
 }
 
-// export const checkListFilter = async (request, response, next) => {
-//     try {
-//         const stateFilter = request.params.state;
-//         const dateFilter = request.params.createdAt;
 
-//         // console.log(request.params);
-//         const matchStage = {};
 
-//         if (stateFilter !== undefined) {
-//             matchStage['state'] = stateFilter;
-//         }
 
-//         if (dateFilter !== undefined) {
-//             const dateObject = new Date(dateFilter);
-//             const nextDay = new Date(dateObject);
-//             nextDay.setDate(dateObject.getDate() + 1);
-//             matchStage['createdAt'] = {
-//                 $gte: dateObject,
-//                 $lt: nextDay
-//             };
-//         }
-//         else {
-//             if (stateFilter && dateFilter) {
-//                 matchStage['state'] = stateFilter;
-//                 const dateObject = new Date(dateFilter);
-//                 const nextDay = new Date(dateObject);
-//                 nextDay.setDate(dateObject.getDate() + 1);
-//                 matchStage['createdAt'] = {
-//                     $gte: dateObject,
-//                     $lt: nextDay
-//                 }
-//             }
-//             console.log(matchStage);
-//         }
-//         const filter = await CheckList.aggregate([
-//             {
-//                 $match: matchStage,
-//             },
-//             {
-//                 $lookup: {
-//                     from: "categories",
-//                     localField: "category",
-//                     foreignField: "_id",
-//                     as: "dataresult",
-//                 },
-//             },
-//             {
-//                 $unwind: "$dataresult",
-//             },
-//         ]);
+export const createPosts = async (req, res) => {
 
-//         response.status(201).json(filter);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
+    // console.log(req.file,'-----'); return;
+    const email = await postMessages.findOne({ email: req.body.email });
+    if (email) {
+        return res.send("409");
+    }
+    const requestBody = req.body;
+    const salt = await bcryptsjs.genSaltSync(10);
+    const passhash = await bcryptsjs.hashSync(requestBody.Password, salt);
+    try {
+        
+        const url = req.protocol + '://' + req.get('host');
+        const formattedFileName = Date.now() + req.file.originalname.split(' ').join('-'); //replace space with -
+
+
+        fs.access('./data/uploads', (err) => {
+            if (err) {
+                fs.mkdirSync('./data/uploads', { recursive: true });// {recursive: true}, (err) => {});   //it will creates './data/uploads' folder
+            }
+        });
+
+        await sharp(req.file.buffer).resize({ width: 600 }).toFile('./data/uploads/' + formattedFileName);
+        const profileImage = url + '/' + formattedFileName;
+        const user = {
+            Name: requestBody.Name,
+            Occupation: requestBody.Occupation,
+            Email: requestBody.Email,
+            Password: passhash,
+            Phone: requestBody.Phone,
+            Description: requestBody.Description,
+            isAdmin: requestBody.isAdmin,
+            //  Image:requestBody.Email+'-'+req.file.originalname    ////from cloudinary cloud
+            Image: profileImage
+        };
+        //console.log(requestBody); return;
+        const newUser = new postMessages(user);
+        await newUser.save();
+        res.status(201).json(newUser);   ////if data saved properly then code 201
+    } catch (error) {
+        res.status(409).json({ message: error.message }); ////if data saved fails  then code 409
+    }
+
+}
+
 
 
 export const checkListFilter = async (request, response, next) => {
@@ -368,55 +395,3 @@ export const findByDate = async (request, response, next) => {
 }
 
 
-
-
-export const createPosts = async (req, res) => {
-
-    // console.log(req.file,'-----'); return;
-    const email = await postMessages.findOne({ email: req.body.email });
-    if (email) {
-        return res.send("409");
-    }
-    const requestBody = req.body;
-    const salt = await bcryptsjs.genSaltSync(10);
-    const passhash = await bcryptsjs.hashSync(requestBody.Password, salt);
-    try {
-        /* let uploadRes = '';
-         if(requestBody.Image !== ''){
-             
-             uploadRes = await Cloudinary.uploader.upload(requestBody.Image,{
-                 upload_preset:"Mern_upload",
-             });
-         }*/
-        const url = req.protocol + '://' + req.get('host');
-        const formattedFileName = Date.now() + req.file.originalname.split(' ').join('-'); //replace space with -
-
-
-        fs.access('./data/uploads', (err) => {
-            if (err) {
-                fs.mkdirSync('./data/uploads', { recursive: true });// {recursive: true}, (err) => {});   //it will creates './data/uploads' folder
-            }
-        });
-
-        await sharp(req.file.buffer).resize({ width: 600 }).toFile('./data/uploads/' + formattedFileName);
-        const profileImage = url + '/' + formattedFileName;
-        const user = {
-            Name: requestBody.Name,
-            Occupation: requestBody.Occupation,
-            Email: requestBody.Email,
-            Password: passhash,
-            Phone: requestBody.Phone,
-            Description: requestBody.Description,
-            isAdmin: requestBody.isAdmin,
-            //  Image:requestBody.Email+'-'+req.file.originalname    ////from cloudinary cloud
-            Image: profileImage
-        };
-        //console.log(requestBody); return;
-        const newUser = new postMessages(user);
-        await newUser.save();
-        res.status(201).json(newUser);   ////if data saved properly then code 201
-    } catch (error) {
-        res.status(409).json({ message: error.message }); ////if data saved fails  then code 409
-    }
-
-}

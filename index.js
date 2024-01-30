@@ -8,10 +8,12 @@ import connection from './db/connection.js';
 import cookieParser from "cookie-parser";
 import multer from 'multer';
 import Logger from './utils/logger.js';
+import path from 'path'
 dotenv.config();
 
 const app = express();
-
+// app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use('/public/', express.static('public'));app.use(express.static('data/uploads'));
 //middlewares
 //now setting up limit of http request body and urlencoded data
 app.use(bodyParser.json({limit:'30mb', extended : true}));
