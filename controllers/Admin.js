@@ -25,7 +25,7 @@ export const login = async (req, res, next) => {
             return res.send("400");
         }
 
-        //now remove Password and isAdmin from User get from query as follows   
+        // now remove Password and isAdmin from User get from query as follows   
         //const { Password, isAdmin, ...otherDetails } = User;   
         //since in output of return response.json({...otherDetails}); I am getting collectable values in _doc variable so
         const { password, ...otherDetails } = user._doc;
@@ -191,10 +191,8 @@ export const stateCreate = async (request, response, next) => {
 export const checkListCreate = async (request, response, next) => {
     try {
         const data = request.body
-
         const documentFile = request.files.document[0];
         const imageFile = request.files.image[0];
-        console.log(request.files);
         const url = request.protocol + '://' + request.get('host');
 
 
