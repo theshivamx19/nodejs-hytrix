@@ -191,17 +191,12 @@ export const stateCreate = async (request, response, next) => {
 export const checkListCreate = async (request, response, next) => {
     try {
         const data = request.body
-        // console.log(data);
-        // console.log(request.file.path);
-        // let { image, document } = data
+
         const documentFile = request.files.document[0];
         const imageFile = request.files.image[0];
         console.log(request.files);
         const url = request.protocol + '://' + request.get('host');
 
-        // image = request.file.path
-        // const image = request.file
-        // document = request.files.document[0].path
 
         const formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
         const formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
@@ -235,6 +230,7 @@ export const checkListCreate = async (request, response, next) => {
 
         await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
         const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+        fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
         const documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
 
         // }
