@@ -2,10 +2,9 @@ import mongoose, { mongo } from "mongoose";
 
 const checkListSchema = new mongoose.Schema({
     state : {
-        type : String,
-        required : true,
-        trim : true,
-        index : true 
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "State",
+        index : true
     },
     act : {
         type : String,
@@ -15,7 +14,7 @@ const checkListSchema = new mongoose.Schema({
     },
     branchname: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Executive"
+        ref: "Branch"
     },
     rule : {
         type : String,
@@ -31,7 +30,7 @@ const checkListSchema = new mongoose.Schema({
     },
     status : {
         type : Number,
-        enum : [0, 1],
+        default : 0,
         trim : true,
         index : true
     },
@@ -42,19 +41,19 @@ const checkListSchema = new mongoose.Schema({
     },
     image : {
         type : Object,
+        index : true
     },
-    document : {
+    documents : {
         type : Object,
+        index : true
     },
     executive: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Executive"
     },
     compliances:{
-        type : String,
-        required : true,
-        trim : true,
-        index : true
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Compliances"
     },
     risk :{
         type : String,
@@ -65,6 +64,7 @@ const checkListSchema = new mongoose.Schema({
     approvedate:{
         type : String,
         // required : true,
+        default: Date.now,
         trim : true,
         index : true
     },
@@ -77,4 +77,3 @@ const checkListSchema = new mongoose.Schema({
 
 const CheckList =   mongoose.model('CheckList', checkListSchema)
 export default CheckList;
-
