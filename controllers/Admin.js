@@ -408,7 +408,6 @@ export const checkListFind = async (request, response, next) => {
             else
                 newData.catName = checkCatId.category.name
         }
-
         if (stateId) {
             const checkStateId = await CheckList.findOne({ state: stateId }).populate('state')
             if (!checkStateId) {
@@ -428,28 +427,23 @@ export const checkListFind = async (request, response, next) => {
         if (executiveId) {
             const checkExecId = await CheckList.findOne({ executive: executiveId }).populate('executive')
             if (!checkExecId) {
-            response.status(400).json("Given executive id not exists")
+                response.status(400).json("Given executive id not exists")
             }
             else
-            newData.execName = checkExecId.executive.firstName + " " + checkExecId.executive.lastName
+                newData.execName = checkExecId.executive.firstName + " " + checkExecId.executive.lastName
         }
         console.log(newData);
 
         if (complianceId) {
             const checkComplianceId = await CheckList.findOne({ compliances: complianceId }).populate('compliances')
             if (!checkComplianceId) {
-            response.status(400).json("Given compliances id not exists")
+                response.status(400).json("Given compliances id not exists")
             }
             else
-            newData.complianceName = checkComplianceId.compliances.act
+                newData.complianceName = checkComplianceId.compliances.act
         }
-
-        // if (!checkCatId || !checkStateId || !checkBranchId || !checkExecId || !checkComplianceId) {
-        //     response.status(400).json("There is a id which is not present in the any checklist")
-        // }
-        // else {
         response.status(200).json(newData)
-        // }
+
     }
     catch (error) {
         next(error);
