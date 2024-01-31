@@ -1,7 +1,7 @@
 import express from "express";
 import { isAdmin,protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
-import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, findByDate} from '../controllers/Admin.js';
+import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, createExecutive, executiveGetting} from '../controllers/Admin.js';
 import { upload } from "../middlewares/multerConfig.js";
 // import multer from "multer";
 // import path from "path";
@@ -30,13 +30,27 @@ router.post('/userCreate', userCreate )
 router.get('/userGetting', userGetting )
 
 // --------State Route : -----------
-router.get('/stateCreate', stateCreate )
+router.post('/stateCreate', stateCreate )
 
 // -------------Checklist Route --------------
 router.post('/checkListCreate', upload.fields([{ name: 'image' }, { name: 'document' }]), checkListCreate)
 router.get('/checkListGetting', checkListGetting)
 // router.get('/checkListFilter/:state/:createdAt', checkListFilter)
 router.get('/checkListFilter', checkListFilter)
-router.get('/findByDate/:id', findByDate)
+router.get('/checkListFind', checkListFind)
+
+// --------------- Branch Route --------------
+router.post('/createBranch', createBranch)
+router.get('/branchGetting', branchGetting)
+
+// -------------------- Notification Route -----------
+router.post('/createNotification', createNotification)
+router.get('/notificationGetting', notificationGetting)
+
+// ------------------ Executive Route -----------
+
+router.post('/createExecutive', createExecutive)
+router.get('/executiveGetting', executiveGetting)
+
 
 export default router;

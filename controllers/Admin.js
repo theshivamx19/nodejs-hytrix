@@ -1,16 +1,22 @@
 import Admin from '../models/Admin.js';
 import Category from '../models/Category.js';
 import State from '../models/State.js'
+import Branch from '../models/Branch.js';
 import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
+import Compliance from '../models/Compliances.js';
+import CheckList from '../models/CheckList.js';
+import Notification from '../models/Notification.js';
+import generateToken from '../utils/generateToken.js';
 import jwt from 'jsonwebtoken';
 import { createError } from '../utils/error.js';
-import generateToken from '../utils/generateToken.js';
-import Compliance from '../models/Compliances.js';
 import { response } from 'express';
-import User from '../models/User.js';
-import CheckList from '../models/CheckList.js';
 import fs from 'node:fs';
 import sharp from 'sharp';
+import { exec } from 'node:child_process';
+import Executive from '../models/Executive.js';
+
+
 export const login = async (req, res, next) => {
     try {
         const user = await Admin.findOne({ email: req.body.email });
@@ -118,7 +124,6 @@ export const complianceCreate = async (request, response, next) => {
             executiveId: data.executiveId,
             status: data.status,
         }
-
         const newCompliance = new Compliance(compliance);
         await newCompliance.save();
         response.status(201).json(newCompliance);
@@ -265,8 +270,6 @@ export const checkListGetting = async (request, response, next) => {
 }
 
 
-
-
 export const createPosts = async (req, res) => {
 
     // console.log(req.file,'-----'); return;
@@ -278,10 +281,9 @@ export const createPosts = async (req, res) => {
     const salt = await bcryptsjs.genSaltSync(10);
     const passhash = await bcryptsjs.hashSync(requestBody.Password, salt);
     try {
-        
+
         const url = req.protocol + '://' + req.get('host');
         const formattedFileName = Date.now() + req.file.originalname.split(' ').join('-'); //replace space with -
-
 
         fs.access('./data/uploads', (err) => {
             if (err) {
@@ -370,22 +372,99 @@ export const checkListFilter = async (request, response, next) => {
     }
 };
 
+export const checkListFind = async (request, response, next) => {
+    const id = request.body.id
+    // const {state, branchname, category, executive, compliances, company} = data
+    const checkId = await CheckList.findOne({ category: id }).populate('category')
+    if (!checkId) {
+        response.status(400).json("Given user id not exists")
+    }
 
-export const findByDate = async (request, response, next) => {
-    const dateString = request.params.id;
-    const dateObject = new Date(dateString);
-    const nextDay = new Date(dateObject);
-    nextDay.setDate(dateObject.getDate() + 1);
-
-    const filter = await CheckList.find({
-        createdAt: {
-            $gte: dateObject,
-            $lt: nextDay
-        }
-    });
-    response.json(filter)
-
-
+    response.status(200).json(checkId)
 }
 
+//  ** Branch ** 
 
+export const createBranch = async (request, response, next) => {
+    try {
+        const name = request.body.name
+        const branch = {
+            name
+        }
+        const newBranch = new Branch(branch)
+        await newBranch.save()
+        response.status(201).json(newBranch)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+export const branchGetting = async (request, response, next) => {
+    try {
+        const branches = await Branch.find({})
+        response.status(200).json(branches)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+//  ** Notification **
+
+export const createNotification = async (request, response, next) => {
+    try {
+        const notification = {
+            label,
+            role,
+            description,
+            externallinks,
+            image,
+            isread,
+            dates
+        }
+        const newNotification = new Notification(notification)
+        await newNotification.save()
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+export const notificationGetting = async (request, response, next) => {
+    try {
+        const notifications = await Notification.find({})
+        response.status(200).json(notifications)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+//  ** Executive **
+
+export const createExecutive = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { name, email, userType, password, mobile, status, image } = data
+        const executive = {
+            name: name, email: email, userType: userType, password: password, mobile: mobile, status: status, image: image
+        }
+        const newExecutive = new Executive(executive)
+        await newExecutive.save()
+        response.status(201).json(newExecutive)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+export const executiveGetting = async (request, response, next) => {
+    try {
+        const executives = await Executive.find({})
+        response.status(200).json(executives)
+    }
+    catch (error) {
+        next(error)
+    }
+}

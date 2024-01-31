@@ -9,25 +9,16 @@ const companySchema = new mongoose.Schema({
         index:true
     },
     state: {
-        type: String,
-        required: true,
-        min: 6,
-        max: 30,
-        trim: true,
-        index:true
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'State'
     },
     branchname: {
-        type: String,
-        required: true,
-        min: 6,
-        max: 50,
-        trim: true,
-        index:true
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'Branch'
     },
     executiveId: {
         type : mongoose.Schema.Types.ObjectId,
         ref : "Executive",
-        index:true
     },
     status  : { 
         type: Number, 

@@ -1,12 +1,8 @@
 import mongoose from 'mongoose'
 const complianceschema = new mongoose.Schema({
     state: {                        ////Specify the geographical region or state to which the compliance entry pertains
-        type: [String],
-        required: true,
-        min: 6,
-        max: 30,
-        trim: true,
-        index:true
+        type: mongoose.Schema.Types.Object,
+        ref : 'State'
     },
     act: {
         type: String,               /////Indicate the relevant statutory act governing the compliance requirement
@@ -23,9 +19,6 @@ const complianceschema = new mongoose.Schema({
     category: {                     ////Categorize the compliance entry based on relevant criteria, facilitating easy sorting and reporting
         type: mongoose.Schema.Types.ObjectId,
         ref : "Category",
-        required: true,
-        trim: true,
-        index:true
     },
     questiondesc: {             //////Provide a detailed description of the compliance question or requirement
         type: String,

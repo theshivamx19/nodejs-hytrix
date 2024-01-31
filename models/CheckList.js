@@ -4,7 +4,6 @@ const checkListSchema = new mongoose.Schema({
     state : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "State",
-        index : true
     },
     act : {
         type : String,
@@ -25,8 +24,6 @@ const checkListSchema = new mongoose.Schema({
     category : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "Category",
-        trim : true,
-        index : true
     },
     status : {
         type : Number,
