@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 const complianceschema = new mongoose.Schema({
     state: {                        ////Specify the geographical region or state to which the compliance entry pertains
-        type: mongoose.Schema.Types.Object,
+        type: mongoose.Schema.Types.ObjectId,
         ref : 'State'
     },
     act: {

@@ -11,10 +11,9 @@ import generateToken from '../utils/generateToken.js';
 import jwt from 'jsonwebtoken';
 import { createError } from '../utils/error.js';
 import { response } from 'express';
-import fs from 'node:fs';
+import fs from 'node:fs'
 import sharp from 'sharp';
-import { exec } from 'node:child_process';
-import Executive from '../models/Executive.js';
+// import Executive from '../models/Executive.js';
 
 
 export const login = async (req, res, next) => {
@@ -109,6 +108,27 @@ export const catEditById = async (request, response, next) => {
 export const complianceCreate = async (request, response, next) => {
     try {
         const data = request.body
+        const documentFile = request.file;
+        const url = request.protocol + '://' + request.get('host');
+        const formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+        const uploadsDirectory = './data/uploads/';
+        const documentDirectory = 'documents/';
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+        // Ensure that the documents directory exists
+        fs.access(uploadsDirectory + documentDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
+            }
+        });
+        fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
+        const documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+
+
         const compliance = {
             state: data.state,
             act: data.act,
@@ -116,7 +136,7 @@ export const complianceCreate = async (request, response, next) => {
             category: data.category,
             questiondesc: data.questiondesc,
             form: data.form,
-            docattachment: data.docattachment,
+            docattachment: documentUrl,
             compliancetype: data.compliancetype,
             recurrence: data.recurrence,
             duedate: data.duedate,
@@ -196,7 +216,7 @@ export const stateCreate = async (request, response, next) => {
 export const checkListCreate = async (request, response, next) => {
     try {
         const data = request.body
-        const documentFile = request.files.document[0];
+        const documentFile = request.files.documents[0];
         const imageFile = request.files.image[0];
         const url = request.protocol + '://' + request.get('host');
 
@@ -244,10 +264,12 @@ export const checkListCreate = async (request, response, next) => {
             category: data.category,
             status: data.status,
             image: imageUrl,
-            document: documentUrl,
+            documents: documentUrl,
             form: data.form,
             compliances: data.compliances,
-            risk: data.risk
+            risk: data.risk,
+            executive: data.executive,
+            branchname: data.branchname
         }
         // console.log(checklist); return
         const newCheckList = new CheckList(checklist)
@@ -372,18 +394,94 @@ export const checkListFilter = async (request, response, next) => {
     }
 };
 
+// export const checkListFind = async (request, response, next) => {
+//     try {
+//         const data = request.body
+//         const { categoryId, stateId, branchId, executiveId, complianceId, companyId } = data
+//         let newData = {}
+
+//         const checkCatId = await CheckList.findOne({ category: categoryId }).populate('category')
+//         if (!checkCatId) {
+//             response.status(400).json("Give category id not exists")
+//         }
+//         else {
+//             newData.catName = checkCatId.category.name
+//         }
+//         const checkStateId = await CheckList.findOne({ state : stateId }).populate('state')
+//         if (!checkStateId) {
+//             response.status(400).json("Given state id not exists")
+//         }
+//         else {
+//             newData.stateName = checkStateId.state.name
+//         }
+//         const checkBranchId = await CheckList.findOne({ branchname : branchId }).populate('branchname')
+//         if (!checkBranchId) {
+//             response.status(400).json("Given branch id not exists")
+//         }
+//         else {
+//             newData.branchName = checkBranchId.branchname.name
+//         }
+//         const checkExecId = await CheckList.findOne({ executive : executiveId }).populate('executive')
+//         if (!checkExecId) {
+//             response.status(400).json("Given executive id not exists")
+//         }
+//         else {
+//             newData.execName = checkExecId.executive.name
+//         }
+//         const checkCompId = await CheckList.findOne({ compliances : complianceId }).populate('compliances')
+//         if (!checkCompId) {
+//             response.status(400).json("Given compliances id not exists")
+//         }
+//         else {
+//             newData.compName = checkCompId.compliances.name
+//         }
+//         response.status(200).json(newData)
+//     }
+//     catch (error) {
+//         next(error);
+//     }
+// }
+
 export const checkListFind = async (request, response, next) => {
-    const id = request.body.id
-    // const {state, branchname, category, executive, compliances, company} = data
-    const checkId = await CheckList.findOne({ category: id }).populate('category')
-    if (!checkId) {
-        response.status(400).json("Given user id not exists")
+    try {
+        const data = request.body;
+        const { categoryId, stateId, branchId, executiveId, complianceId, companyId } = data;
+
+        let newData = {};
+
+        const checkList = await CheckList.findOne({
+            $or: [
+                { category: categoryId },
+                { state: stateId },
+                { branchname: branchId },
+                { executive: executiveId },
+                { compliances: complianceId },
+            ],
+        })
+            .populate('category', 'name')
+            .populate('state', 'name')
+            .populate('branchname', 'name')
+            .populate('executive', 'firstName lastName')
+            .populate('compliances', 'act');
+
+        if (!checkList) {
+            response.status(400).json("No matching records found");
+            return;
+        }
+
+        newData.catName = checkList.category ? checkList.category.name : null;
+        newData.stateName = checkList.state ? checkList.state.name : null;
+        newData.branchName = checkList.branchname ? checkList.branchname.name : null;
+        newData.execName = checkList.executive ? `${checkList.executive.firstName} ${checkList.executive.lastName}` : null;
+        newData.compName = checkList.compliances ? checkList.compliances.act : null;
+
+        response.status(200).json(newData);
+    } catch (error) {
+        next(error);
     }
+};
 
-    response.status(200).json(checkId)
-}
-
-//  ** Branch ** 
+//  ** Branch **
 
 export const createBranch = async (request, response, next) => {
     try {
@@ -443,28 +541,28 @@ export const notificationGetting = async (request, response, next) => {
 
 //  ** Executive **
 
-export const createExecutive = async (request, response, next) => {
-    try {
-        const data = request.body
-        const { name, email, userType, password, mobile, status, image } = data
-        const executive = {
-            name: name, email: email, userType: userType, password: password, mobile: mobile, status: status, image: image
-        }
-        const newExecutive = new Executive(executive)
-        await newExecutive.save()
-        response.status(201).json(newExecutive)
-    }
-    catch (error) {
-        next(error)
-    }
-}
+// export const createExecutive = async (request, response, next) => {
+//     try {
+//         const data = request.body
+//         const { name, email, userType, password, mobile, status, image } = data
+//         const executive = {
+//             name: name, email: email, userType: userType, password: password, mobile: mobile, status: status, image: image
+//         }
+//         const newExecutive = new Executive(executive)
+//         await newExecutive.save()
+//         response.status(201).json(newExecutive)
+//     }
+//     catch (error) {
+//         next(error)
+//     }
+// }
 
-export const executiveGetting = async (request, response, next) => {
-    try {
-        const executives = await Executive.find({})
-        response.status(200).json(executives)
-    }
-    catch (error) {
-        next(error)
-    }
-}
+// export const executiveGetting = async (request, response, next) => {
+//     try {
+//         const executives = await Executive.find({})
+//         response.status(200).json(executives)
+//     }
+//     catch (error) {
+//         next(error)
+//     }
+// }
