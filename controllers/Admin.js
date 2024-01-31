@@ -394,92 +394,93 @@ export const checkListFilter = async (request, response, next) => {
     }
 };
 
-// export const checkListFind = async (request, response, next) => {
-//     try {
-//         const data = request.body
-//         const { categoryId, stateId, branchId, executiveId, complianceId, companyId } = data
-//         let newData = {}
-
-//         const checkCatId = await CheckList.findOne({ category: categoryId }).populate('category')
-//         if (!checkCatId) {
-//             response.status(400).json("Give category id not exists")
-//         }
-//         else {
-//             newData.catName = checkCatId.category.name
-//         }
-//         const checkStateId = await CheckList.findOne({ state : stateId }).populate('state')
-//         if (!checkStateId) {
-//             response.status(400).json("Given state id not exists")
-//         }
-//         else {
-//             newData.stateName = checkStateId.state.name
-//         }
-//         const checkBranchId = await CheckList.findOne({ branchname : branchId }).populate('branchname')
-//         if (!checkBranchId) {
-//             response.status(400).json("Given branch id not exists")
-//         }
-//         else {
-//             newData.branchName = checkBranchId.branchname.name
-//         }
-//         const checkExecId = await CheckList.findOne({ executive : executiveId }).populate('executive')
-//         if (!checkExecId) {
-//             response.status(400).json("Given executive id not exists")
-//         }
-//         else {
-//             newData.execName = checkExecId.executive.name
-//         }
-//         const checkCompId = await CheckList.findOne({ compliances : complianceId }).populate('compliances')
-//         if (!checkCompId) {
-//             response.status(400).json("Given compliances id not exists")
-//         }
-//         else {
-//             newData.compName = checkCompId.compliances.name
-//         }
-//         response.status(200).json(newData)
-//     }
-//     catch (error) {
-//         next(error);
-//     }
-// }
-
 export const checkListFind = async (request, response, next) => {
     try {
-        const data = request.body;
-        const { categoryId, stateId, branchId, executiveId, complianceId, companyId } = data;
+        const data = request.body
+        const { categoryId, stateId, branchId, executiveId, complianceId, companyId } = data
+        let newData = {}
 
-        let newData = {};
+        const checkCatId = await CheckList.findOne({ category: categoryId }).populate('category')
+        // if (checkCatId) {
+        // response.status(400).json("Give category id not exists")
+        newData.catName = checkCatId.category.name
+        // }
 
-        const checkList = await CheckList.findOne({
-            $or: [
-                { category: categoryId },
-                { state: stateId },
-                { branchname: branchId },
-                { executive: executiveId },
-                { compliances: complianceId },
-            ],
-        })
-            .populate('category', 'name')
-            .populate('state', 'name')
-            .populate('branchname', 'name')
-            .populate('executive', 'firstName lastName')
-            .populate('compliances', 'act');
+        const checkStateId = await CheckList.findOne({ state: stateId }).populate('state')
+        // if (checkStateId) {
+        // response.status(400).json("Given state id not exists")
+        newData.stateName = checkStateId.state.name
+        // }
 
-        if (!checkList) {
-            response.status(400).json("No matching records found");
-            return;
-        }
+        const checkBranchId = await CheckList.findOne({ branchname: branchId }).populate('branchname')
+        // if (checkBranchId) {
+        // response.status(400).json("Given branch id not exists")
+        newData.branchName = checkBranchId.branchname.name
+        // }
 
-        newData.catName = checkList.category ? checkList.category.name : null;
-        newData.stateName = checkList.state ? checkList.state.name : null;
-        newData.branchName = checkList.branchname ? checkList.branchname.name : null;
-        newData.execName = checkList.executive ? `${checkList.executive.firstName} ${checkList.executive.lastName}` : null;
-        newData.compName = checkList.compliances ? checkList.compliances.act : null;
+        const checkExecId = await CheckList.findOne({ executive: executiveId }).populate('executive')
+        // if (checkExecId) {
+        // response.status(400).json("Given executive id not exists")
+        newData.execName = checkExecId.executive.firstName + " " + checkExecId.executive.lastName
+        // }
+        console.log(newData);
+        const checkComplianceId = await CheckList.findOne({ compliances: complianceId }).populate('compliances')
+        // if (checkCompId) {
+        // response.status(400).json("Given compliances id not exists")
+        newData.complianceName = checkComplianceId.compliances.act
+        // }
 
-        response.status(200).json(newData);
-    } catch (error) {
+        // if (!checkCatId || !checkStateId || !checkBranchId || !checkExecId || !checkComplianceId) {
+        //     response.status(400).json("There is a id which is not present in the any checklist")
+        // }
+        // else {
+            response.status(200).json(newData)
+        // }
+    }
+    catch (error) {
         next(error);
     }
-};
+}
+
+// export const checkListFind = async (request, response, next) => {
+//     try {
+//         const data = request.body;
+//         const { categoryId, stateId, branchId, executiveId, complianceId, companyId } = data;
+
+//         let newData = {};
+
+//         const checkList = await CheckList.findOne({
+//             $and: [
+//                 { category: categoryId },
+//                 { state: stateId },
+//                 { branchname: branchId },
+//                 { executive: executiveId },
+//                 { compliances: complianceId },
+//             ],
+//         })
+//             .populate('category', 'name')
+//             .populate('state', 'name')
+//             .populate('branchname', 'name')
+//             .populate('executive', 'firstName lastName')
+//             .populate('compliances', 'act');
+
+//         if (!checkList) {
+//             response.status(400).json("No matching records found");
+//             return;
+//         }
+
+//         newData.catName = checkList.category ? checkList.category.name : null;
+//         newData.stateName = checkList.state ? checkList.state.name : null;
+//         newData.branchName = checkList.branchname ? checkList.branchname.name : null;
+//         newData.execName = checkList.executive ? `${checkList.executive.firstName} ${checkList.executive.lastName}` : null;
+//         newData.compName = checkList.compliances ? checkList.compliances.act : null;
+//         console.log(newData);
+
+//         response.status(200).json(newData);
+//     } catch (error) {
+//         next(error);
+//     }
+// };
 
 //  ** Branch **
 
