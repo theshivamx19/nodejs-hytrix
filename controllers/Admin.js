@@ -412,6 +412,7 @@ export const checkListFind = async (request, response, next) => {
                 category: data.category.name,
                 status: data.status,
                 image: data.image,
+                documents : data.documents,
                 compliances: data.compliances.act,
                 executive: data.executive.firstName + " " + data.executive.lastName,
                 branchname: data.branchname.name,
