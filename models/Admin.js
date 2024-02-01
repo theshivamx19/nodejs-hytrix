@@ -47,9 +47,9 @@ const adminSchema = new mongoose.Schema({
         trim: true,
         index:true
     },
-    image: {
-        type: Object
-    },
+    // image: {
+    //     type: Object
+    // },
     created_at : { 
         type: Date, 
         default: Date.now, 

@@ -2,7 +2,7 @@ import Admin from '../models/Admin.js';
 import Category from '../models/Category.js';
 import State from '../models/State.js'
 import Branch from '../models/Branch.js';
-import bcrypt from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
 import User from '../models/User.js';
 import Compliance from '../models/Compliances.js';
 import CheckList from '../models/CheckList.js';
@@ -25,7 +25,7 @@ export const login = async (req, res, next) => {
             return res.send("404");
         }
         const passwordDB = user.password;
-        const matchPasswotd = await bcryptsjs.compare(req.body.password, passwordDB);
+        const matchPasswotd = await bcryptjs.compare(req.body.password, passwordDB);
         if (matchPasswotd === false) {
             return res.send("400");
         }
@@ -300,8 +300,8 @@ export const createPosts = async (req, res) => {
         return res.send("409");
     }
     const requestBody = req.body;
-    const salt = await bcryptsjs.genSaltSync(10);
-    const passhash = await bcryptsjs.hashSync(requestBody.Password, salt);
+    const salt = await bcryptjs.genSaltSync(10);
+    const passhash = await bcryptjs.hashSync(requestBody.Password, salt);
     try {
 
         const url = req.protocol + '://' + req.get('host');
@@ -396,59 +396,94 @@ export const checkListFilter = async (request, response, next) => {
 
 export const checkListFind = async (request, response, next) => {
     try {
-        const data = request.body
-        const { categoryId, stateId, branchId, executiveId, complianceId, companyId } = data
-        let newData = {}
+        const getAllCheckList = await CheckList.find({})
+            .populate('category', 'name')
+            .populate('state', 'name')
+            .populate('branchname', 'name')
+            .populate('executive', 'firstName lastName')
+            .populate('compliances', 'act');
 
-        if (categoryId) {
-            const checkCatId = await CheckList.findOne({ category: categoryId }).populate('category')
-            if (!checkCatId) {
-                response.status(400).json("Give category id not exists")
+        const newArr = getAllCheckList.map((data) => {
+            return {
+                _id: data._id,
+                state: data.state.name,
+                act: data.act,
+                rule: data.rule,
+                category: data.category.name,
+                status: data.status,
+                image: data.image,
+                compliances: data.compliances.act,
+                executive: data.executive.firstName + " " + data.executive.lastName,
+                branchname: data.branchname.name,
+                risk: data.risk,
+                approvedate: data.approvedate,
+                date: data.date,
             }
-            else
-                newData.catName = checkCatId.category.name
-        }
-        if (stateId) {
-            const checkStateId = await CheckList.findOne({ state: stateId }).populate('state')
-            if (!checkStateId) {
-                response.status(400).json("Given state id not exists")
-            }
-            else
-                newData.stateName = checkStateId.state.name
-        }
-        if (branchId) {
-            const checkBranchId = await CheckList.findOne({ branchname: branchId }).populate('branchname')
-            if (!checkBranchId) {
-                response.status(400).json("Given branch id not exists")
-            }
-            else
-                newData.branchName = checkBranchId.branchname.name
-        }
-        if (executiveId) {
-            const checkExecId = await CheckList.findOne({ executive: executiveId }).populate('executive')
-            if (!checkExecId) {
-                response.status(400).json("Given executive id not exists")
-            }
-            else
-                newData.execName = checkExecId.executive.firstName + " " + checkExecId.executive.lastName
-        }
-        console.log(newData);
-
-        if (complianceId) {
-            const checkComplianceId = await CheckList.findOne({ compliances: complianceId }).populate('compliances')
-            if (!checkComplianceId) {
-                response.status(400).json("Given compliances id not exists")
-            }
-            else
-                newData.complianceName = checkComplianceId.compliances.act
-        }
-        response.status(200).json(newData)
-
+        })
+        response.status(200).json(newArr)
     }
     catch (error) {
         next(error);
     }
 }
+
+// .populate('category').populate('state').populate('branchname').populate('executive').populate('compliances')
+// let arrData = []
+// const arrData = getAllCheckList.map(data => {
+//    if(data.category || data.state){
+//     return data.category = data.category.name
+//    }
+// //    else if(data.state){
+// //     return data.state = data.state.name
+// //    }
+// })
+
+// const { categoryId, stateId, branchId, executiveId, complianceId, companyId } = data
+// let newData = {}
+
+// if (categoryId) {
+//     const checkCatId = await CheckList.findOne({ category: categoryId }).populate('category')
+//     if (!checkCatId) {
+//         response.status(400).json("Give category id not exists")
+//     }
+//     else
+//         newData.catName = checkCatId.category.name
+// }
+// if (stateId) {
+//     const checkStateId = await CheckList.findOne({ state: stateId }).populate('state')
+//     if (!checkStateId) {
+//         response.status(400).json("Given state id not exists")
+//     }
+//     else
+//         newData.stateName = checkStateId.state.name
+// }
+// if (branchId) {
+//     const checkBranchId = await CheckList.findOne({ branchname: branchId }).populate('branchname')
+//     if (!checkBranchId) {
+//         response.status(400).json("Given branch id not exists")
+//     }
+//     else
+//         newData.branchName = checkBranchId.branchname.name
+// }
+// if (executiveId) {
+//     const checkExecId = await CheckList.findOne({ executive: executiveId }).populate('executive')
+//     if (!checkExecId) {
+//         response.status(400).json("Given executive id not exists")
+//     }
+//     else
+//         newData.execName = checkExecId.executive.firstName + " " + checkExecId.executive.lastName
+// }
+// console.log(newData);
+
+// if (complianceId) {
+//     const checkComplianceId = await CheckList.findOne({ compliances: complianceId }).populate('compliances')
+//     if (!checkComplianceId) {
+//         response.status(400).json("Given compliances id not exists")
+//     }
+//     else
+//         newData.complianceName = checkComplianceId.compliances.act
+// }
+
 
 // export const checkListFind = async (request, response, next) => {
 //     try {
