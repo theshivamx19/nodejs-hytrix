@@ -7,10 +7,11 @@ import { createExpenseDetail, expenseDetailGetting } from '../controllers/liseRe
 import { createInvoiceDetail, invoiceDetailGetting } from '../controllers/liseRegController/InvoiceDetails'
 import { createLicenseDetail, licenseDetailGetting } from '../controllers/liseRegController/LicenseDetails'
 import { createNameRate, nameRateGetting } from '../controllers/liseRegController/NameRate'
+import { upload } from '../middlewares/multerConfig'
 
 const router = express.Router()
 
-router.post('/createApplicationDetail', createApplicationDetail)
+router.post('/createApplicationDetail', upload.single('acknowledge'), createApplicationDetail)
 router.get('/appDetailGetting', appDetailGetting)
 
 router.post('/createCompanyInfo', createCompanyInfo)

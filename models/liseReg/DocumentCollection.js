@@ -22,5 +22,5 @@ const docCollectionSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
-const DocumentCollection = mongoose.model('Namerate', docCollectionSchema)
+const DocumentCollection = mongoose.model('DocumentCollection', docCollectionSchema)
 export default DocumentCollection

@@ -7,7 +7,7 @@ const applicationDetailSchema = new mongoose.Schema({
         index : true
     },
     status : {
-        type : [],
+        type : String,
         required : true,
         // enum : ['Verified', 'Under Process', 'Rejected'],
         index : true

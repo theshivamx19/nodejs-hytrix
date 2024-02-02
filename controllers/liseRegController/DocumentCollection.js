@@ -3,9 +3,34 @@ import DocumentCollection from '../../models/liseReg/DocumentCollection'
 export const createDocCollection = async (request, response, next) => {
     try {
         const data = request.body
-        const { documents, docReqDate, docRegFollow, docReviewDate } = data
+        console.log(data);
+
+        const { docReqDate, docRegFollow, docReviewDate } = data
+        
+        const documents = request.file;
+        const url = request.protocol + '://' + request.get('host');
+        const formattedImageFileName = Date.now() + documents.originalname.split(' ').join('-');
+
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        await sharp(documents.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+        const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
         const docCollection = {
-            documents, docReqDate, docRegFollow, docReviewDate
+            documents : imageUrl, docReqDate, docRegFollow, docReviewDate
         }
         const newDocCollection = new DocumentCollection(docCollection)
         await newDocCollection.save()
