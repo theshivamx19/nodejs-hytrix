@@ -7,8 +7,9 @@ const applicationDetailSchema = new mongoose.Schema({
         index : true
     },
     status : {
-        type : String,
+        type : Number,
         required : true,
+        default : 0,
         // enum : ['Verified', 'Under Process', 'Rejected'],
         index : true
     },
@@ -21,6 +22,7 @@ const applicationDetailSchema = new mongoose.Schema({
     acknowledge : {
         type : Object
     }
+    
 }, {timestamps : true})
 
 const Applicationdetail = mongoose.model('Applicationdetail', applicationDetailSchema)
