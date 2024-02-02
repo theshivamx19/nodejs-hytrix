@@ -20,13 +20,13 @@ router.get('/companyInfoGetting', companyInfoGetting)
 router.post('/createDocCollection', upload.single('documents'), createDocCollection)
 router.get('/docCollectionGetting', docCollectionGetting)
 
-router.post('/createExpenseDetail', createExpenseDetail)
+router.post('/createExpenseDetail', upload.single('challanUpload'), createExpenseDetail)
 router.get('/expenseDetailGetting', expenseDetailGetting)
 
 router.post('/createInvoiceDetail', createInvoiceDetail)
 router.get('/invoiceDetailGetting', invoiceDetailGetting)
 
-router.post('/createLicenseDetail', createLicenseDetail)
+router.post('/createLicenseDetail', upload.single('licenseUpload'), createLicenseDetail)
 router.get('/licenseDetailGetting', licenseDetailGetting)
 
 router.post('/createNameRate', createNameRate)

@@ -1,4 +1,4 @@
-import DocumentCollection from '../../models/liseReg/DocumentCollection.js'
+import Documentcollection from '../../models/liseReg/DocumentCollection.js'
 import fs from 'fs'
 import sharp from 'sharp';
 
@@ -8,7 +8,7 @@ export const createDocCollection = async (request, response, next) => {
         const data = request.body
         console.log(data);
 
-        const { docReqDate, docRegFollow, docReviewDate } = data
+        const { docReqDate, docRegFollow, docReviewDate, company, executive, state, branch } = data
         const documents = request.file;
         
         const url = request.protocol + '://' + request.get('host');
@@ -33,9 +33,9 @@ export const createDocCollection = async (request, response, next) => {
         await sharp(documents.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
         const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
         const docCollection = {
-            documents : imageUrl, docReqDate, docRegFollow, docReviewDate
+            documents : imageUrl, docReqDate, docRegFollow, docReviewDate, company, executive, state, branch
         }
-        const newDocCollection = new DocumentCollection(docCollection)
+        const newDocCollection = new Documentcollection(docCollection)
         await newDocCollection.save()
         response.status(201).json(newDocCollection)
     } catch (error) {
@@ -45,7 +45,7 @@ export const createDocCollection = async (request, response, next) => {
 
 export const docCollectionGetting = async (request, response, next) => {
     try {
-        const documents = await DocumentCollection.find({})
+        const documents = await Documentcollection.find({})
         response.status(201).json(documents)
     }
     catch (error) {

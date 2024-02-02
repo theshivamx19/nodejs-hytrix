@@ -25,7 +25,23 @@ const licenseDetailSchema = new mongoose.Schema({
     },
     licenseUpload : {
         type : Object
-    }
+    },
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+    },
+    executive: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    state: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State",
+    },
+    branch : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Branch"
+    },
 }, {timestamps : true})
 
 const Licensedetail = mongoose.model('Licensedetail', licenseDetailSchema)

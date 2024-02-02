@@ -11,7 +11,23 @@ const nameRateSchema = new mongoose.Schema({
         type : Number,
         required : true,
         index : true
-    }
+    },
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+    },
+    executive: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    state: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State",
+    },
+    branch : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Branch"
+    },
 }, {timestamps : true})
 
 const Namerate = mongoose.model('Namerate', nameRateSchema)

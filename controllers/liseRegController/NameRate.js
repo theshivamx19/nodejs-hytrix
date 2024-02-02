@@ -3,9 +3,9 @@ import NameRate from '../../models/liseReg/NameRate.js'
 export const createNameRate = async (request, response, next) => {
     try {
         const data = request.body
-        const { regNo, rate } = data
+        const { regNo, rate, company, executive, state, branch } = data
         const nameRate = {
-            regNo, rate
+            regNo, rate, company, executive, state, branch
         }
         const newNameRate = new NameRate(nameRate)
         await newNameRate.save()

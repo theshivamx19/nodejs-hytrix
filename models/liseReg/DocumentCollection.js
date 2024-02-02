@@ -18,9 +18,25 @@ const docCollectionSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
         index: true
-    }
+    },
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+    },
+    executive: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    state: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State",
+    },
+    branch : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Branch"
+    },
 
 }, { timestamps: true })
 
-const DocumentCollection = mongoose.model('DocumentCollection', docCollectionSchema)
-export default DocumentCollection
+const Documentcollection = mongoose.model('Documentcollection', docCollectionSchema)
+export default Documentcollection

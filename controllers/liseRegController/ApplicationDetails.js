@@ -1,9 +1,11 @@
 import Applicationdetails from "../../models/liseReg/ApplicationDetails.js"
+import fs from 'fs'
+import sharp from 'sharp';
 
 export const createApplicationDetail = async (request, response, next) => {
     try {
-        const data = data.body
-        const { appliedDate, status, remark } = data
+        const data = request.body
+        const { appliedDate, status, remark, company, executive, state, branch } = data
 
         const acknowledge = request.file;
         const url = request.protocol + '://' + request.get('host');
@@ -28,7 +30,7 @@ export const createApplicationDetail = async (request, response, next) => {
         await sharp(acknowledge.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
         const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
         const applicationDetail = {
-            appliedDate, status, remark, acknowledge: imageUrl
+            appliedDate, status, remark, acknowledge: imageUrl, company, executive, state, branch
         }
         const newApplicationDetail = await Applicationdetails(applicationDetail)
         await newApplicationDetail.save()

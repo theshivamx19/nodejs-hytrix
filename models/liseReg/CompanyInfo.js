@@ -1,11 +1,27 @@
 import mongoose from "mongoose";
 
 const companyInfoSchema = new mongoose.Schema({
-    branch : {
-        type : [],
+    branchName : {
+        type : String,
         required : true,
         index : true,
         trim : true
+    },
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+    },
+    executive: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    state: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State",
+    },
+    branch : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Branch"
     }
 }, {timestamps : true})
 

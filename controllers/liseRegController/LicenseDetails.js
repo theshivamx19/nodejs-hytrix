@@ -1,13 +1,37 @@
 import LicenseDetails from '../../models/liseReg/LicenseDetails.js'
-
+import fs from 'fs'
+import sharp from 'sharp';
 
 
 export const createLicenseDetail = async (request, response, next) => {
     try {
         const data = request.body
-        const { licenseNumber, dateOfIssue, renewalDate, expireDate, licenseUpload } = data
+        const { licenseNumber, dateOfIssue, renewalDate, expireDate, company, executive, state, branch } = data
+        const licenseUpload = request.file;
+        
+        const url = request.protocol + '://' + request.get('host');
+        const formattedImageFileName = Date.now() + licenseUpload.originalname.split(' ').join('-');
+        
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        await sharp(licenseUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+        const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
         const licenseDetail = {
-            licenseNumber, dateOfIssue, renewalDate, expireDate, licenseUpload
+            licenseNumber, dateOfIssue, renewalDate, expireDate, licenseUpload : imageUrl, company, executive, state, branch
         }
         const newLicenseDetail = new Licensedetails(licenseDetail)
         await newLicenseDetail.save()

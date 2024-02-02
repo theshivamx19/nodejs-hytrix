@@ -1,12 +1,12 @@
-import InvoiceDetails from '../../models/liseReg/InvoiceDetails.js'
+import Invoicedetail from '../../models/liseReg/InvoiceDetails.js'
 
 
 export const createInvoiceDetail = async (request, response, next) => {
     try {
         const data = request.body
-        const { invoiceType, invoiceDate, invoiceNumber, submissionDate } = data
+        const { invoiceType, invoiceDate, invoiceNumber, submissionDate, company, executive, state, branch } = data
         const invoiceDetail = {
-            invoiceType, invoiceDate, invoiceNumber, submissionDate
+            invoiceType, invoiceDate, invoiceNumber, submissionDate, company, executive, state, branch
         }
         const newInvoiceDetail = new Invoicedetail(invoiceDetail)
         await newInvoiceDetail.save()
@@ -18,7 +18,7 @@ export const createInvoiceDetail = async (request, response, next) => {
 
 export const invoiceDetailGetting = async (request, response, next) => {
     try {
-        const invoice = await InvoiceDetails.find({})
+        const invoice = await Invoicedetail.find({})
         response.status(201).json(invoice)
     }
     catch (error) {

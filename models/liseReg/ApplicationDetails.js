@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const applicationDetailSchema = new mongoose.Schema({
+    
     appliedDate : {
         type : Date,
         default : Date.now,
@@ -21,6 +22,22 @@ const applicationDetailSchema = new mongoose.Schema({
     },
     acknowledge : {
         type : Object
+    },
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+    },
+    executive: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    state: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State",
+    },
+    branch : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Branch"
     }
     
 }, {timestamps : true})

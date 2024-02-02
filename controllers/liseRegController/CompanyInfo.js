@@ -2,9 +2,15 @@ import Companyinfo from "../../models/liseReg/CompanyInfo.js"
 
 export const createCompanyInfo = async (request, response, next) => {
     try {
-        const branch = request.body.branch
-        const newCompanyInfo = await Companyinfo.create({ branch })
-        await response.status(201).json(newCompanyInfo)
+        const data = request.body
+        const { branchName, company, executive, state, branch } = data
+        const companyInfo = {
+            branchName, company, executive, state, branch
+        }
+        const newCompanyInfo = new Companyinfo(companyInfo)
+        await newCompanyInfo.save()
+        response.status(201).json(newCompanyInfo)
+
     } catch (error) {
         next(error)
     }

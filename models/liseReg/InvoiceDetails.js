@@ -21,7 +21,23 @@ const invoiceDetailSchema = new mongoose.Schema({
         type : Date,
         default : Date.now,
         index : true
-    }
+    },
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+    },
+    executive: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    state: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State",
+    },
+    branch : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Branch"
+    },
 }, {timestamps : true})
 
 const Invoicedetail = mongoose.model('Invoicedetail', invoiceDetailSchema)

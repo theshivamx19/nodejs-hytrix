@@ -1,11 +1,36 @@
 import Expensedetails from '../../models/liseReg/ExpenseDetails.js'
+import fs from 'fs'
+import sharp from 'sharp';
 
 export const createExpenseDetail = async (request, response, next) => {
     try {
         const data = request.body
-        const { challlanFees, challanNumber, challanDate, challanUpload, directExpenses} = data
+        const { challlanFees, challanNumber, challanDate, directExpenses, company, executive, state, branch} = data
+        const challanUpload = request.file;
+        
+        const url = request.protocol + '://' + request.get('host');
+        const formattedImageFileName = Date.now() + challanUpload.originalname.split(' ').join('-');
+        
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        await sharp(challanUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+        const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
         const expenseDetail = {
-            challlanFees, challanNumber, challanDate, challanUpload, directExpenses
+            challlanFees, challanNumber, challanDate, challanUpload : imageUrl, directExpenses, company, executive, state, branch
         }
         const newExpenseDetail = new Expensedetails(expenseDetail)
         await newExpenseDetail.save()
