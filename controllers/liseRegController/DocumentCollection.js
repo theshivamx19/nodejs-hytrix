@@ -1,4 +1,7 @@
-import DocumentCollection from '../../models/liseReg/DocumentCollection'
+import DocumentCollection from '../../models/liseReg/DocumentCollection.js'
+import fs from 'fs'
+import sharp from 'sharp';
+
 
 export const createDocCollection = async (request, response, next) => {
     try {
@@ -6,11 +9,11 @@ export const createDocCollection = async (request, response, next) => {
         console.log(data);
 
         const { docReqDate, docRegFollow, docReviewDate } = data
-        
         const documents = request.file;
+        
         const url = request.protocol + '://' + request.get('host');
         const formattedImageFileName = Date.now() + documents.originalname.split(' ').join('-');
-
+        
         const uploadsDirectory = './data/uploads/';
         const imageDirectory = 'images/';
 

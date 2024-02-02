@@ -1,4 +1,4 @@
-import Expensedetails from '../../models/liseReg/ExpenseDetails'
+import Expensedetails from '../../models/liseReg/ExpenseDetails.js'
 
 export const createExpenseDetail = async (request, response, next) => {
     try {

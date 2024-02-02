@@ -1,4 +1,4 @@
-import NameRate from '../../models/liseReg/NameRate'
+import NameRate from '../../models/liseReg/NameRate.js'
 
 export const createNameRate = async (request, response, next) => {
     try {
@@ -15,7 +15,7 @@ export const createNameRate = async (request, response, next) => {
     }
 }
 
-export const nameRateGetting = async (request, response, next) => {
+export const nameRateGetting = async (requxest, response, next) => {
     try {
         const nameRate = await NameRate.find({})
         response.status(201).json(nameRate)

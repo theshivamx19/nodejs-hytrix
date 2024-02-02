@@ -1,4 +1,4 @@
-import LicenseDetails from '../../models/liseReg/LicenseDetails'
+import LicenseDetails from '../../models/liseReg/LicenseDetails.js'
 
 
 

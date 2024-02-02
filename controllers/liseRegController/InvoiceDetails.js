@@ -1,4 +1,4 @@
-import InvoiceDetails from '../../models/liseReg/InvoiceDetails'
+import InvoiceDetails from '../../models/liseReg/InvoiceDetails.js'
 
 
 export const createInvoiceDetail = async (request, response, next) => {

@@ -1,4 +1,4 @@
-import Applicationdetails from "../../models/liseReg/ApplicationDetails"
+import Applicationdetails from "../../models/liseReg/ApplicationDetails.js"
 
 export const createApplicationDetail = async (request, response, next) => {
     try {

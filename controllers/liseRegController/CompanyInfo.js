@@ -1,4 +1,4 @@
-import Companyinfo from "../../models/liseReg/CompanyInfo"
+import Companyinfo from "../../models/liseReg/CompanyInfo.js"
 
 export const createCompanyInfo = async (request, response, next) => {
     try {

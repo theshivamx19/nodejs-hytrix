@@ -1,5 +1,6 @@
 import express from 'express';
 import adminRoutes from './routes/adminRoutes.js';
+import liseRegRoutes from './routes/liseRegRoutes.js'
 import './db/connection.js';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -33,6 +34,7 @@ app.use(cookieParser());
 app.use(cors({ origin:true, credentials:true }));
 //setting up default enpoint for api routes which is
 app.use('/api/admin',adminRoutes);
+app.use('/api/lisereg',liseRegRoutes);
 ///customized error handler
 app.use((err,req,res,next) => {
     const errorStatus = err.status || 500 ;
