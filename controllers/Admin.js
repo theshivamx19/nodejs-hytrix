@@ -13,6 +13,7 @@ import { createError } from '../utils/error.js';
 import { response } from 'express';
 import fs from 'node:fs'
 import sharp from 'sharp';
+import { List } from '../models/List.js';
 // import Executive from '../models/Executive.js';
 
 
@@ -412,7 +413,7 @@ export const checkListFind = async (request, response, next) => {
                 category: data.category.name,
                 status: data.status,
                 image: data.image,
-                documents : data.documents,
+                documents: data.documents,
                 compliances: data.compliances.act,
                 executive: data.executive.firstName + " " + data.executive.lastName,
                 branchname: data.branchname.name,
@@ -613,3 +614,12 @@ export const notificationGetting = async (request, response, next) => {
 // }
 
 
+export const addlist = async (request, response, next) => {
+    try {
+        const data = request.body
+        const createList = await List.create(data)
+        response.status(201).json(createList)
+    } catch (error) {
+        next(error)
+    }
+}

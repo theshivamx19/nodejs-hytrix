@@ -10,7 +10,6 @@ export const createCompanyInfo = async (request, response, next) => {
         const newCompanyInfo = new Companyinfo(companyInfo)
         await newCompanyInfo.save()
         response.status(201).json(newCompanyInfo)
-
     } catch (error) {
         next(error)
     }
