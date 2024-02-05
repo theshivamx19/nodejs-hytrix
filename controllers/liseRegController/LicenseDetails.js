@@ -6,8 +6,9 @@ import sharp from 'sharp';
 export const createLicenseDetail = async (request, response, next) => {
     try {
         const data = request.body
-        const { licenseNumber, dateOfIssue, renewalDate, expireDate, company, executive, state, branch } = data
         const licenseUpload = request.file;
+        console.log(data, licenseUpload);
+        const { licenseNumber, dateOfIssue, renewalDate, expireDate, company, executive, state, branch } = data
         
         const url = request.protocol + '://' + request.get('host');
         const formattedImageFileName = Date.now() + licenseUpload.originalname.split(' ').join('-');
@@ -33,7 +34,7 @@ export const createLicenseDetail = async (request, response, next) => {
         const licenseDetail = {
             licenseNumber, dateOfIssue, renewalDate, expireDate, licenseUpload : imageUrl, company, executive, state, branch
         }
-        const newLicenseDetail = new Licensedetails(licenseDetail)
+        const newLicenseDetail = new LicenseDetails(licenseDetail)
         await newLicenseDetail.save()
         response.status(201).json(newLicenseDetail)
     } catch (error) {
