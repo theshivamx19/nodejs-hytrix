@@ -1,12 +1,9 @@
 import mongoose from 'mongoose'
 const complianceschema = new mongoose.Schema({
-    state: {                        ////Specify the geographical region or state to which the compliance entry pertains
-        type: mongoose.Schema.Types.ObjectId,
-        ref : 'State'
-    },
     act: {
         type: String,               /////Indicate the relevant statutory act governing the compliance requirement
         required: true,
+        unique:true,
         trim: true,
         index:true
     },
@@ -19,11 +16,11 @@ const complianceschema = new mongoose.Schema({
     category: {                     ////Categorize the compliance entry based on relevant criteria, facilitating easy sorting and reporting
         type: mongoose.Schema.Types.ObjectId,
         ref : "Category",
+        index:true
     },
-    questiondesc: {             //////Provide a detailed description of the compliance question or requirement
-        type: String,
-        required: true,
-        trim: true,
+    state: {                     ////Categorize the compliance entry based on relevant criteria, facilitating easy sorting and reporting
+        type: mongoose.Schema.Types.ObjectId,
+        ref : "State",
         index:true
     },
     form: {                     ////Indicate the form or format associated with the compliance entry if applicable
@@ -42,28 +39,35 @@ const complianceschema = new mongoose.Schema({
         trim: true,
         index:true
     },  
-    recurrence: {           /////one-time requirement, monthly, annually,custom combobox
+    question: {
+        type: String,
+        required: true,
+        trim: true,
+        index:true
+    },
+    description : {
+        type : String,
+        required: true,
+        trim : true,
+        index : true
+    },
+    frequency: {           /////one-time requirement, monthly, annually,custom combobox
         type: String,
         required: true,
         trim: true,
         index:true
     },  
-    duedate: {
-        type: Date, 
-        default: Date.now, 
-        index: true 
-    },      
-    url: {
+    risk: {           /////one-time requirement, monthly, annually,custom combobox
         type: String,
         required: true,
-        max: 60,
         trim: true,
         index:true
     },
-    executiveId: {
-        type: String,
-        index:true
-    },
+    duedate: {
+        type: Date, 
+        default: null, 
+        index: true 
+    },      
     status  : { 
         type: Number, 
         index: true, 
@@ -74,10 +78,7 @@ const complianceschema = new mongoose.Schema({
         default: Date.now, 
         index: true 
     },
-    updated_at : { 
-        type: Date, 
-        default: Date.now 
-    }
+    
 })
 const Compliance = mongoose.model("Compliance", complianceschema)
 

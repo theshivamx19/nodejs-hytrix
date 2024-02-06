@@ -109,9 +109,9 @@ export const catEditById = async (request, response, next) => {
 export const complianceCreate = async (request, response, next) => {
     try {
         const data = request.body
-        const documentFile = request.file;
+        const docattachment = request.file;
         const url = request.protocol + '://' + request.get('host');
-        const formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+        const formattedDocumentFileName = Date.now() + docattachment.originalname.split(' ').join('-');
         const uploadsDirectory = './data/uploads/';
         const documentDirectory = 'documents/';
 
@@ -126,7 +126,7 @@ export const complianceCreate = async (request, response, next) => {
                 fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
             }
         });
-        fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
+        fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, docattachment.buffer);
         const documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
 
 
@@ -135,13 +135,14 @@ export const complianceCreate = async (request, response, next) => {
             act: data.act,
             rule: data.rule,
             category: data.category,
-            questiondesc: data.questiondesc,
+            question: data.question,
             form: data.form,
             docattachment: documentUrl,
             compliancetype: data.compliancetype,
-            recurrence: data.recurrence,
+            frequency: data.frequency,
+            risk: data.risk,
+            description: data.description,
             duedate: data.duedate,
-            url: data.url,
             executiveId: data.executiveId,
             status: data.status,
         }
@@ -157,24 +158,24 @@ export const complianceCreate = async (request, response, next) => {
 export const complianceGetting = async (request, response, next) => {
     try {
         const compliance = await Compliance.find({}).populate("category", 'name').populate('state', 'name')
-        let newArr = compliance.map(data=>{
+        let newArr = compliance.map(data => {
             return {
-                _id : data._id,
-                state : data.state.name,
-                act : data.act,
-                rule : data.rule,
-                category : data.category.name,
-                questiondesc : data.questiondesc,
-                form : data.form,
-                docattachment : data.docattachment,
-                compliancetype : data.compliancetype,
-                recurrence : data.recurrence,
-                duedate : data.duedate,
-                url : data.url,
-                executive : data.executiveId,
-                status : data.status,
-                created_at : data.created_at,
-                updated_at : data.updated_at
+                _id: data._id,
+                state: data.state.name,
+                act: data.act,
+                rule: data.rule,
+                category: data.category.name,
+                question: data.question,
+                form: data.form,
+                docattachment: data.docattachment,
+                compliancetype: data.compliancetype,
+                frequency: data.frequency,
+                description: data.description,
+                risk: data.risk,
+                duedate: data.duedate,
+                status: data.status,
+                created_at: data.created_at,
+                updated_at: data.updated_at
             }
         })
         response.status(201).json(newArr)
