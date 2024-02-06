@@ -156,8 +156,28 @@ export const complianceCreate = async (request, response, next) => {
 
 export const complianceGetting = async (request, response, next) => {
     try {
-        const compliance = await Compliance.find({}).populate("category")
-        response.status(201).json(compliance)
+        const compliance = await Compliance.find({}).populate("category", 'name').populate('state', 'name')
+        let newArr = compliance.map(data=>{
+            return {
+                _id : data._id,
+                state : data.state.name,
+                act : data.act,
+                rule : data.rule,
+                category : data.category.name,
+                questiondesc : data.questiondesc,
+                form : data.form,
+                docattachment : data.docattachment,
+                compliancetype : data.compliancetype,
+                recurrence : data.recurrence,
+                duedate : data.duedate,
+                url : data.url,
+                executive : data.executiveId,
+                status : data.status,
+                created_at : data.created_at,
+                updated_at : data.updated_at
+            }
+        })
+        response.status(201).json(newArr)
     }
     catch (error) {
         next(error)
