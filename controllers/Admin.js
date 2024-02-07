@@ -8,6 +8,7 @@ import Compliance from '../models/Compliances.js';
 import CheckList from '../models/CheckList.js';
 import Notification from '../models/Notification.js';
 import generateToken from '../utils/generateToken.js';
+import Checkdata from '../models/CheckData.js'
 import jwt from 'jsonwebtoken';
 import { createError } from '../utils/error.js';
 import { response } from 'express';
@@ -157,7 +158,7 @@ export const complianceCreate = async (request, response, next) => {
 
 export const complianceGetting = async (request, response, next) => {
     try {
-        const compliance = await Compliance.find({}).populate("category", 'name').populate('state', 'name')
+        const compliance = await Compliance.find({}).populate("category").populate('state')
         let newArr = compliance.map(data => {
             return {
                 _id: data._id,
@@ -640,6 +641,38 @@ export const addlist = async (request, response, next) => {
         const data = request.body
         const createList = await List.create(data)
         response.status(201).json(createList)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const checkData = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { name, age } = data
+        // console.log(data);
+        const newArrData = name.map((data, i)=>{
+            return {
+                _id : i+1,
+                value : data.value
+            }
+        })
+        console.log(newArrData);
+        const userData = {
+            name : newArrData, age
+        }
+        const newUserData = new Checkdata(userData)
+        await newUserData.save()
+        response.status(201).json(newUserData)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getCheckData = async (request, response, next) => {
+    try {
+        const userData = await Checkdata.find({})
+        response.status(200).json(userData)
     } catch (error) {
         next(error)
     }

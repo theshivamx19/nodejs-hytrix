@@ -2,7 +2,7 @@ import express from "express";
 import cors from 'cors'
 import { isAdmin,protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
-import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist} from '../controllers/Admin.js';
+import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData} from '../controllers/Admin.js';
 import { upload } from "../middlewares/multerConfig.js";
 // import multer from "multer";
 // import path from "path";
@@ -54,5 +54,8 @@ router.get('/notificationGetting', notificationGetting)
 // router.get('/executiveGetting', executiveGetting)
 
 router.post('/addlist', addlist)
+
+router.post('/checkData', checkData)
+router.get('/getCheckData', getCheckData)
 
 export default router;
