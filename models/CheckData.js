@@ -3,8 +3,12 @@ import mongoose from "mongoose";
 
 const checkDataSchema = new mongoose.Schema({
     name: [{
-        _id: Number,
-        value: String
+        _id: {
+            type : Number
+        },
+        value: {
+            type : String
+        }
     }],
     age: {
         type: String
