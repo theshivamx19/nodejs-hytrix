@@ -1,4 +1,5 @@
 import express from 'express'
+const router = express.Router()
 
 import { createApplicationDetail, appDetailGetting } from '../controllers/liseRegController/ApplicationDetails.js'
 import { createCompanyInfo, companyInfoGetting } from '../controllers/liseRegController/CompanyInfo.js'
@@ -9,7 +10,6 @@ import { createLicenseDetail, licenseDetailGetting } from '../controllers/liseRe
 import { createNameRate, nameRateGetting } from '../controllers/liseRegController/NameRate.js'
 import { upload } from '../middlewares/multerConfig.js'
 
-const router = express.Router()
 
 router.post('/createApplicationDetail', upload.single('acknowledge'), createApplicationDetail)
 router.get('/appDetailGetting', appDetailGetting)
