@@ -9,7 +9,6 @@ const applicationDetailSchema = new mongoose.Schema({
     },
     status : {
         type : Number,
-        required : true,
         default : 0,
         index : true
     },
