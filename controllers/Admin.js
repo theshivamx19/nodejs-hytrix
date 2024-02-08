@@ -187,6 +187,178 @@ export const complianceCreate = async (request, response, next) => {
     }
 }
 
+
+
+
+export const updateCompliancesById = async (request, response, next) => {
+    try {
+        const act = await Compliance.findOne({ act: request.body.act });
+        if (act) {
+            return response.send("409");
+        }
+        const data = request.body
+        //console.log(data);
+        // const documentFile = request.files.document[0];
+        // const imageFile = request.files.image[0];
+        // const url = request.protocol + '://' + request.get('host');
+        // const uploadsDirectory = './data/uploads/';
+        // const imageDirectory = 'comliance/images/';
+        // const documentDirectory = 'comliance/documents/';
+        const documentFile = request.files.docattachment ? request.files.docattachment[0] : null;
+        const imageFile = request.files.form ? request.files.form[0] : null;
+        const url = request.protocol + '://' + request.get('host');
+        let imageUrl, formattedImageFileName
+        let documentUrl, formattedDocumentFileName
+
+        if (imageFile) {
+            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
+        }
+        if (documentFile) {
+            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+        }
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the documents directory exists
+        fs.access(uploadsDirectory + documentDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
+            }
+        });
+
+
+        if (imageFile) {
+            if (imageFile.mimetype.includes('image')) {
+                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+            else if (imageFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + imageDirectory + formattedImageFileName, imageFile.buffer);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+        }
+        if (documentFile) {
+            if (documentFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
+                documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+            }
+        }
+        const newArrDataRules = (data.rule).split("\r\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        const newArrDataQuestion = (data.question).split("\r\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        const newArrDataDescription = (data.description).split("\r\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        // let comliancelist = {};
+        const comliancelist = {
+            state: data.state,
+            act: data.act,
+            rule: data.rule,
+            category: data.category,
+            question: data.question,
+            form: imageUrl,
+            docattachment: documentUrl,
+            compliancetype: data.compliancetype,
+            frequency: data.frequency,
+            risk: data.risk,
+            description: data.description,
+            duedate: data.duedate,
+            executiveId: data.executiveId,
+            status: data.status,
+        }
+        // if (imageFile) {
+        //     comliancelist = {
+        //         category: data.category,
+        //         state: data.state,
+        //         act: data.act,
+        //         rule: data.rule,
+        //         ruletype: newArrDataRules,
+        //         question: data.question,
+        //         questiontype: newArrDataQuestion,
+        //         description: data.description,
+        //         descriptiontype: newArrDataDescription,
+        //         executive: data.executive,
+        //         form: imageUrl,
+        //         compliancetype: data.compliancetype,
+        //         frequency: data.frequency,
+        //         risk: data.risk,
+        //         created_at: data.dates
+        //     }
+        // }
+        // else if (documentFile) {
+        //     comliancelist = {
+        //         category: data.category,
+        //         state: data.state,
+        //         act: data.act,
+        //         rule: data.rule,
+        //         ruletype: newArrDataRules,
+        //         question: data.question,
+        //         questiontype: newArrDataQuestion,
+        //         description: data.description,
+        //         descriptiontype: newArrDataDescription,
+        //         executive: data.executive,
+        //         docattachment: documentUrl,
+        //         compliancetype: data.compliancetype,
+        //         frequency: data.frequency,
+        //         risk: data.risk,
+        //         created_at: data.dates
+        //     }
+        // }
+        // else {
+        //     comliancelist = {
+        //         category: data.category,
+        //         state: data.state,
+        //         act: data.act,
+        //         rule: data.rule,
+        //         ruletype: newArrDataRules,
+        //         question: data.question,
+        //         questiontype: newArrDataQuestion,
+        //         description: data.description,
+        //         descriptiontype: newArrDataDescription,
+        //         executive: data.executive,
+        //         form: imageUrl,
+        //         docattachment: documentUrl,
+        //         compliancetype: data.compliancetype,
+        //         frequency: data.frequency,
+        //         risk: data.risk,
+        //         created_at: data.dates
+        //     }
+        // }
+        console.log(comliancelist);
+        // const newComliancelistt = new Compliance(comliancelist)
+        const updatedCompliance = await Compliance.updateOne({ _id: request.params.id }, comliancelist);
+        // await newComliancelistt.save()
+        response.status(201).json(updatedCompliance)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+
+
 export const complianceGetting = async (request, response, next) => {
     try {
         const compliance = await Compliance.find({}).populate("category").populate('state')
