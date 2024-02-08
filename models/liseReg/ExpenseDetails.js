@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const expenseDetailSchema = new mongoose.Schema({
     challlanFees : {
-        type : Number,
+        type : String,
         required : true,
         index : true,
         trim : true
@@ -35,18 +35,22 @@ const expenseDetailSchema = new mongoose.Schema({
     company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',
+        default : null
     },
     executive: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        default : null
     },
     state: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "State",
+        default : null
     },
     branch : {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Branch"
+        ref: "Branch",
+        default : null
     },
 }, {timestamps : true})
 

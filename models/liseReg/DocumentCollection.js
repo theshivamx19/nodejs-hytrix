@@ -9,14 +9,12 @@ const docCollectionSchema = new mongoose.Schema({
         default: Date.now,
         index: true
     },
-    docRegFollow: {
+    docReqFollow: {
         type: Date,
-        default: Date.now,
         index: true
     },
     docReviewDate: {
         type: Date,
-        default: Date.now,
         index: true
     },
     status : {
@@ -27,18 +25,22 @@ const docCollectionSchema = new mongoose.Schema({
     company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',
+        default : null
     },
     executive: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        default : null
     },
     state: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "State",
+        default : null
     },
     branch : {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Branch"
+        ref: "Branch",
+        default : null
     },
 
 }, { timestamps: true })

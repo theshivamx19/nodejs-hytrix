@@ -14,7 +14,7 @@ const applicationDetailSchema = new mongoose.Schema({
     },
     remark : {
         type : String,
-        trime : true,
+        trim : true,
         index : true,
         trim : true
     },
@@ -24,18 +24,22 @@ const applicationDetailSchema = new mongoose.Schema({
     company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',
+        default : null
     },
     executive: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        default : null
     },
     state: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "State",
+        default : null
     },
     branch : {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Branch"
+        ref: "Branch",
+        default : null
     }
     
 }, {timestamps : true})
