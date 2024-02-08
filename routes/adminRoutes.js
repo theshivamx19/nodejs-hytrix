@@ -26,7 +26,7 @@ router.put('/catEditById/:id',protectRoute,catEditById);
 // var upload = multer({ storage: storage })
 router.post('/complianceCreate',  upload.fields([{ name: 'form' }, { name: 'docattachment' }]), complianceCreate )
 router.get('/complianceGetting', complianceGetting )
-router.put('/updateCompliancesById', updateCompliancesById )
+router.put('/updateCompliancesById/:id', upload.fields([{ name: 'form' }, { name: 'docattachment' }]), updateCompliancesById )
 
 // --------- User Route ----------
 router.post('/userCreate', userCreate )

@@ -192,11 +192,12 @@ export const complianceCreate = async (request, response, next) => {
 
 export const updateCompliancesById = async (request, response, next) => {
     try {
-        const act = await Compliance.findOne({ act: request.body.act });
-        if (act) {
-            return response.send("409");
-        }
+        // const act = await Compliance.findOne({ act: request.body.act });
+        // if (act) {
+        //     return response.send("409");
+        // }
         const data = request.body
+        // const id = req.params.id
         //console.log(data);
         // const documentFile = request.files.document[0];
         // const imageFile = request.files.image[0];
@@ -204,6 +205,10 @@ export const updateCompliancesById = async (request, response, next) => {
         // const uploadsDirectory = './data/uploads/';
         // const imageDirectory = 'comliance/images/';
         // const documentDirectory = 'comliance/documents/';
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+        const documentDirectory = 'documents/';
+
         const documentFile = request.files.docattachment ? request.files.docattachment[0] : null;
         const imageFile = request.files.form ? request.files.form[0] : null;
         const url = request.protocol + '://' + request.get('host');
@@ -348,6 +353,7 @@ export const updateCompliancesById = async (request, response, next) => {
         // }
         console.log(comliancelist);
         // const newComliancelistt = new Compliance(comliancelist)
+        console.log(request.params.id);
         const updatedCompliance = await Compliance.updateOne({ _id: request.params.id }, comliancelist);
         // await newComliancelistt.save()
         response.status(201).json(updatedCompliance)
