@@ -110,10 +110,20 @@ export const catEditById = async (request, response, next) => {
 export const complianceCreate = async (request, response, next) => {
     try {
         const data = request.body
-        const docattachment = request.file;
+        const documentFile = request.files.docattachment ? request.files.docattachment[0] : null;
+        const imageFile = request.files.form ? request.files.form[0] : null;
         const url = request.protocol + '://' + request.get('host');
-        const formattedDocumentFileName = Date.now() + docattachment.originalname.split(' ').join('-');
+        let imageUrl, formattedImageFileName
+        let documentUrl, formattedDocumentFileName
+
+        if (imageFile) {
+            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
+        }
+        if (documentFile) {
+            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+        }
         const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
         const documentDirectory = 'documents/';
 
         fs.access(uploadsDirectory, (err) => {
@@ -121,23 +131,44 @@ export const complianceCreate = async (request, response, next) => {
                 fs.mkdirSync(uploadsDirectory, { recursive: true });
             }
         });
+
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
         // Ensure that the documents directory exists
         fs.access(uploadsDirectory + documentDirectory, (err) => {
             if (err) {
                 fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
             }
         });
-        fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, docattachment.buffer);
-        const documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
 
-
+        if (imageFile) {
+            if (imageFile.mimetype.includes('image')) {
+                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+            else if (imageFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + imageDirectory + formattedImageFileName, imageFile.buffer);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+        }
+        if (documentFile) {
+            if (documentFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
+                documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+            }
+        }
         const compliance = {
             state: data.state,
             act: data.act,
             rule: data.rule,
             category: data.category,
             question: data.question,
-            form: data.form,
+            form: imageUrl,
             docattachment: documentUrl,
             compliancetype: data.compliancetype,
             frequency: data.frequency,
@@ -651,15 +682,15 @@ export const checkData = async (request, response, next) => {
         const data = request.body
         const { name, age } = data
         // console.log(data);
-        const newArrData = name.map((data, i)=>{
+        const newArrData = name.map((data, i) => {
             return {
-                _id : i+1,
-                value : data.value
+                _id: i + 1,
+                value: data.value
             }
         })
         console.log(newArrData);
         const userData = {
-            name : newArrData, age
+            name: newArrData, age
         }
         const newUserData = new Checkdata(userData)
         await newUserData.save()

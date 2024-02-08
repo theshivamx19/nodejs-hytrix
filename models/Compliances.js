@@ -24,14 +24,12 @@ const complianceschema = new mongoose.Schema({
         index:true
     },
     form: {                     ////Indicate the form or format associated with the compliance entry if applicable
-        type: String,
-        trim: true,
-        index:true
+        type: Object,
+        default : null
     },
     docattachment: {
         type: Object,
-        required: true,
-        index:true
+        default : null
     },    
     compliancetype: {       /////legal, environmental, or internal policy compliance combobox
         type: String,

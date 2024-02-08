@@ -43,7 +43,6 @@ export const createExpenseDetail = async (request, response, next) => {
 export const expenseDetailGetting = async (request, response, next) => {
     try {
         const expenses = await Expensedetails.find({})
-        
         response.status(201).json(expenses)
     }
     catch (error) {

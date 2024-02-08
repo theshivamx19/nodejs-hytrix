@@ -50,14 +50,13 @@ export const createElibrary = async (request, response, next) => {
 // }
 
 
-export const elibraryGetting = async (request, response, next) => {
+export const elibraryGetting = (request, res, next) => {
     try {
-        const elibraryData = await Elibrary.find({}).then(response => response).then(data => {
-            data.map(item => {
-                return response.json(item)
+        Elibrary.find({}).then(response => {
+            response.map(data => {
+                console.log(data.label);
             })
         })
-        // respone.status(200).json(elibraryData)
     } catch (error) {
         next(error)
     }
