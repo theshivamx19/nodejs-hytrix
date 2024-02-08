@@ -8,7 +8,7 @@ export const createLicenseDetail = async (request, response, next) => {
         const data = request.body
         const licenseUpload = request.file;
         console.log(data, licenseUpload);
-        const { licenseNumber, dateOfIssue, renewalDate, expireDate, company, executive, state, branch } = data
+        const { licenseNumber, dateOfIssue, renewalDate, expireDate, status, company, executive, state, branch } = data
         
         const url = request.protocol + '://' + request.get('host');
         const formattedImageFileName = Date.now() + licenseUpload.originalname.split(' ').join('-');
@@ -32,7 +32,7 @@ export const createLicenseDetail = async (request, response, next) => {
         await sharp(licenseUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
         const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
         const licenseDetail = {
-            licenseNumber, dateOfIssue, renewalDate, expireDate, licenseUpload : imageUrl, company, executive, state, branch
+            licenseNumber, dateOfIssue, renewalDate, expireDate, licenseUpload : imageUrl, status, company, executive, state, branch
         }
         const newLicenseDetail = new LicenseDetails(licenseDetail)
         await newLicenseDetail.save()

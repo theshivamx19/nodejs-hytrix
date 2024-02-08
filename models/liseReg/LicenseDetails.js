@@ -26,6 +26,12 @@ const licenseDetailSchema = new mongoose.Schema({
     licenseUpload : {
         type : Object
     },
+    status : {
+        type : Number,
+        required : true,
+        default : 0,
+        index : true
+    },
     company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',

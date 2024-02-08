@@ -19,6 +19,12 @@ const docCollectionSchema = new mongoose.Schema({
         default: Date.now,
         index: true
     },
+    status : {
+        type : Number,
+        required : true,
+        default : 0,
+        index : true
+    },
     company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',

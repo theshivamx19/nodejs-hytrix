@@ -5,7 +5,7 @@ import sharp from 'sharp';
 export const createExpenseDetail = async (request, response, next) => {
     try {
         const data = request.body
-        const { challlanFees, challanNumber, challanDate, directExpenses, company, executive, state, branch} = data
+        const { challlanFees, challanNumber, challanDate, directExpenses, status, company, executive, state, branch} = data
         const challanUpload = request.file;
         
         const url = request.protocol + '://' + request.get('host');
@@ -30,7 +30,7 @@ export const createExpenseDetail = async (request, response, next) => {
         await sharp(challanUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
         const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
         const expenseDetail = {
-            challlanFees, challanNumber, challanDate, challanUpload : imageUrl, directExpenses, company, executive, state, branch
+            challlanFees, challanNumber, challanDate, challanUpload : imageUrl, directExpenses, status, company, executive, state, branch
         }
         const newExpenseDetail = new Expensedetails(expenseDetail)
         await newExpenseDetail.save()

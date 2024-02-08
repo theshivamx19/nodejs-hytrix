@@ -7,6 +7,12 @@ const companyInfoSchema = new mongoose.Schema({
         index : true,
         trim : true
     },
+    status : {
+        type : Number,
+        required : true,
+        default : 0,
+        index : true
+    },
     company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',
@@ -22,7 +28,7 @@ const companyInfoSchema = new mongoose.Schema({
     branch : {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Branch"
-    }
+    },
 }, {timestamps : true})
 
 const Companyinfo = mongoose.model('Companyinfo', companyInfoSchema)
