@@ -10,10 +10,10 @@ export const createDocCollection = async (request, response, next) => {
 
         const { docReqDate, docRegFollow, docReviewDate, status, company, executive, state, branch } = data
         const documents = request.file;
-
+        
         const url = request.protocol + '://' + request.get('host');
         const formattedImageFileName = Date.now() + documents.originalname.split(' ').join('-');
-
+        
         const uploadsDirectory = './data/uploads/';
         const imageDirectory = 'images/';
 
@@ -33,7 +33,7 @@ export const createDocCollection = async (request, response, next) => {
         await sharp(documents.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
         const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
         const docCollection = {
-            documents: imageUrl, docReqDate, docReqFollow, docReviewDate, status, company, executive, state, branch
+            documents : imageUrl, docReqDate, docRegFollow, docReviewDate, status, company, executive, state, branch
         }
         const newDocCollection = new Documentcollection(docCollection)
         await newDocCollection.save()
@@ -46,24 +46,7 @@ export const createDocCollection = async (request, response, next) => {
 export const docCollectionGetting = async (request, response, next) => {
     try {
         const documents = await Documentcollection.find({})
-            .populate(company)
-            .populate(executive)
-            .populate(state)
-            .populate(branch)
-        const newArr = company.map(data => {
-            return {
-                documents: data.documents,
-                docReqDate: data.docReqDate,
-                docReqFollow: data.docReqFollow,
-                docReviewDate: data.docReviewDate,
-                status: data.status,
-                company: data.company.name,
-                executive: data.executive.name,
-                state: data.state.name,
-                branch: data.branch.name,
-            }
-        })
-        response.status(201).json(newArr)
+        response.status(201).json(documents)
     }
     catch (error) {
         next(error)

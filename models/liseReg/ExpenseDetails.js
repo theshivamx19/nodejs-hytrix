@@ -16,7 +16,6 @@ const expenseDetailSchema = new mongoose.Schema({
     },
     challanDate : {
         type : Date,
-        default : true,
         index : true
     },
     challanUpload : {

@@ -5,12 +5,12 @@ import sharp from 'sharp';
 export const createExpenseDetail = async (request, response, next) => {
     try {
         const data = request.body
-        const { challlanFees, challanNumber, challanDate, directExpenses, status, company, executive, state, branch } = data
+        const { challlanFees, challanNumber, challanDate, directExpenses, status, company, executive, state, branch} = data
         const challanUpload = request.file;
-
+        
         const url = request.protocol + '://' + request.get('host');
         const formattedImageFileName = Date.now() + challanUpload.originalname.split(' ').join('-');
-
+        
         const uploadsDirectory = './data/uploads/';
         const imageDirectory = 'images/';
 
@@ -30,7 +30,7 @@ export const createExpenseDetail = async (request, response, next) => {
         await sharp(challanUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
         const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
         const expenseDetail = {
-            challlanFees, challanNumber, challanDate, challanUpload: imageUrl, directExpenses, status, company, executive, state, branch
+            challlanFees, challanNumber, challanDate, challanUpload : imageUrl, directExpenses, status, company, executive, state, branch
         }
         const newExpenseDetail = new Expensedetails(expenseDetail)
         await newExpenseDetail.save()
@@ -43,24 +43,8 @@ export const createExpenseDetail = async (request, response, next) => {
 export const expenseDetailGetting = async (request, response, next) => {
     try {
         const expenses = await Expensedetails.find({})
-            .populate(company)
-            .populate(executive)
-            .populate(state)
-            .populate(branch)
-        const newArr = company.map(data => {
-            return {
-                challlanFees: data.challlanFees,
-                challanNumber: data.challanNumber,
-                challanUpload: data.challanUpload,
-                directExpenses: data.directExpenses,
-                status: data.status,
-                company: data.company.name,
-                executive: data.executive.name,
-                state: data.state.name,
-                branch: data.branch.name,
-            }
-        })
-        response.status(201).json(newArr)
+        
+        response.status(201).json(expenses)
     }
     catch (error) {
         next(error)
