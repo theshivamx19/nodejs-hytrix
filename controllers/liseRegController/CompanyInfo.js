@@ -18,7 +18,21 @@ export const createCompanyInfo = async (request, response, next) => {
 export const companyInfoGetting = async (request, response, next) => {
     try {
         const company = await Companyinfo.find({})
-        response.status(201).json(company)
+            .populate(company)
+            .populate(executive)
+            .populate(state)
+            .populate(branch)
+        const newArr = company.map(data=>{
+            return {
+                branchName : data.branchName,
+                status : data.status,
+                company : data.company.name,
+                executive : data.executive.name,
+                state : data.state.name,
+                branch : data.branch.name,
+            }
+        })
+        response.status(201).json(newArr)
     }
     catch (error) {
         next(error)

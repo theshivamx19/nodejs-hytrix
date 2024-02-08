@@ -16,7 +16,6 @@ const applicationDetailSchema = new mongoose.Schema({
         type : String,
         trim : true,
         index : true,
-        trim : true
     },
     acknowledge : {
         type : Object

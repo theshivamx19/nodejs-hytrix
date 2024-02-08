@@ -44,7 +44,24 @@ export const createApplicationDetail = async (request, response, next) => {
 export const appDetailGetting = async (request, response, next) => {
     try {
         const applications = await Applicationdetails.find({})
-        response.status(201).json(applications)
+            .populate(company)
+            .populate(executive)
+            .populate(state)
+            .populate(branch)
+
+        const newArr = applications.map(data=>{
+            return {
+                appliedDate : data.appliedDate,
+                status : data.status,
+                remark : data.remark,
+                acknowledge : data.acknowledge,
+                company : data.company.name,
+                executive : data.executive.name,
+                state : data.state.name,
+                branch : data.branch.name,
+            }
+        })
+        response.status(201).json(newArr)
     }
     catch (error) {
         next(error)

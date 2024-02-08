@@ -10,17 +10,14 @@ const licenseDetailSchema = new mongoose.Schema({
     },
     dateOfIssue : {
         type : Date,
-        default : Date.now,
         index : true
     },
     renewalDate : {
         type : Date,
-        default : Date.now,
         index : true
     },
     expireDate : {
         type : Date,
-        default : Date.now,
         index : true
     },
     licenseUpload : {
