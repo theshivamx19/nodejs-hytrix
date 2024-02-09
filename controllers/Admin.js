@@ -16,6 +16,7 @@ import fs from 'node:fs'
 import sharp from 'sharp';
 import { List } from '../models/List.js';
 import { lookup } from 'node:dns';
+import mongoose from 'mongoose';
 // import Executive from '../models/Executive.js';
 
 
@@ -421,15 +422,21 @@ export const userCreate = async (request, response, next) => {
 
 export const complianceFilter = async (request, response, next) => {
     try {
+        // const findAllComp = await Compliance.find({}).populate('state')
+        // console.log(findAllComp);
+        
         const stateFilter = request.query.state;
         const dateFilter = request.query.created_at;
 
+        // findAllComp.filter(data=>{
+            
+        // })
         console.log(request.query);
         const matchStage = {};
 
         if (stateFilter !== undefined && dateFilter !== undefined) {
             // Both state and createdAt are provided
-            matchStage['state'] = stateFilter;
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
 
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
@@ -440,7 +447,7 @@ export const complianceFilter = async (request, response, next) => {
             };
         } else if (stateFilter !== undefined) {
             // Only state is provided
-            matchStage['state'] = stateFilter;
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());;
         } else if (dateFilter !== undefined) {
             // Only createdAt is provided
             const dateObject = new Date(dateFilter);
@@ -452,7 +459,7 @@ export const complianceFilter = async (request, response, next) => {
             };
         }
 
-        console.log(matchStage);
+        // console.log(matchStage);
         const filter = await Compliance.aggregate([
             {
                 $match: matchStage,
