@@ -15,6 +15,7 @@ import { response } from 'express';
 import fs from 'node:fs'
 import sharp from 'sharp';
 import { List } from '../models/List.js';
+import { lookup } from 'node:dns';
 // import Executive from '../models/Executive.js';
 
 
@@ -421,7 +422,7 @@ export const userCreate = async (request, response, next) => {
 export const complianceFilter = async (request, response, next) => {
     try {
         const stateFilter = request.query.state;
-        const dateFilter = request.query.createdAt;
+        const dateFilter = request.query.created_at;
 
         console.log(request.query);
         const matchStage = {};
@@ -433,7 +434,7 @@ export const complianceFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['createdAt'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -445,7 +446,7 @@ export const complianceFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['createdAt'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -457,8 +458,8 @@ export const complianceFilter = async (request, response, next) => {
             },
             {
                 $lookup: {
-                    from: "categories",
-                    localField: "category",
+                    from: "states",
+                    localField: "state",
                     foreignField: "_id",
                     as: "dataresult",
                 },
