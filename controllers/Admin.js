@@ -418,6 +418,62 @@ export const userCreate = async (request, response, next) => {
     }
 }
 
+export const complianceFilter = async (request, response, next) => {
+    try {
+        const stateFilter = request.query.state;
+        const dateFilter = request.query.createdAt;
+
+        console.log(request.query);
+        const matchStage = {};
+
+        if (stateFilter !== undefined && dateFilter !== undefined) {
+            // Both state and createdAt are provided
+            matchStage['state'] = stateFilter;
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['createdAt'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        } else if (stateFilter !== undefined) {
+            // Only state is provided
+            matchStage['state'] = stateFilter;
+        } else if (dateFilter !== undefined) {
+            // Only createdAt is provided
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['createdAt'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+
+        const filter = await Compliance.aggregate([
+            {
+                $match: matchStage,
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "dataresult",
+                },
+            },
+            {
+                $unwind: "$dataresult",
+            },
+        ]);
+
+        response.status(201).json(filter);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const userGetting = async (request, response, next) => {
     try {
         const user = await User.find({})

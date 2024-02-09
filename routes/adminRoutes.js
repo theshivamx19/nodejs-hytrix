@@ -2,7 +2,7 @@ import express from "express";
 import cors from 'cors'
 import { isAdmin,protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
-import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById} from '../controllers/Admin.js';
+import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById, complianceFilter} from '../controllers/Admin.js';
 import {createElibrary, elibraryGetting} from '../controllers/Elibrary.js'
 import { upload } from "../middlewares/multerConfig.js";
 // import multer from "multer";
@@ -25,6 +25,7 @@ router.put('/catEditById/:id',protectRoute,catEditById);
   
 // var upload = multer({ storage: storage })
 router.post('/complianceCreate',  upload.fields([{ name: 'form' }, { name: 'docattachment' }]), complianceCreate )
+router.get('/complianceFilter', complianceFilter )
 router.get('/complianceGetting', complianceGetting )
 router.put('/updateCompliancesById/:id', upload.fields([{ name: 'form' }, { name: 'docattachment' }]), updateCompliancesById )
 

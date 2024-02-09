@@ -16,12 +16,10 @@ const complianceschema = new mongoose.Schema({
     category: {                     ////Categorize the compliance entry based on relevant criteria, facilitating easy sorting and reporting
         type: mongoose.Schema.Types.ObjectId,
         ref : "Category",
-        index:true
     },
     state: {                     ////Categorize the compliance entry based on relevant criteria, facilitating easy sorting and reporting
         type: mongoose.Schema.Types.ObjectId,
         ref : "State",
-        index:true
     },
     form: {                     ////Indicate the form or format associated with the compliance entry if applicable
         type: Object,
