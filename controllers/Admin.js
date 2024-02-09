@@ -452,21 +452,57 @@ export const complianceFilter = async (request, response, next) => {
             };
         }
 
+        console.log(matchStage);
         const filter = await Compliance.aggregate([
             {
                 $match: matchStage,
             },
             {
                 $lookup: {
-                    from: "states",
-                    localField: "state",
+                    from: "categories",
+                    localField: "category",
                     foreignField: "_id",
-                    as: "dataresult",
+                    as: "categoryData",
                 },
             },
             {
-                $unwind: "$dataresult",
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
             },
+            {
+                $project: {
+                    _id: 1,
+                    act : 1,
+                    rule : 1,
+                    form : 1,
+                    docattachment : 1,
+                    compliancetype : 1,
+                    question : 1,
+                    description : 1,
+                    frequency : 1,
+                    risk : 1,
+                    duedate : 1,
+                    status : 1,
+                    created_at: 1,
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    }
+            }
+            // {
+            //     $lookup: {
+            //         from: "states",
+            //         localField: "state",
+            //         foreignField: "_id",
+            //         as: "dataresult",
+            //     },
+            // },
+            // {
+            //     $unwind: "$dataresult",
+            // },
         ]);
 
         response.status(201).json(filter);
