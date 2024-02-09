@@ -397,41 +397,20 @@ export const complianceGetting = async (request, response, next) => {
     }
 }
 
-// ----------------------User Creation ------------------>
-
-export const userCreate = async (request, response, next) => {
-    try {
-        const data = request.body
-        const user = {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            role: data.role,
-            password: data.password,
-        }
-        const hashedPass = await bcrypt.hash(data.password, 10)
-        user.password = hashedPass;
-        const newUser = new User(user)
-        await newUser.save()
-        response.status(201).json(newUser)
-    }
-    catch (error) {
-        next(error)
-    }
-}
+// ---------------- Compliance Create Filter -----------------------------
 
 export const complianceFilter = async (request, response, next) => {
     try {
         // const findAllComp = await Compliance.find({}).populate('state')
         // console.log(findAllComp);
-        
-        const stateFilter = request.query.state;
-        const dateFilter = request.query.created_at;
+
+        const stateFilter = request.body.state;
+        const dateFilter = request.body.created_at;
 
         // findAllComp.filter(data=>{
-            
+
         // })
-        console.log(request.query);
+        // console.log(request.query);
         const matchStage = {};
 
         if (stateFilter !== undefined && dateFilter !== undefined) {
@@ -483,21 +462,21 @@ export const complianceFilter = async (request, response, next) => {
             {
                 $project: {
                     _id: 1,
-                    act : 1,
-                    rule : 1,
-                    form : 1,
-                    docattachment : 1,
-                    compliancetype : 1,
-                    question : 1,
-                    description : 1,
-                    frequency : 1,
-                    risk : 1,
-                    duedate : 1,
-                    status : 1,
+                    act: 1,
+                    rule: 1,
+                    form: 1,
+                    docattachment: 1,
+                    compliancetype: 1,
+                    question: 1,
+                    description: 1,
+                    frequency: 1,
+                    risk: 1,
+                    duedate: 1,
+                    status: 1,
                     created_at: 1,
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
-                    }
+                }
             }
             // {
             //     $lookup: {
@@ -517,6 +496,276 @@ export const complianceFilter = async (request, response, next) => {
         next(error);
     }
 };
+
+// ---------------------------Compliance Approve Filter ----------------------------
+
+export const complianceApproveFilter = async (request, response, next) => {
+    try {
+        // const findAllComp = await Compliance.find({}).populate('state')
+        // console.log(findAllComp);
+
+        const stateFilter = request.body.state;
+        const executiveFilter = request.body.executive;
+        const dateFilter = request.body.created_at;
+
+        // findAllComp.filter(data=>{
+
+        // })
+        // console.log(request.query);
+        const matchStage = {};
+
+        if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined) {
+            // Both state and createdAt are provided
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+            matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+        } else if (stateFilter !== undefined) {
+            // Only state is provided
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());;
+        } else if (dateFilter !== undefined) {
+            // Only createdAt is provided
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (executiveFilter !== undefined) {
+            matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+        }
+
+        // console.log(matchStage);
+        const filter = await Compliance.aggregate([
+            {
+                $match: matchStage,
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    act: 1,
+                    rule: 1,
+                    form: 1,
+                    docattachment: 1,
+                    // compliancetype : 1,
+                    // question : 1,
+                    // description : 1,
+                    // frequency : 1,
+                    // risk : 1,
+                    // duedate : 1,
+                    // status : 1,
+                    created_at: 1,
+                    executive: { $arrayElemAt: ["$executiveData.name", 0] },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                }
+            }
+            // {
+            //     $lookup: {
+            //         from: "states",
+            //         localField: "state",
+            //         foreignField: "_id",
+            //         as: "dataresult",
+            //     },
+            // },
+            // {
+            //     $unwind: "$dataresult",
+            // },
+        ]);
+
+        response.status(201).json(filter);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// ---------------------------Compliance Rejectd Filter ----------------------------
+
+export const complianceRejectedFilter = async (request, response, next) => {
+    try {
+        // const findAllComp = await Compliance.find({}).populate('state')
+        // console.log(findAllComp);
+
+        const stateFilter = request.body.state;
+        const executiveFilter = request.body.executive;
+        const updatedFilter = request.body.updated_at;
+        const rejectedFilter = request.body.rejected_at;
+
+        // findAllComp.filter(data=>{
+
+        // })
+        // console.log(request.query);
+        const matchStage = {};
+
+        if (stateFilter !== undefined && executiveFilter !== undefined && updatedFilter !== undefined && rejectedFilter !== undefined) {
+            // Both state and createdAt are provided
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+
+            const updatedDateObject = new Date(updatedFilter);
+            const updatedNextDay = new Date(updatedDateObject);
+            updatedNextDay.setDate(dateObject.getDate() + 1);
+            matchStage['updated_at'] = {
+                $gte: updatedDateObject,
+                $lt: updatedNextDay
+            };
+            const dateObject = new Date(rejectedFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['rejected_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+            matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+        } else if (stateFilter !== undefined) {
+            // Only state is provided
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());;
+        } else if (updatedFilter !== undefined) {
+            // Only createdAt is provided
+            const updatedDateObject = new Date(updatedFilter);
+            const updatedNextDay = new Date(updatedDateObject);
+            updatedNextDay.setDate(dateObject.getDate() + 1);
+            matchStage['updated_at'] = {
+                $gte: updatedDateObject,
+                $lt: updatedNextDay
+            };
+        } else if (rejectedFilter !== undefined) {
+            // Only createdAt is provided
+            const dateObject = new Date(rejectedFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['rejected_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (executiveFilter !== undefined) {
+            matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+        }
+
+        // console.log(matchStage);
+        const filter = await Compliance.aggregate([
+            {
+                $match: matchStage,
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    act: 1,
+                    rule: 1,
+                    form: 1,
+                    docattachment: 1,
+                    updated_at: 1,
+                    rejected_at: 1,
+                    // compliancetype : 1,
+                    // question : 1,
+                    // description : 1,
+                    // frequency : 1,
+                    // risk : 1,
+                    // duedate : 1,
+                    // status : 1,
+                    created_at: 1,
+                    executive: { $arrayElemAt: ["$executiveData.name", 0] },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                }
+            }
+            // {
+            //     $lookup: {
+            //         from: "states",
+            //         localField: "state",
+            //         foreignField: "_id",
+            //         as: "dataresult",
+            //     },
+            // },
+            // {
+            //     $unwind: "$dataresult",
+            // },
+        ]);
+
+        response.status(201).json(filter);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// ----------------------User Creation ------------------>
+
+export const userCreate = async (request, response, next) => {
+    try {
+        const data = request.body
+        const user = {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            role: data.role,
+            password: data.password,
+        }
+        const hashedPass = await bcrypt.hash(data.password, 10)
+        user.password = hashedPass;
+        const newUser = new User(user)
+        await newUser.save()
+        response.status(201).json(newUser)
+    }
+    catch (error) {
+        next(error)
+    }
+}
 
 export const userGetting = async (request, response, next) => {
     try {

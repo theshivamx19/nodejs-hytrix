@@ -21,6 +21,10 @@ const complianceschema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref : "State",
     },
+    executive: {                     ////Categorize the compliance entry based on relevant criteria, facilitating easy sorting and reporting
+        type: mongoose.Schema.Types.ObjectId,
+        ref : "User",
+    },
     form: {                     ////Indicate the form or format associated with the compliance entry if applicable
         type: Object,
         default : null
@@ -68,13 +72,21 @@ const complianceschema = new mongoose.Schema({
         type: Number, 
         index: true, 
         default: 0
-    },  
+    }, 
+    rejected_at : {
+        type: Date, 
+        index: true 
+    },
     created_at : { 
         type: Date, 
         default: Date.now, 
         index: true 
     },
-    
+    updated_at : {
+        type: Date, 
+        default: Date.now, 
+        index: true 
+    }
 })
 const Compliance = mongoose.model("Compliance", complianceschema)
 
