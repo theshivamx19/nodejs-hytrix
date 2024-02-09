@@ -416,10 +416,9 @@ export const complianceFilter = async (request, response, next) => {
         if (stateFilter !== undefined && dateFilter !== undefined) {
             // Both state and createdAt are provided
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-
-            const dateObject = new Date(dateFilter);
-            const nextDay = new Date(dateObject);
-            nextDay.setDate(dateObject.getDate() + 1);
+            const dateObject = new Date(dateFilter); // taking user data 2024-05-20 and converting to mongodb iso date
+            const nextDay = new Date(dateObject); // now dateobject have date as iso date and saving again it to nexday
+            nextDay.setDate(dateObject.getDate() + 1); // then extracting date and adding 1 to it bcz $lt used
             matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
