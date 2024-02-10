@@ -177,7 +177,7 @@ export const complianceCreate = async (request, response, next) => {
             risk: data.risk,
             description: data.description,
             duedate: data.duedate,
-            executiveId: data.executiveId,
+            executive: data.executive,
             status: data.status,
         }
         const newCompliance = new Compliance(compliance);
@@ -403,9 +403,10 @@ export const complianceFilter = async (request, response, next) => {
     try {
         // const findAllComp = await Compliance.find({}).populate('state')
         // console.log(findAllComp);
-
+        
         const stateFilter = request.body.state;
         const dateFilter = request.body.created_at;
+        console.log(request.body);
 
         // findAllComp.filter(data=>{
 
@@ -435,7 +436,11 @@ export const complianceFilter = async (request, response, next) => {
                 $gte: dateObject,
                 $lt: nextDay
             };
+            // console.log('date');
         }
+        // if(!stateFilter){
+            
+        // }
 
         // console.log(matchStage);
         const filter = await Compliance.aggregate([
@@ -490,7 +495,7 @@ export const complianceFilter = async (request, response, next) => {
             // },
         ]);
 
-        response.status(201).json(filter);
+        response.status(201).json({message : "Total = "+filter.length , data : filter});
     } catch (error) {
         next(error);
     }
@@ -672,7 +677,8 @@ export const complianceRejectedFilter = async (request, response, next) => {
         else if (executiveFilter !== undefined) {
             matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
         }
-
+        matchStage['status'] = {$eq : 2}
+        
         // console.log(matchStage);
         const filter = await Compliance.aggregate([
             {
@@ -717,7 +723,7 @@ export const complianceRejectedFilter = async (request, response, next) => {
                     // frequency : 1,
                     // risk : 1,
                     // duedate : 1,
-                    // status : 1,
+                    status : 1,
                     created_at: 1,
                     executive: { $arrayElemAt: ["$executiveData.name", 0] },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
@@ -737,7 +743,7 @@ export const complianceRejectedFilter = async (request, response, next) => {
             // },
         ]);
 
-        response.status(201).json(filter);
+        response.status(201).json({message : "Total :"+ filter.length, data : filter});
     } catch (error) {
         next(error);
     }
