@@ -2,8 +2,8 @@ import express from "express";
 import cors from 'cors'
 import { isAdmin,protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
-import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById, complianceFilter, complianceRejectedFilter} from '../controllers/Admin.js';
-import {createElibrary, elibraryGetting} from '../controllers/Elibrary.js'
+import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById, complianceFilter, complianceRejectedFilter, checkListRejectedFilter, checkListCreateFilter, checkListApproveFilter, checkListAllFilter, createElibrary, elibraryGetting} from '../controllers/Admin.js';
+
 import { upload } from "../middlewares/multerConfig.js";
 // import multer from "multer";
 // import path from "path";
@@ -43,6 +43,10 @@ router.get('/checkListGetting', checkListGetting)
 // router.get('/checkListFilter/:state/:createdAt', checkListFilter)
 router.get('/checkListFilter', checkListFilter)
 router.get('/checkListFind', checkListFind)
+router.post('/checkListAllFilter', checkListAllFilter)
+router.post('/checkListApproveFilter', checkListApproveFilter)
+router.post('/checkListCreateFilter', checkListCreateFilter)
+router.post('/checkListRejectedFilter', checkListRejectedFilter)
 
 // --------------- Branch Route --------------
 router.post('/createBranch', createBranch)

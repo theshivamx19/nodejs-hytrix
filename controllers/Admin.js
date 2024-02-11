@@ -9,6 +9,8 @@ import CheckList from '../models/CheckList.js';
 import Notification from '../models/Notification.js';
 import generateToken from '../utils/generateToken.js';
 import Checkdata from '../models/CheckData.js'
+import Elibrary from '../models/Elibrary.js'
+import Audit from '../models/Audit.js';
 import jwt from 'jsonwebtoken';
 import { createError } from '../utils/error.js';
 import { response } from 'express';
@@ -397,7 +399,7 @@ export const complianceGetting = async (request, response, next) => {
     }
 }
 
-// ---------------- Compliance Create Filter -----------------------------
+// ----------------------------- Compliance Create Filter ------------------------------------
 
 export const complianceFilter = async (request, response, next) => {
     try {
@@ -591,7 +593,13 @@ export const complianceApproveFilter = async (request, response, next) => {
                     // duedate : 1,
                     // status : 1,
                     created_at: 1,
-                    executive: { $arrayElemAt: ["$executiveData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
                 }
@@ -615,7 +623,7 @@ export const complianceApproveFilter = async (request, response, next) => {
     }
 };
 
-// ---------------------------Compliance Rejectd Filter ----------------------------
+// -------------------------------Compliance Rejectd Filter -------------------------------
 
 export const complianceRejectedFilter = async (request, response, next) => {
     try {
@@ -725,7 +733,13 @@ export const complianceRejectedFilter = async (request, response, next) => {
                     // duedate : 1,
                     status: 1,
                     created_at: 1,
-                    executive: { $arrayElemAt: ["$executiveData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
                 }
@@ -749,7 +763,7 @@ export const complianceRejectedFilter = async (request, response, next) => {
     }
 };
 
-// ----------------------User Creation ------------------>
+// -------------------------------User Creation ----------------------------->
 
 export const userCreate = async (request, response, next) => {
     try {
@@ -783,7 +797,7 @@ export const userGetting = async (request, response, next) => {
 }
 
 
-// -----------------Create State ----------------
+// ------------------------------------Create State -------------------------------
 
 export const stateCreate = async (request, response, next) => {
     try {
@@ -797,7 +811,7 @@ export const stateCreate = async (request, response, next) => {
     }
 }
 
-// ---------------Create CheckList-------------------
+// --------------------------------Create CheckList----------------------------------
 
 export const checkListCreate = async (request, response, next) => {
     try {
@@ -877,7 +891,7 @@ export const checkListGetting = async (request, response, next) => {
     }
 }
 
-// ------------------ Checklist All Filter---------------------------
+// ------------------------------- Checklist All Filter-------------------------------------
 export const checkListAllFilter = async (request, response, next) => {
     try {
         // const findAllComp = await Compliance.find({}).populate('state')
@@ -897,7 +911,7 @@ export const checkListAllFilter = async (request, response, next) => {
         if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && companyFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "" && companyFilter !== "") {
             // Both state and createdAt are provided
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
 
             const dateObject = new Date(dateFilter);
@@ -912,7 +926,7 @@ export const checkListAllFilter = async (request, response, next) => {
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());;
         }
         else if (executiveFilter !== undefined && executiveFilter !== "") {
-            matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
         }
         else if (companyFilter !== undefined && companyFilter !== "") {
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
@@ -967,6 +981,14 @@ export const checkListAllFilter = async (request, response, next) => {
                 },
             },
             {
+                $lookup: {
+                    from: "branches",
+                    localField: "branchname",
+                    foreignField: "_id",
+                    as: "branchData",
+                },
+            },
+            {
                 $project: {
                     _id: 1,
                     company: 1,
@@ -976,10 +998,18 @@ export const checkListAllFilter = async (request, response, next) => {
                     // duedate : 1,
                     // status : 1,
                     created_at: 1,
-                    executive: { $arrayElemAt: ["$executiveData.name", 0] },
+                    // executive : "$executiveData.firstName"+"",
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     // category: { $arrayElemAt: ["$categoryData.name", 0] },
                     company: { $arrayElemAt: ["$companyData.name", 0] },
+                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
                 }
             }
         ]);
@@ -990,7 +1020,7 @@ export const checkListAllFilter = async (request, response, next) => {
     }
 };
 
-// ------------------ Checklist Approve Filter---------------------------
+// ------------------------------- Checklist Approve Filter----------------------------------
 export const checkListApproveFilter = async (request, response, next) => {
     try {
         // const findAllComp = await Compliance.find({}).populate('state')
@@ -1102,7 +1132,13 @@ export const checkListApproveFilter = async (request, response, next) => {
                     // duedate : 1,
                     // status : 1,
                     created_at: 1,
-                    executive: { $arrayElemAt: ["$executiveData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     // category: { $arrayElemAt: ["$categoryData.name", 0] },
                     company: { $arrayElemAt: ["$companyData.name", 0] },
@@ -1117,7 +1153,7 @@ export const checkListApproveFilter = async (request, response, next) => {
     }
 };
 
-// ------------------ Checklist Create Filter---------------------------
+// ------------------------------------- Checklist Create Filter-----------------------------------
 export const checkListCreateFilter = async (request, response, next) => {
     try {
         // const findAllComp = await Compliance.find({}).populate('state')
@@ -1229,7 +1265,13 @@ export const checkListCreateFilter = async (request, response, next) => {
                     // duedate : 1,
                     // status : 1,
                     created_at: 1,
-                    // executive: { $arrayElemAt: ["$executiveData.name", 0] },
+                    // executive: {
+                    //     $concat: [
+                    //         { $arrayElemAt: ["$executiveData.firstName", 0] },
+                    //         " ",
+                    //         { $arrayElemAt: ["$executiveData.lastName", 0] }
+                    //     ]
+                    // },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     // category: { $arrayElemAt: ["$categoryData.name", 0] },
                     company: { $arrayElemAt: ["$companyData.name", 0] },
@@ -1244,7 +1286,7 @@ export const checkListCreateFilter = async (request, response, next) => {
     }
 };
 
-// ------------------ Checklist Rejected Filter---------------------------
+// --------------------------------- Checklist Rejected Filter-----------------------------------------
 export const checkListRejectedFilter = async (request, response, next) => {
     try {
         // const findAllComp = await Compliance.find({}).populate('state')
@@ -1356,7 +1398,13 @@ export const checkListRejectedFilter = async (request, response, next) => {
                     // duedate : 1,
                     // status : 1,
                     created_at: 1,
-                    executive: { $arrayElemAt: ["$executiveData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     // category: { $arrayElemAt: ["$categoryData.name", 0] },
                     company: { $arrayElemAt: ["$companyData.name", 0] },
@@ -1370,9 +1418,6 @@ export const checkListRejectedFilter = async (request, response, next) => {
         next(error);
     }
 };
-
-
-
 
 
 
@@ -1696,7 +1741,7 @@ export const notificationGetting = async (request, response, next) => {
 //     }
 // }
 
-
+// ----------------------------------------- List ------------------------------------------
 export const addlist = async (request, response, next) => {
     try {
         const data = request.body
@@ -1734,6 +1779,94 @@ export const getCheckData = async (request, response, next) => {
     try {
         const userData = await Checkdata.find({})
         response.status(200).json(userData)
+    } catch (error) {
+        next(error)
+    }
+}
+
+// ---------------------------------- Elibrary -------------------------------------------
+
+export const createElibrary = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { category, placeholder, label, date, description } = data
+        const image = request.file
+        const url = request.protocol + '://' + request.get('host');
+        const formattedImageFileName = Date.now() + image.originalname.split(' ').join('-');
+
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        await sharp(image.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+        const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+        const elibrary = {
+            category, placeholder, label, date, description, image: imageUrl
+        }
+        const newElibrary = new Elibrary(elibrary)
+        await newElibrary.save()
+        response.status(201).json(newElibrary)
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const elibraryGetting = async (request, respone, next) => {
+    try {
+        const elibraryData = await Elibrary.find({})
+        respone.status(200).json(elibraryData)
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+// ---------------------------using then catch --------------------------
+// export const elibraryGetting = (request, res, next) => {
+//     try {
+//         Elibrary.find({}).then(response => {
+//             response.map(data => {
+//                 console.log(data.label);
+//             })
+//         })
+//     } catch (error) {
+//         next(error)
+//     }
+// }
+
+// ---------------------- Audit ------------------------------------
+
+export const createAudit = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { title, company, branch, state, executive, auditor, overdue, status, risk, start_date, end_date } = data
+        const audit = {
+            title, company, branch, state, executive, auditor, overdue, status, risk, start_date, end_date
+        }
+        const newAudit = new Audit(audit)
+        await newAudit.save()
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const auditGetting = async (request, respone, next) => {
+    try {
+        const auditData = await Audit.find({})
+        respone.status(200).json(auditData)
     } catch (error) {
         next(error)
     }
