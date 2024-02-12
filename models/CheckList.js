@@ -70,7 +70,7 @@ const checkListSchema = new mongoose.Schema({
         default: Date.now,
         index: true
     },
-})
+}, {timestamps : true})
 
 const CheckList = mongoose.model('CheckList', checkListSchema)
 export default CheckList;

@@ -900,14 +900,14 @@ export const checkListAllFilter = async (request, response, next) => {
         const stateFilter = request.body.state;
         const companyFilter = request.body.company;
         const executiveFilter = request.body.executive;
-        const dateFilter = request.body.created_at;
+        const dateFilter = request.body.date;
 
         // findAllComp.filter(data=>{
 
         // })
         // console.log(request.query);
         const matchStage = {};
-
+        // matchStage['status'] = { $eq: 2 }
         if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && companyFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "" && companyFilter !== "") {
             // Both state and createdAt are provided
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
@@ -917,7 +917,7 @@ export const checkListAllFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['created_at'] = {
+            matchStage['date'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -936,7 +936,7 @@ export const checkListAllFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['created_at'] = {
+            matchStage['date'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -991,13 +991,12 @@ export const checkListAllFilter = async (request, response, next) => {
             {
                 $project: {
                     _id: 1,
-                    company: 1,
                     state: 1,
                     branchname: 1,
                     approvedate: 1,
                     // duedate : 1,
                     // status : 1,
-                    created_at: 1,
+                    date: 1,
                     // executive : "$executiveData.firstName"+"",
                     executive: {
                         $concat: [
@@ -1007,8 +1006,7 @@ export const checkListAllFilter = async (request, response, next) => {
                         ]
                     },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
-                    // category: { $arrayElemAt: ["$categoryData.name", 0] },
-                    company: { $arrayElemAt: ["$companyData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
                     branchname: { $arrayElemAt: ["$branchData.name", 0] },
                 }
             }
