@@ -907,6 +907,7 @@ export const checkListAllFilter = async (request, response, next) => {
         const companyFilter = request.body.company;
         const executiveFilter = request.body.executive;
         const dateFilter = request.body.date;
+        const adminFilter = request.body.admin
 
         const matchStage = {};
         matchStage['status'] = { $eq: 0 }
@@ -1069,6 +1070,10 @@ export const checkListAllFilter = async (request, response, next) => {
         else if (companyFilter !== undefined && companyFilter !== "") {
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
         }
+        else if (adminFilter !== undefined && adminFilter !== "") {
+            // matchStage['admin'] = "659d4f2609c9923c9e7b8f72"
+            matchStage['admin'] = new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72")
+        }
         else if (dateFilter !== undefined && dateFilter !== "") {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
@@ -1124,6 +1129,14 @@ export const checkListAllFilter = async (request, response, next) => {
                 },
             },
             {
+                $lookup: {
+                    from: "admins",
+                    localField: "admin",
+                    foreignField: "_id",
+                    as: "adminData",
+                },
+            },
+            {
                 $project: {
                     _id: 1,
                     state: 1,
@@ -1140,6 +1153,7 @@ export const checkListAllFilter = async (request, response, next) => {
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     company: { $arrayElemAt: ["$companyData.companyname", 0] },
                     branchname: { $arrayElemAt: ["$branchData.name", 0] },
+                    admin: { $arrayElemAt: ["$adminData.name", 0] },
                 }
             }
         ]);
