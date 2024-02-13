@@ -12,7 +12,7 @@ const router = express.Router();
 router.post('/login',login); 
 router.get('/logout',logout);
 router.post('/catCreate',catCreate);
-router.get('/catGettting',protectRoute,catGettting);
+router.get('/catGettting',catGettting);
 // router.post('/add-user',createUsers); //router.route('/add-user').post(protectRoute,createUsers); both the ways will work
 // router.route('/user-profile/:id').get(protectRoute,usersProfileById);  //this way of request routes is also be taken 
 // router.put('/update-user-profile/:id',protectRoute,updateUsersProfileById);
