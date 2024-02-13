@@ -578,62 +578,22 @@ export const complianceApproveFilter = async (request, response, next) => {
 
 export const complianceRejectedFilter = async (request, response, next) => {
     try {
+        // const findAllComp = await Compliance.find({}).populate('state')
+        // console.log(findAllComp);
+
         const stateFilter = request.body.state;
         const executiveFilter = request.body.executive;
         const updatedFilter = request.body.updated_at;
         const rejectedFilter = request.body.rejected_at;
 
+        // findAllComp.filter(data=>{
+
+        // })
+        // console.log(request.query);
         const matchStage = {};
-        matchStage['status'] = { $eq: 2 }
 
         if (stateFilter !== undefined && executiveFilter !== undefined && updatedFilter !== undefined && rejectedFilter !== undefined && stateFilter !== "" && executiveFilter !== "" && updatedFilter !== "" && rejectedFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
-
-            const updatedDateObject = new Date(updatedFilter);
-            const updatedNextDay = new Date(updatedDateObject);
-            updatedNextDay.setDate(dateObject.getDate() + 1);
-            matchStage['updated_at'] = {
-                $gte: updatedDateObject,
-                $lt: updatedNextDay
-            };
-            const dateObject = new Date(rejectedFilter);
-            const nextDay = new Date(dateObject);
-            nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['rejected_at'] = {
-                $gte: dateObject,
-                $lt: nextDay
-            };
-        }
-
-        // ---------------- 3 Filter -------------------
-
-        else if (stateFilter !== undefined && executiveFilter !== undefined && updatedFilter !== undefined && stateFilter !== "" && executiveFilter !== "" && updatedFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
-
-            const updatedDateObject = new Date(updatedFilter);
-            const updatedNextDay = new Date(updatedDateObject);
-            updatedNextDay.setDate(dateObject.getDate() + 1);
-            matchStage['updated_at'] = {
-                $gte: updatedDateObject,
-                $lt: updatedNextDay
-            };
-
-        }
-        else if (stateFilter !== undefined && executiveFilter !== undefined && rejectedFilter !== undefined && stateFilter !== "" && executiveFilter !== "" && rejectedFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
-
-            const dateObject = new Date(rejectedFilter);
-            const nextDay = new Date(dateObject);
-            nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['rejected_at'] = {
-                $gte: dateObject,
-                $lt: nextDay
-            };
-        }
-        else if (stateFilter !== undefined && updatedFilter !== undefined && rejectedFilter !== undefined && stateFilter !== "" && updatedFilter !== "" && rejectedFilter !== "") {
+            // Both state and createdAt are provided
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
 
             const updatedDateObject = new Date(updatedFilter);
@@ -650,108 +610,21 @@ export const complianceRejectedFilter = async (request, response, next) => {
                 $gte: dateObject,
                 $lt: nextDay
             };
-        }
-        else if (executiveFilter !== undefined && updatedFilter !== undefined && rejectedFilter !== undefined && executiveFilter !== "" && updatedFilter !== "" && rejectedFilter !== "") {
             matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
-
-            const updatedDateObject = new Date(updatedFilter);
-            const updatedNextDay = new Date(updatedDateObject);
-            updatedNextDay.setDate(dateObject.getDate() + 1);
-            matchStage['updated_at'] = {
-                $gte: updatedDateObject,
-                $lt: updatedNextDay
-            };
-            const dateObject = new Date(rejectedFilter);
-            const nextDay = new Date(dateObject);
-            nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['rejected_at'] = {
-                $gte: dateObject,
-                $lt: nextDay
-            };
-        }
-        // --------- 2 Filter ---------------
-        else if (stateFilter !== undefined && executiveFilter !== undefined && stateFilter !== "" && executiveFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
-
-        }
-        else if (stateFilter !== undefined && updatedFilter !== undefined && stateFilter !== "" && updatedFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-
-            const updatedDateObject = new Date(updatedFilter);
-            const updatedNextDay = new Date(updatedDateObject);
-            updatedNextDay.setDate(dateObject.getDate() + 1);
-            matchStage['updated_at'] = {
-                $gte: updatedDateObject,
-                $lt: updatedNextDay
-            };
-
-        }
-        else if (stateFilter !== undefined && rejectedFilter !== undefined && stateFilter !== "" && rejectedFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-
-            const dateObject = new Date(rejectedFilter);
-            const nextDay = new Date(dateObject);
-            nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['rejected_at'] = {
-                $gte: dateObject,
-                $lt: nextDay
-            };
-        }
-        else if (executiveFilter !== undefined && updatedFilter !== undefined && executiveFilter !== "" && updatedFilter !== "") {
-            matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
-
-            const updatedDateObject = new Date(updatedFilter);
-            const updatedNextDay = new Date(updatedDateObject);
-            updatedNextDay.setDate(dateObject.getDate() + 1);
-            matchStage['updated_at'] = {
-                $gte: updatedDateObject,
-                $lt: updatedNextDay
-            };
-
-        }
-        else if (executiveFilter !== undefined && rejectedFilter !== undefined && executiveFilter !== "" && rejectedFilter !== "") {
-            matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
-
-            const dateObject = new Date(rejectedFilter);
-            const nextDay = new Date(dateObject);
-            nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['rejected_at'] = {
-                $gte: dateObject,
-                $lt: nextDay
-            };
-        }
-        else if (updatedFilter !== undefined && rejectedFilter !== undefined && updatedFilter !== "" && rejectedFilter !== "") {
-
-            const updatedDateObject = new Date(updatedFilter);
-            const updatedNextDay = new Date(updatedDateObject);
-            updatedNextDay.setDate(dateObject.getDate() + 1);
-            matchStage['updated_at'] = {
-                $gte: updatedDateObject,
-                $lt: updatedNextDay
-            };
-            const dateObject = new Date(rejectedFilter);
-            const nextDay = new Date(dateObject);
-            nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['rejected_at'] = {
-                $gte: dateObject,
-                $lt: nextDay
-            };
-        }
-
-
-        else if (stateFilter !== undefined && stateFilter !== "") {
+        } else if (stateFilter !== undefined && stateFilter !== "") {
+            // Only state is provided
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());;
         } else if (updatedFilter !== undefined && updatedFilter !== "") {
             // Only createdAt is provided
             const updatedDateObject = new Date(updatedFilter);
             const updatedNextDay = new Date(updatedDateObject);
-            updatedNextDay.setDate(dateObject.getDate() + 1);
+            updatedNextDay.setDate(updatedDateObject.getDate() + 1);
             matchStage['updated_at'] = {
                 $gte: updatedDateObject,
                 $lt: updatedNextDay
             };
         } else if (rejectedFilter !== undefined && rejectedFilter !== "") {
+            // Only createdAt is provided
             const dateObject = new Date(rejectedFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
@@ -763,7 +636,9 @@ export const complianceRejectedFilter = async (request, response, next) => {
         else if (executiveFilter !== undefined && executiveFilter !== "") {
             matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
         }
+        matchStage['status'] = { $eq: 2 }
 
+        // console.log(matchStage);
         const filter = await Compliance.aggregate([
             {
                 $match: matchStage,
@@ -801,12 +676,12 @@ export const complianceRejectedFilter = async (request, response, next) => {
                     docattachment: 1,
                     updated_at: 1,
                     rejected_at: 1,
-                    // compliancetype : 1,
-                    // question : 1,
-                    // description : 1,
-                    // frequency : 1,
-                    // risk : 1,
-                    // duedate : 1,
+                    compliancetype : 1,
+                    question : 1,
+                    description : 1,
+                    frequency : 1,
+                    risk : 1,
+                    duedate : 1,
                     status: 1,
                     created_at: 1,
                     executive: {
@@ -820,9 +695,20 @@ export const complianceRejectedFilter = async (request, response, next) => {
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
                 }
             }
+            // {
+            //     $lookup: {
+            //         from: "states",
+            //         localField: "state",
+            //         foreignField: "_id",
+            //         as: "dataresult",
+            //     },
+            // },
+            // {
+            //     $unwind: "$dataresult",
+            // },
         ]);
 
-        response.status(201).json({ message: "Total :" + filter.length, data: filter });
+        response.status(201).json(filter);
     } catch (error) {
         next(error);
     }
