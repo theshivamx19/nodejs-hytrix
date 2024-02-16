@@ -112,11 +112,17 @@ export const catEditById = async (request, response, next) => {
     }
 }
 // ------------------------ Create Compliance --------------------
-export const complianceCreate = async (request, response, next) => {
+export const createCompliances = async (request, response, next) => {
+
     try {
+        const act = await Compliance.findOne({ act: request.body.act });
+        if (act) {
+            return response.send("409");
+        }
         const data = request.body
-        const documentFile = request.files.docattachment ? request.files.docattachment[0] : null;
-        const imageFile = request.files.form ? request.files.form[0] : null;
+        // console.log('documentUrl',documentUrl)
+        const documentFile = request.files.document ? request.files.document[0] : null;
+        const imageFile = request.files.image ? request.files.image[0] : null;
         const url = request.protocol + '://' + request.get('host');
         let imageUrl, formattedImageFileName
         let documentUrl, formattedDocumentFileName
@@ -167,22 +173,44 @@ export const complianceCreate = async (request, response, next) => {
                 documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
             }
         }
+        const newArrDataRules = (data.rule).split("\r\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        const newArrDataQuestion = (data.question).split("\r\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        const newArrDataDescription = (data.description).split("\r\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
         const compliance = {
             state: data.state,
             act: data.act,
             rule: data.rule,
+            ruletype: newArrDataRules,
             category: data.category,
             question: data.question,
+            questiontype: newArrDataQuestion,
             form: imageUrl,
             docattachment: documentUrl,
+            formtype: data.formtype,
+            docattachmenttype: data.docattachmenttype,
             compliancetype: data.compliancetype,
             frequency: data.frequency,
             risk: data.risk,
             description: data.description,
-            duedate: data.duedate,
-            executive: data.executive,
-            status: data.status,
+            descriptiontype: newArrDataDescription,
+            executive: data.executive
         }
+        //    console.log(compliance); 
         const newCompliance = new Compliance(compliance);
         await newCompliance.save();
         response.status(201).json(newCompliance);
@@ -1961,7 +1989,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString());
         }
         else if (companyFilter !== undefined && companyFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
-            matchStage['company'] = new mongoose.Types.ObjectId(companyFilterFilter.toString());
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString());
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
@@ -2668,11 +2696,17 @@ export const checklistApprovegetting = async (request, response, next) => {
     try {
         // const compliance = await Compliance.find({ $and: [ { status: { $eq: 0 } }, { executive: { $ne: '659d4f2609c9923c9e7b8f72' } } ] }).populate("category").populate('state')
         const matchStage = {}
-        matchStage['status'] = {$eq : 0}
-        matchStage['executive'] = { $ne: '659d4f2609c9923c9e7b8f72' }
+        // matchStage['status'] = {$eq : 0}
+        // matchStage['executive'] = { $ne: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72") }
+        // console.log(matchStage);
         const newArr = await CheckList.aggregate([
             {
-                $match: matchStage
+                $match: {
+                    $and: [
+                        { status: { $eq: 0 } },
+                        { executive: { $ne: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72")} }
+                    ]
+                }
             },
             {
                 $lookup: {
@@ -2859,6 +2893,103 @@ export const checklistOnRejectegetting = async (request, response, next) => {
         // })
         console.log(newArr)
         response.status(201).json(newArr)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+
+
+export const gettingCompliances = async (request, response, next) => { /////////this is when getting on approve compliance page
+    try {
+        const newArr = await Compliance.aggregate([
+            {
+                $match: {
+                    $and: [
+                        { status: { $eq: 0 } },
+                        { executive: { $ne: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72") } }
+                    ]
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    compliance: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    form: 1,
+                    docattachment: 1,
+                    compliancetype: 1,
+                    description: 1,
+                    frequency: 1,
+                    risk: 1,
+                    status: 1,
+                    created_at: 1,
+                    updated_at: 1,
+                    duedate: 1,
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                }
+            }
+        ])
+        console.log(newArr)
+        response.status(201).json({message : "Total : "+newArr.length,  data :newArr})
+        // const compliance = await Compliance.find({ $and: [ { status: { $eq: 0 } }, { executive: { $ne: '659d4f2609c9923c9e7b8f72' } } ] }).populate("category").populate('state').populate("executive")
+        // let newArr = compliance.map(data => {
+        //     return {
+        //         _id: data._id,
+        //         state: data.state.name,
+        //         act: data.act,
+        //         rule: data.rule,
+        //         category: data.category.name,
+        //         question: data.question,
+        //         form: data.form,
+        //         docattachment: data.docattachment,
+        //         compliancetype: data.compliancetype,
+        //         frequency: data.frequency,
+        //         description: data.description,
+        //         risk: data.risk,
+        //         duedate: data.duedate,
+        //         status: data.status,
+        //         // executive:data.executive.firstName+' '+data.executive.lastName,
+        //         created_at: data.created_at,
+        //         updated_at: data.updated_at
+        //     }
+        // })
+        // response.status(201).json(newArr)
     }
     catch (error) {
         next(error)

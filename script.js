@@ -52,9 +52,49 @@ const uri = "https://api.github.com/users/theshivamx19"
 // .then(function(data){
 //     console.log(data);
 // })
-const fetchedData = async function (){
-const response = await fetch(uri)
-console.log(response);
-const data = await response.json()
-console.log(data);
-}()
+// const fetchedData = async function (){
+// const response = await fetch(uri)
+// console.log(response);
+// const data = await response.json()
+// console.log(data);
+// }()
+
+// let num1 = "SDf547"
+// let num2 = "SDf547"
+// let nan1 = isNaN(num1)
+// let nan2 = isNaN(num2)
+// // console.log(num1 == num2);
+// console.log(nan1 == nan2);
+// console.log(isNaN(num1) == isNaN(num2));
+// console.log(NaN == NaN);
+
+// let str = "Shivam" + 'Maurya'
+
+// console.log("Age is "+ 60);
+
+// let num = 5
+// let i = 1
+// while(i<=10){
+//     console.log(`${num} x ${i} = ${num * i}`);
+//     i++
+// }
+
+// let num = 5
+// let i = 1
+// do {
+//     console.log(num +"*"+i+"="+ num*i);
+//     i++
+// }
+// while(i<=10)
+
+// for(;;){       // Infinite loop
+
+// }
+
+
+for (let i = 0; i <= 5; i++) {
+    console.log("\t");
+    for (let j = 0; j <= i; j++) {
+        console.log("*");
+    }
+}

@@ -256,6 +256,55 @@ export const deleteUser = async (request, response, next) => {
         next(error);
     }
 }
+export const createBranch = async (request, response, next) => {
+    try {
+
+        const name = await Branch.findOne({ name: request.body.name });
+        if (name) {
+            return response.send("409");
+        }
+        const data = request.body;
+
+        const branch = {
+            name: data.name
+        }
+
+        const newbranch = new Branch(branch)
+        await newbranch.save()
+        //  console.log(newUser._id);
+        //await sendMail(newUser._id, newUser.email, 'email verification',data.password);
+        response.status(201).json(newbranch)
+    } catch (error) {
+        // response.status(404).json({ message: 'error.message' })
+        next(error);
+    }
+}
+export const createCompany = async (request, response, next) => {
+    try {
+
+        const companyname = await Company.findOne({ companyname: request.body.name });
+        if (companyname) {
+            return response.send("409");
+        }
+        const data = request.body;
+
+        const company = {
+            companyname: data.companyname,
+            state: '65b2d649ea514009b0989736',
+            branchname: '65bb474a1d06166d9d85f55c',
+            executiveId: '65b2d649ea514009b0989736',
+        }
+
+        const newCompany = new Company(company)
+        await newCompany.save()
+        //  console.log(newUser._id);
+        //await sendMail(newUser._id, newUser.email, 'email verification',data.password);
+        response.status(201).json(newCompany)
+    } catch (error) {
+        // response.status(404).json({ message: 'error.message' })
+        next(error);
+    }
+}
 export const gettingCompany = async (request, response, next) => {
     try {
         const company = await Company.find();
@@ -274,30 +323,413 @@ export const gettingBranch = async (request, response, next) => {
         next(error);
     }
 }
-export const gettingCompliances = async (request, response, next) => { /////////this is when getting on approve compliance page
+export const createCompliances = async (request, response, next) => {
+
     try {
-        const compliance = await Compliance.find({ $and: [{ status: { $eq: 0 } }, { executive: { $ne: '659d4f2609c9923c9e7b8f72' } }] }).populate("category").populate('state')
-        let newArr = compliance.map(data => {
+        const act = await Compliance.findOne({ act: request.body.act });
+        if (act) {
+            return response.send("409");
+        }
+        const data = request.body
+        // console.log('documentUrl',documentUrl)
+        const documentFile = request.files.document ? request.files.document[0] : null;
+        const imageFile = request.files.image ? request.files.image[0] : null;
+        const url = request.protocol + '://' + request.get('host');
+        let imageUrl, formattedImageFileName
+        let documentUrl, formattedDocumentFileName
+
+        if (imageFile) {
+            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
+        }
+        if (documentFile) {
+            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+        }
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+        const documentDirectory = 'documents/';
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the documents directory exists
+        fs.access(uploadsDirectory + documentDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
+            }
+        });
+
+        if (imageFile) {
+            if (imageFile.mimetype.includes('image')) {
+                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+            else if (imageFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + imageDirectory + formattedImageFileName, imageFile.buffer);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+        }
+        if (documentFile) {
+            if (documentFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
+                documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+            }
+        }
+        const newArrDataRules = (data.rule).split("\r\n").map((data, i) => {
             return {
-                _id: data._id,
-                state: data.state.name,
-                act: data.act,
-                rule: data.rule,
-                category: data.category.name,
-                question: data.question,
-                form: data.form,
-                docattachment: data.docattachment,
-                compliancetype: data.compliancetype,
-                frequency: data.frequency,
-                description: data.description,
-                risk: data.risk,
-                duedate: data.duedate,
-                status: data.status,
-                created_at: data.created_at,
-                updated_at: data.updated_at
+                id: i + 1,
+                value: data
             }
         })
+        const newArrDataQuestion = (data.question).split("\r\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        const newArrDataDescription = (data.description).split("\r\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        const compliance = {
+            state: data.state,
+            act: data.act,
+            rule: data.rule,
+            ruletype: newArrDataRules,
+            category: data.category,
+            question: data.question,
+            questiontype: newArrDataQuestion,
+            form: imageUrl,
+            docattachment: documentUrl,
+            formtype: data.formtype,
+            docattachmenttype: data.docattachmenttype,
+            compliancetype: data.compliancetype,
+            frequency: data.frequency,
+            risk: data.risk,
+            description: data.description,
+            descriptiontype: newArrDataDescription,
+            executive: data.executive
+        }
+        //    console.log(compliance); 
+        const newCompliance = new Compliance(compliance);
+        await newCompliance.save();
+        response.status(201).json(newCompliance);
+    } catch (error) {
+        // response.status(404).json({ message: 'error.message' })
+        next(error);
+    }
+}
+export const updateCompliancesById = async (request, response, next) => {
+    try {
+        const data = request.body;
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+        const documentDirectory = 'documents/';
+        const url = request.protocol + '://' + request.get('host');
+        let imageUrl, formattedImageFileName
+        let documentUrl, formattedDocumentFileName
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the documents directory exists
+        fs.access(uploadsDirectory + documentDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
+            }
+        });
+        if (request.files?.document !== undefined && request.files?.document[0] !== undefined) {
+            const documentFile = request.files.document ? request.files.document[0] : null;
+            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+            if (documentFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
+                documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+            }
+
+        }
+        if (request.files?.image !== undefined && request.files?.image[0] !== undefined) {
+            const imageFile = request.files.image ? request.files.image[0] : null;
+            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
+            if (imageFile.mimetype.includes('image')) {
+                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+            else if (imageFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + imageDirectory + formattedImageFileName, imageFile.buffer);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+        }
+        if (request.files?.document !== undefined && request.files?.document[0] !== undefined && request.files?.image !== undefined && request.files?.image[0] !== undefined) {
+
+            const documentFile = request.files.document ? request.files.document[0] : null;
+            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+            if (documentFile.mimetype === 'application/pdf') {
+                console.log('both')
+                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
+                documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+            }
+            const imageFile = request.files.image ? request.files.image[0] : null;
+            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
+            if (imageFile.mimetype.includes('image')) {
+                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+            else if (imageFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + imageDirectory + formattedImageFileName, imageFile.buffer);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+        }
+        const newArrDataRules = (data.rule).split("\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        const newArrDataQuestion = (data.question).split("\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        const newArrDataDescription = (data.description).split("\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        let comliancelist = {};
+        comliancelist = {
+            category: data.category,
+            state: data.state,
+            act: data.act,
+            rule: data.rule,
+            ruletype: newArrDataRules,
+            question: data.question,
+            questiontype: newArrDataQuestion,
+            description: data.description,
+            descriptiontype: newArrDataDescription,
+            executive: data.executive,
+            form: imageUrl,
+            docattachment: documentUrl,
+            docattachmenttype: data.docattachmenttype,
+            compliancetype: data.compliancetype,
+            compliancetype: data.compliancetype,
+            frequency: data.frequency,
+            risk: data.risk,
+            updated_at: data.dates
+        }
+        //}
+        console.log(comliancelist)
+        const updatedCompliance = await Compliance.updateOne({ _id: request.params.id }, comliancelist);
+        // await newComliancelistt.save()
+        response.status(201).json(updatedCompliance)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+export const gettingCompliancesOnCreate = async (request, response, next) => {
+    try {
+        const newArr = await Compliance.aggregate([
+            {
+                $match: {
+                    status: { $eq: 0 }
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    compliance: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    form: 1,
+                    docattachment: 1,
+                    compliancetype: 1,
+                    description: 1,
+                    frequency: 1,
+                    risk: 1,
+                    status: 1,
+                    created_at: 1,
+                    updated_at: 1,
+                    duedate: 1,
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                }
+            }
+        ])
+        console.log(newArr)
         response.status(201).json(newArr)
+        // const compliance = await Compliance.find({ status: { $eq: 0 } } ).populate("category").populate('state').populate("executive")
+        // let newArr = compliance.map(data => {
+        //     return {
+        //         _id: data._id,
+        //         state: data.state.name,
+        //         act: data.act,
+        //         rule: data.rule,
+        //         category: data.category.name,
+        //         question: data.question,
+        //         form: data.form,
+        //         docattachment: data.docattachment,
+        //         compliancetype: data.compliancetype,
+        //         frequency: data.frequency,
+        //         description: data.description,
+        //         risk: data.risk,
+        //         duedate: data.duedate,
+        //         status: data.status,
+        //         // executive:data.executive.firstName+' '+data.executive.lastName,
+        //         created_at: data.created_at,
+        //         updated_at: data.updated_at
+        //     }
+        // })
+        // console.log()
+        // response.status(201).json(newArr)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+export const gettingCompliances = async (request, response, next) => { /////////this is when getting on approve compliance page
+    try {
+        const newArr = await Compliance.aggregate([
+            {
+                $match: {
+                    $and: [
+                        { status: { $eq: 0 } },
+                        { executive: { $ne: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72") } }
+                    ]
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    compliance: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    form: 1,
+                    docattachment: 1,
+                    compliancetype: 1,
+                    description: 1,
+                    frequency: 1,
+                    risk: 1,
+                    status: 1,
+                    created_at: 1,
+                    updated_at: 1,
+                    duedate: 1,
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                }
+            }
+        ])
+        console.log(newArr)
+        response.status(201).json(newArr)
+        // const compliance = await Compliance.find({ $and: [ { status: { $eq: 0 } }, { executive: { $ne: '659d4f2609c9923c9e7b8f72' } } ] }).populate("category").populate('state').populate("executive")
+        // let newArr = compliance.map(data => {
+        //     return {
+        //         _id: data._id,
+        //         state: data.state.name,
+        //         act: data.act,
+        //         rule: data.rule,
+        //         category: data.category.name,
+        //         question: data.question,
+        //         form: data.form,
+        //         docattachment: data.docattachment,
+        //         compliancetype: data.compliancetype,
+        //         frequency: data.frequency,
+        //         description: data.description,
+        //         risk: data.risk,
+        //         duedate: data.duedate,
+        //         status: data.status,
+        //         // executive:data.executive.firstName+' '+data.executive.lastName,
+        //         created_at: data.created_at,
+        //         updated_at: data.updated_at
+        //     }
+        // })
+        // response.status(201).json(newArr)
     }
     catch (error) {
         next(error)
@@ -305,42 +737,197 @@ export const gettingCompliances = async (request, response, next) => { /////////
 }
 export const gettingCompliancesAll = async (request, response, next) => {
     try {
-        const compliance = await Compliance.find({ status: { $eq: 1 } }).populate("category").populate('state')
-        let newArr = compliance.map(data => {
-            return {
-                _id: data._id,
-                state: data.state.name,
-                act: data.act,
-                rule: data.rule,
-                category: data.category.name,
-                question: data.question,
-                form: data.form,
-                docattachment: data.docattachment,
-                compliancetype: data.compliancetype,
-                frequency: data.frequency,
-                description: data.description,
-                risk: data.risk,
-                duedate: data.duedate,
-                status: data.status,
-                created_at: data.created_at,
-                updated_at: data.updated_at
+        const newArr = await Compliance.aggregate([
+            {
+                $match: {
+                    status: { $eq: 1 }
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    compliance: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    form: 1,
+                    docattachment: 1,
+                    compliancetype: 1,
+                    description: 1,
+                    frequency: 1,
+                    risk: 1,
+                    status: 1,
+                    created_at: 1,
+                    updated_at: 1,
+                    duedate: 1,
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                }
             }
-        })
+        ])
+        console.log(newArr)
         response.status(201).json(newArr)
+        // const compliance = await Compliance.find({ status: { $eq: 1 } }).populate("category").populate('state').populate("executive")
+        // let newArr = compliance.map(data => {
+        //     return {
+        //         _id: data._id,
+        //         state: data.state.name,
+        //         act: data.act,
+        //         rule: data.rule,
+        //         category: data.category.name,
+        //         question: data.question,
+        //         form: data.form,
+        //         docattachment: data.docattachment,
+        //         compliancetype: data.compliancetype,
+        //         frequency: data.frequency,
+        //         description: data.description,
+        //         risk: data.risk,
+        //         duedate: data.duedate,
+        //         status: data.status,
+        //         // executive:`${data.executive.firstName} ${data.executive.lastName}`,
+        //         created_at: data.created_at,
+        //         updated_at: data.updated_at
+        //     }
+        // })
+        // response.status(201).json(newArr)
     }
     catch (error) {
         next(error)
     }
 }
+export const gettingCompliancesReject = async (request, response, next) => {
+    try {
+        const newArr = await Compliance.aggregate([
+            {
+                $match: {
+                    status: { $eq: 2 }
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    compliance: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    form: 1,
+                    docattachment: 1,
+                    compliancetype: 1,
+                    description: 1,
+                    frequency: 1,
+                    risk: 1,
+                    status: 1,
+                    created_at: 1,
+                    updated_at: 1,
+                    rejected_at: 1,
+                    reason : 1,
+                    duedate: 1,
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                }
+            }
+        ])
+        console.log(newArr)
+        response.status(201).json(newArr)
+    }
+    catch (error) {
+        next(error)
+    }
+    // try {
+    //     const compliance = await Compliance.find({ status: { $eq: 2 } } ).populate("category").populate('state').populate("executive")
+    //     let newArr = compliance.map(data => {
+    //         return {
+    //             _id: data._id,
+    //             state: data.state.name,
+    //             act: data.act,
+    //             rule: data.rule,
+    //             category: data.category.name,
+    //             question: data.question,
+    //             form: data.form,
+    //             docattachment: data.docattachment,
+    //             compliancetype: data.compliancetype,
+    //             frequency: data.frequency,
+    //             description: data.description,
+    //             risk: data.risk,
+    //             duedate: data.duedate,
+    //             status: data.status,
+    //             // executive:data.executive.firstName+' '+data.executive.lastName,
+    //             created_at: data.created_at,
+    //             updated_at: data.updated_at
+    //         }
+    //     })
+    //     response.status(201).json(newArr)
+    // }
+    // catch (error) {
+    //     next(error)
+    // }
+}
 export const complianceFilter = async (request, response, next) => {
     try {
-        // const findAllComp = await Compliance.find({}).populate('state')
-        // console.log(findAllComp);
-
         const stateFilter = request.body.state;
         const dateFilter = request.body.created_at;
-
-        // console.log(stateFilter+'='+dateFilter);
         const matchStage = {};
         matchStage['status'] = { $eq: 0 };
         if (stateFilter !== undefined && dateFilter !== undefined && stateFilter !== "" && dateFilter !== "") {
@@ -393,6 +980,14 @@ export const complianceFilter = async (request, response, next) => {
                 },
             },
             {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
                 $project: {
                     _id: 1,
                     act: 1,
@@ -409,6 +1004,14 @@ export const complianceFilter = async (request, response, next) => {
                     created_at: 1,
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+
                 }
             }
         ]);
@@ -420,12 +1023,11 @@ export const complianceFilter = async (request, response, next) => {
 }
 export const gettingCompliancesAllFilter = async (request, response, next) => {
     try {
-
         const stateFilter = request.body.state;
         const dateFilter = request.body.created_at;
         const executiveFilter = request.body.executive;
 
-        // console.log(stateFilter+'='+dateFilter+'='+executiveFilter);
+        console.log(stateFilter + '=' + dateFilter + '=' + executiveFilter);
         const matchStage = {};
         matchStage['status'] = { $eq: 1 };
         if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "") {
@@ -480,6 +1082,14 @@ export const gettingCompliancesAllFilter = async (request, response, next) => {
                 },
             },
             {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
                 $project: {
                     _id: 1,
                     act: 1,
@@ -496,11 +1106,17 @@ export const gettingCompliancesAllFilter = async (request, response, next) => {
                     created_at: 1,
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
                 }
             }
-
         ]);
-        // console.log(filter);
+        console.log(filter);
         response.status(201).json(filter);
     } catch (error) {
         next(error);
@@ -511,7 +1127,6 @@ export const complianceApproveFilter = async (request, response, next) => {
         const stateFilter = request.body.state;
         const executiveFilter = request.body.executive;
         const dateFilter = request.body.created_at;
-
         const matchStage = {};
         matchStage['status'] = { $eq: 1 };
         if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "") {
@@ -542,6 +1157,8 @@ export const complianceApproveFilter = async (request, response, next) => {
         else if (executiveFilter !== undefined && executiveFilter !== "") {
             matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
         }
+
+        // console.log(matchStage);
         const filter = await Compliance.aggregate([
             {
                 $match: matchStage,
@@ -585,11 +1202,18 @@ export const complianceApproveFilter = async (request, response, next) => {
                     duedate: 1,
                     status: 1,
                     created_at: 1,
-                    executive: { $arrayElemAt: ["$executiveData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
                 }
             }
+
         ]);
         console.log(filter)
         response.status(201).json(filter);
@@ -605,7 +1229,6 @@ export const complianceRejectedFilter = async (request, response, next) => {
         const executiveFilter = request.body.executive;
         const updatedFilter = request.body.updated_at;
         const rejectedFilter = request.body.rejected_at;
-
         const matchStage = {};
 
         if (stateFilter !== undefined && executiveFilter !== undefined && updatedFilter !== undefined && rejectedFilter !== undefined && stateFilter !== "" && executiveFilter !== "" && updatedFilter !== "" && rejectedFilter !== "") {
@@ -825,8 +1448,6 @@ export const complianceRejectedFilter = async (request, response, next) => {
                     rule: 1,
                     form: 1,
                     docattachment: 1,
-                    updated_at: 1,
-                    rejected_at: 1,
                     compliancetype: 1,
                     question: 1,
                     description: 1,
@@ -834,7 +1455,10 @@ export const complianceRejectedFilter = async (request, response, next) => {
                     risk: 1,
                     duedate: 1,
                     status: 1,
+                    reason : 1,
                     created_at: 1,
+                    updated_at: 1,
+                    rejected_at: 1,
                     executive: {
                         $concat: [
                             { $arrayElemAt: ["$executiveData.firstName", 0] },
@@ -853,329 +1477,6 @@ export const complianceRejectedFilter = async (request, response, next) => {
         next(error);
     }
 };
-export const gettingCompliancesOnCreate = async (request, response, next) => {
-    try {
-        const compliance = await Compliance.find({ status: { $eq: 0 } }).populate("category").populate('state')
-        let newArr = compliance.map(data => {
-            return {
-                _id: data._id,
-                state: data.state.name,
-                act: data.act,
-                rule: data.rule,
-                category: data.category.name,
-                question: data.question,
-                form: data.form,
-                docattachment: data.docattachment,
-                compliancetype: data.compliancetype,
-                frequency: data.frequency,
-                description: data.description,
-                risk: data.risk,
-                duedate: data.duedate,
-                status: data.status,
-                created_at: data.created_at,
-                updated_at: data.updated_at
-            }
-        })
-        response.status(201).json(newArr)
-    }
-    catch (error) {
-        next(error)
-    }
-}
-export const createBranch = async (request, response, next) => {
-    try {
-
-        const name = await Branch.findOne({ name: request.body.name });
-        if (name) {
-            return response.send("409");
-        }
-        const data = request.body;
-
-        const branch = {
-            name: data.name
-        }
-
-        const newbranch = new Branch(branch)
-        await newbranch.save()
-        response.status(201).json(newbranch)
-    } catch (error) {
-        next(error);
-    }
-}
-export const createCompany = async (request, response, next) => {
-    try {
-
-        const companyname = await Company.findOne({ companyname: request.body.name });
-        if (companyname) {
-            return response.send("409");
-        }
-        const data = request.body;
-
-        const company = {
-            companyname: data.companyname,
-            state: '65b2d649ea514009b0989736',
-            branchname: '65bb474a1d06166d9d85f55c',
-            executiveId: '65b2d649ea514009b0989736',
-        }
-
-        const newCompany = new Company(company)
-        await newCompany.save()
-        response.status(201).json(newCompany)
-    } catch (error) {
-        next(error);
-    }
-}
-export const createCompliances = async (request, response, next) => {
-
-    try {
-        const act = await Compliance.findOne({ act: request.body.act });
-        if (act) {
-            return response.send("409");
-        }
-        const data = request.body
-        const documentFile = request.files.document ? request.files.document[0] : null;
-        const imageFile = request.files.image ? request.files.image[0] : null;
-        const url = request.protocol + '://' + request.get('host');
-        let imageUrl, formattedImageFileName
-        let documentUrl, formattedDocumentFileName
-
-        if (imageFile) {
-            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
-        }
-        if (documentFile) {
-            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
-        }
-        const uploadsDirectory = './data/uploads/';
-        const imageDirectory = 'images/';
-        const documentDirectory = 'documents/';
-
-        fs.access(uploadsDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory, { recursive: true });
-            }
-        });
-
-        // Ensure that the images directory exists
-        fs.access(uploadsDirectory + imageDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
-            }
-        });
-
-        // Ensure that the documents directory exists
-        fs.access(uploadsDirectory + documentDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
-            }
-        });
-
-        if (imageFile) {
-            if (imageFile.mimetype.includes('image')) {
-                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
-                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-            }
-            else if (imageFile.mimetype === 'application/pdf') {
-                fs.writeFileSync(uploadsDirectory + imageDirectory + formattedImageFileName, imageFile.buffer);
-                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-            }
-        }
-        if (documentFile) {
-            if (documentFile.mimetype === 'application/pdf') {
-                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
-                documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
-            }
-        }
-        const newArrDataRules = (data.rule).split("\r\n").map((data, i) => {
-            return {
-                id: i + 1,
-                value: data
-            }
-        })
-        const newArrDataQuestion = (data.question).split("\r\n").map((data, i) => {
-            return {
-                id: i + 1,
-                value: data
-            }
-        })
-        const newArrDataDescription = (data.description).split("\r\n").map((data, i) => {
-            return {
-                id: i + 1,
-                value: data
-            }
-        })
-        const compliance = {
-            state: data.state,
-            act: data.act,
-            rule: data.rule,
-            ruletype: newArrDataRules,
-            category: data.category,
-            question: data.question,
-            questiontype: newArrDataQuestion,
-            form: imageUrl,
-            docattachment: documentUrl,
-            formtype: data.formtype,
-            docattachmenttype: data.docattachmenttype,
-            compliancetype: data.compliancetype,
-            frequency: data.frequency,
-            risk: data.risk,
-            description: data.description,
-            descriptiontype: newArrDataDescription,
-            executive: data.executive
-        }
-        const newCompliance = new Compliance(compliance);
-        await newCompliance.save();
-        response.status(201).json(newCompliance);
-    } catch (error) {
-        next(error);
-    }
-}
-export const updateCompliancesById = async (request, response, next) => {
-    try {
-        const data = request.body;
-        const uploadsDirectory = './data/uploads/';
-        const imageDirectory = 'images/';
-        const documentDirectory = 'documents/';
-        const url = request.protocol + '://' + request.get('host');
-        let imageUrl, formattedImageFileName
-        let documentUrl, formattedDocumentFileName
-
-        fs.access(uploadsDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory, { recursive: true });
-            }
-        });
-
-        // Ensure that the images directory exists
-        fs.access(uploadsDirectory + imageDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
-            }
-        });
-
-        // Ensure that the documents directory exists
-        fs.access(uploadsDirectory + documentDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
-            }
-        });
-        if (request.files?.document !== undefined && request.files?.document[0] !== undefined) {
-            const documentFile = request.files.document ? request.files.document[0] : null;
-            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
-            if (documentFile.mimetype === 'application/pdf') {
-                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
-                documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
-            }
-
-        }
-        if (request.files?.image !== undefined && request.files?.image[0] !== undefined) {
-            const imageFile = request.files.image ? request.files.image[0] : null;
-            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
-            if (imageFile.mimetype.includes('image')) {
-                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
-                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-            }
-            else if (imageFile.mimetype === 'application/pdf') {
-                fs.writeFileSync(uploadsDirectory + imageDirectory + formattedImageFileName, imageFile.buffer);
-                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-            }
-        }
-        if (request.files?.document !== undefined && request.files?.document[0] !== undefined && request.files?.image !== undefined && request.files?.image[0] !== undefined) {
-
-            const documentFile = request.files.document ? request.files.document[0] : null;
-            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
-            if (documentFile.mimetype === 'application/pdf') {
-                console.log('both')
-                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
-                documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
-            }
-            const imageFile = request.files.image ? request.files.image[0] : null;
-            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
-            if (imageFile.mimetype.includes('image')) {
-                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
-                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-            }
-            else if (imageFile.mimetype === 'application/pdf') {
-                fs.writeFileSync(uploadsDirectory + imageDirectory + formattedImageFileName, imageFile.buffer);
-                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-            }
-        }
-        const newArrDataRules = (data.rule).split("\n").map((data, i) => {
-            return {
-                id: i + 1,
-                value: data
-            }
-        })
-        const newArrDataQuestion = (data.question).split("\n").map((data, i) => {
-            return {
-                id: i + 1,
-                value: data
-            }
-        })
-        const newArrDataDescription = (data.description).split("\n").map((data, i) => {
-            return {
-                id: i + 1,
-                value: data
-            }
-        })
-        let comliancelist = {};
-        comliancelist = {
-            category: data.category,
-            state: data.state,
-            act: data.act,
-            rule: data.rule,
-            ruletype: newArrDataRules,
-            question: data.question,
-            questiontype: newArrDataQuestion,
-            description: data.description,
-            descriptiontype: newArrDataDescription,
-            executive: data.executive,
-            form: imageUrl,
-            docattachment: documentUrl,
-            docattachmenttype: data.docattachmenttype,
-            compliancetype: data.compliancetype,
-            compliancetype: data.compliancetype,
-            frequency: data.frequency,
-            risk: data.risk,
-            updated_at: data.dates
-        }
-        //}
-        const updatedCompliance = await Compliance.updateOne({ _id: request.params.id }, comliancelist);
-        // await newComliancelistt.save()
-        response.status(201).json(updatedCompliance)
-    }
-    catch (error) {
-        next(error)
-    }
-}
-export const gettingCompliancesReject = async (request, response, next) => {
-    try {
-        const compliance = await Compliance.find({ status: { $eq: 2 } }).populate("category").populate('state')
-        let newArr = compliance.map(data => {
-            return {
-                _id: data._id,
-                state: data.state.name,
-                act: data.act,
-                rule: data.rule,
-                category: data.category.name,
-                question: data.question,
-                form: data.form,
-                docattachment: data.docattachment,
-                compliancetype: data.compliancetype,
-                frequency: data.frequency,
-                description: data.description,
-                risk: data.risk,
-                duedate: data.duedate,
-                status: data.status,
-                created_at: data.created_at,
-                updated_at: data.updated_at
-            }
-        })
-        response.status(201).json(newArr)
-    }
-    catch (error) {
-        next(error)
-    }
-}
 export const gettingCompliancesById = async (request, response, next) => {
     try {
         const compliances = await Compliance.findOne({ _id: request.params.id });
@@ -1186,6 +1487,7 @@ export const gettingCompliancesById = async (request, response, next) => {
 }
 export const complianceApporve = async (request, response, next) => {
     try {
+        //console.log(request.body);return;
         const compliancesApprove = await Compliance.updateMany({ status: request.body.status, duedate: request.body.duedate });
         response.status(201).json(compliancesApprove);
     } catch (error) {
@@ -1194,6 +1496,7 @@ export const complianceApporve = async (request, response, next) => {
 }
 export const complianceReject = async (request, response, next) => {
     try {
+        //console.log(request.body);return;
         const compliances = await Compliance.updateMany({ status: request.body.status, reason: request.body.reason, rejected_at: request.body.rejected_at });
         response.status(201).json(compliances);
     } catch (error) {
@@ -1202,7 +1505,10 @@ export const complianceReject = async (request, response, next) => {
 }
 export const checkListCreate = async (request, response, next) => {
     try {
-
+        // const act = await CheckList.findOne({act:request.body.act});
+        // if(act) {
+        //     return response.send("409");
+        // }
         const data = request.body
         //  console.log('documentUrl',documentUrl)
         const documentFile = request.files.document ? request.files.document[0] : null;
@@ -1450,7 +1756,6 @@ export const updateChecklistsById = async (request, response, next) => {
         //}
         console.log(checklist)
         const updatedChecklist = await CheckList.updateOne({ _id: request.params.id }, checklist);
-        // await newComliancelistt.save()
         response.status(201).json(updatedChecklist)
     }
     catch (error) {
@@ -1461,7 +1766,7 @@ export const checklistOnCreateegetting = async (request, response, next) => {
     try {
         const newArr = await CheckList.aggregate([
             {
-                $match : { status : {$eq : 0}}
+                $match: { status: { $eq: 0 } }
             },
             {
                 $lookup: {
@@ -1496,12 +1801,25 @@ export const checklistOnCreateegetting = async (request, response, next) => {
                 },
             },
             {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData",
+                },
+            },
+            {
                 $project: {
                     _id: 1,
-                    state: 1,
                     category: 1,
-                    company: 1,
-                    executive: 1,
                     branchname: 1,
                     compliance: 1,
                     rule: 1,
@@ -1511,33 +1829,23 @@ export const checklistOnCreateegetting = async (request, response, next) => {
                     documents: 1,
                     frequency: 1,
                     risk: 1,
-                    created_at: 1
+                    created_at: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.companyname", 0] },
+                    company: { $arrayElemAt: ["$companyData.name", 0] },
+                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
+                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
                 }
             }
         ])
 
-        // const checklist = await CheckList.find({ status: { $eq: 0 } } ).populate("category").populate('state').populate('compliance',"act").populate('branchname')
-
-
-        // let newArr = checklist.map(data => {
-        //     return {
-        //         _id: data._id,
-        //         state: data.state.name,
-        //         category: data.category.name,
-        //         company:data.company,  
-        //         executive: data.executive,
-        //         branchname:data.branchname.name,  
-        //         compliance: data.compliance.act,
-        //         rule: data.rule,
-        //         question: data.question,
-        //         description:data.description,
-        //         image: data.image,
-        //         documents: data.documents,
-        //         frequency:data.frequency,
-        //         risk: data.risk,
-        //         created_at:data.created_at,
-        //     }
-        // })
         console.log(newArr)
         response.status(201).json(newArr)
     }
@@ -1546,12 +1854,11 @@ export const checklistOnCreateegetting = async (request, response, next) => {
     }
 }
 export const checklistAllgetting = async (request, response, next) => {
-    // console.log('pradeep');return;
     try {
         const newArr = await CheckList.aggregate([
             {
-                $match : {
-                    status : { $eq : 1}
+                $match: {
+                    status: { $eq: 1 }
                 }
             },
             {
@@ -1587,10 +1894,25 @@ export const checklistAllgetting = async (request, response, next) => {
                 },
             },
             {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData",
+                },
+            },
+            {
                 $project: {
                     _id: 1,
-                    category: 1,
-                    company: 1,
+                    category: 1,                    
                     branchname: 1,
                     compliance: 1,
                     rule: 1,
@@ -1602,43 +1924,21 @@ export const checklistAllgetting = async (request, response, next) => {
                     risk: 1,
                     created_at: 1,
                     approvedate: 1,
-                    // executive: {
-                    //     $concat: [
-                    //         { $arrayElemAt: ["$executiveData.firstName", 0] },
-                    //         " ",
-                    //         { $arrayElemAt: ["$executiveData.lastName", 0] }
-                    //     ]
-                    // },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
-                    company: { $arrayElemAt: ["$companyData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
                     branchname: { $arrayElemAt: ["$branchData.name", 0] },
                     compliance: { $arrayElemAt: ["$complianceData.act", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
                 }
             }
         ])
-
-        // const checklist = await CheckList.find({ status: { $eq: 1 } }).populate("category").populate('state').populate('compliance',"act").populate('branchname')
-        // let newArr = checklist.map(data => {
-        //     return {
-        //         _id: data._id,
-        //         state: data.state.name,
-        //         category: data.category.name,
-        //         company:data.company,  
-        //         executive: data.executive,
-        //         branchname:data.branchname.name,  
-        //         compliance: data.compliance.act,
-        //         rule: data.rule,
-        //         question: data.question,
-        //         description:data.description,
-        //         image: data.image,
-        //         documents: data.documents,
-        //         frequency:data.frequency,
-        //         risk: data.risk,
-        //         approvedate: data.approvedate,
-        //         created_at:data.created_at,
-        //     }
-        // })
         console.log(newArr)
         response.status(201).json(newArr)
     }
@@ -1669,11 +1969,16 @@ export const checklistApprovegetting = async (request, response, next) => {
     try {
         // const compliance = await Compliance.find({ $and: [ { status: { $eq: 0 } }, { executive: { $ne: '659d4f2609c9923c9e7b8f72' } } ] }).populate("category").populate('state')
         const matchStage = {}
-        matchStage['status'] = {$eq : 0}
-        matchStage['executive'] = { $ne: '659d4f2609c9923c9e7b8f72' }
+        // matchStage['status'] = {$eq : 0}
+        // matchStage['executive'] = { $ne: '659d4f2609c9923c9e7b8f72' }
         const newArr = await CheckList.aggregate([
             {
-                $match: matchStage
+                $match: {
+                    $and: [
+                        { status: { $eq: 0 } },
+                        { executive: { $ne: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72") } }
+                    ]
+                }
             },
             {
                 $lookup: {
@@ -1708,10 +2013,25 @@ export const checklistApprovegetting = async (request, response, next) => {
                 },
             },
             {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData",
+                },
+            },
+            {
                 $project: {
                     _id: 1,
-                    category: 1,
-                    company: 1,
+                    category: 1,                    
                     branchname: 1,
                     compliance: 1,
                     rule: 1,
@@ -1732,34 +2052,13 @@ export const checklistApprovegetting = async (request, response, next) => {
                     },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
-                    company: { $arrayElemAt: ["$companyData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
                     branchname: { $arrayElemAt: ["$branchData.name", 0] },
                     compliance: { $arrayElemAt: ["$complianceData.act", 0] },
                 }
             }
         ])
-        // const checklist = await CheckList.find({ $and: [ { status: { $eq: 0 } }, { executive: { $ne: '659d4f2609c9923c9e7b8f72' } } ] }).populate("category").populate('state').populate('compliance',"act").populate('branchname')
-        // let newArr = checklist.map(data => {
-        //     return {
-        //         _id: data._id,
-        //         state: data.state.name,
-        //         category: data.category.name,
-        //         company:data.company,  
-        //         executive: data.executive,
-        //         branchname:data.branchname.name,  
-        //         compliance: data.compliance.act,
-        //         rule: data.rule,
-        //         question: data.question,
-        //         description:data.description,
-        //         image: data.image,
-        //         documents: data.documents,
-        //         frequency:data.frequency,
-        //         risk: data.risk,
-        //         approvedate: data.approvedate,
-        //         created_at:data.created_at,
-        //     }
-        // })
-        console.log(checklist)
+        console.log(newArr)
         response.status(201).json(newArr)
     }
     catch (error) {
@@ -1770,8 +2069,8 @@ export const checklistOnRejectegetting = async (request, response, next) => {
     try {
         const newArr = await CheckList.aggregate([
             {
-                $match : {
-                    status : { $eq : 2 }
+                $match: {
+                    status: { $eq: 2 }
                 }
             },
             {
@@ -1807,21 +2106,37 @@ export const checklistOnRejectegetting = async (request, response, next) => {
                 },
             },
             {
-                $project : {
-                    _id : 1,
-                    category : 1,
-                    company : 1,
-                    branchname : 1,
-                    compliance : 1,
-                    rule : 1,
-                    question : 1, 
-                    description : 1,
-                    image : 1,
-                    documents : 1,
-                    frequency : 1, 
-                    risk : 1,
-                    created_at : 1,
-                    rejected_at : 1,
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    category: 1,                    
+                    branchname: 1,
+                    compliance: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    image: 1,
+                    documents: 1,
+                    frequency: 1,
+                    risk: 1,
+                    created_at: 1,
+                    rejected_at: 1,
+                    reason : 1,
                     executive: {
                         $concat: [
                             { $arrayElemAt: ["$executiveData.firstName", 0] },
@@ -1831,33 +2146,12 @@ export const checklistOnRejectegetting = async (request, response, next) => {
                     },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
-                    company: { $arrayElemAt: ["$companyData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
                     branchname: { $arrayElemAt: ["$branchData.name", 0] },
                     compliance: { $arrayElemAt: ["$complianceData.act", 0] },
                 }
             }
         ])
-
-        // const checklist = await CheckList.find({ status: { $eq: 2 } }).populate("category").populate('state').populate('compliance', "act").populate('branchname')
-        // let newArr = checklist.map(data => {
-        //     return {
-        //         _id: data._id,
-        //         state: data.state.name,
-        //         category: data.category.name,
-        //         company: data.company,
-        //         executive: data.executive,
-        //         branchname: data.branchname.name,
-        //         compliance: data.compliance.act,
-        //         rule: data.rule,
-        //         question: data.question,
-        //         description: data.description,
-        //         image: data.image,
-        //         documents: data.documents,
-        //         frequency: data.frequency,
-        //         risk: data.risk,
-        //         rejected_at: data.rejected_at,
-        //     }
-        // })
         console.log(newArr)
         response.status(201).json(newArr)
     }
@@ -3087,6 +3381,8 @@ export const checkListRejectedFilter = async (request, response, next) => {
                     frequency: 1,
                     risk: 1,
                     created_at: 1,
+                    rejected_at: 1,
+                    reason : 1,
                     executive: {
                         $concat: [
                             { $arrayElemAt: ["$executiveData.firstName", 0] },

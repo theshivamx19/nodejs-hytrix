@@ -2,7 +2,7 @@ import express from "express";
 import cors from 'cors'
 import { isAdmin,protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
-import {login,logout,catCreate,catGettting,catEditById,complianceCreate, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById, complianceFilter, complianceRejectedFilter, checkListRejectedFilter, checkListCreateFilter, checkListApproveFilter, checkListAllFilter, createElibrary, elibraryGetting, checklistOnCreateegetting, checklistApprovegetting, checklistOnRejectegetting } from '../controllers/Admin.js';
+import {login,logout,catCreate,catGettting,catEditById,createCompliances, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById, complianceFilter, complianceRejectedFilter, checkListRejectedFilter, checkListCreateFilter, checkListApproveFilter, checkListAllFilter, createElibrary, elibraryGetting, checklistOnCreateegetting, checklistApprovegetting, checklistOnRejectegetting, gettingCompliances } from '../controllers/Admin.js';
 
 import { upload } from "../middlewares/multerConfig.js";
 // import multer from "multer";
@@ -24,10 +24,11 @@ router.put('/catEditById/:id',protectRoute,catEditById);
 // const storage = multer.memoryStorage();
   
 // var upload = multer({ storage: storage })
-router.post('/complianceCreate',  upload.fields([{ name: 'form' }, { name: 'docattachment' }]), complianceCreate )
+router.post('/createCompliances',  upload.fields([{ name: 'form' }, { name: 'docattachment' }]), createCompliances )
 router.post('/complianceFilter', complianceFilter )
 router.post('/complianceRejectedFilter', complianceRejectedFilter )
-router.get('/complianceGetting', complianceGetting )
+// router.get('/complianceGetting', complianceGetting )
+router.get('/gettingCompliances', gettingCompliances )
 router.put('/updateCompliancesById/:id', upload.fields([{ name: 'form' }, { name: 'docattachment' }]), updateCompliancesById )
 
 // --------- User Route ----------
