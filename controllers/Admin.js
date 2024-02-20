@@ -2990,11 +2990,16 @@ export const gettingAuditor = async (request, response, next) => {
 }
 export const gettingChecklist = async (request, response, next) => {
     try {
-        // const checklist = await User.find( {role : {$eq : "Auditor"}})
+        // const checklist = await CheckList.find({})
         const checklist = await CheckList.aggregate([
             {
                 $match: {
-                    role: { $eq: "Auditor" }
+                    status: 2
+                }              // $match : {} this will fetch the all the documents
+            },
+            {
+                $project : {
+                    _id : 1
                 }
             }
         ])
@@ -3032,11 +3037,11 @@ export const updateAudit = async (request, response, next) => {
     try {
         const auditId = request.params.id
         const data = request.body
-        const checkAuditIdExists = await Audit.findById({_id : auditId})
+        const checkAuditIdExists = await Audit.findById({ _id: auditId })
         if (!checkAuditIdExists) {
             response.status(400).json("Audit id doesn't exists")
         }
-        const auditData = await Audit.findByIdAndUpdate({_id : auditId}, data, {new : true})
+        const auditData = await Audit.findByIdAndUpdate({ _id: auditId }, data, { new: true })
         response.status(201).json(auditData)
     } catch (error) {
         next(error)
