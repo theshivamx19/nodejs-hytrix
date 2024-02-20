@@ -17,7 +17,6 @@ import { response } from 'express';
 import fs from 'node:fs'
 import sharp from 'sharp';
 import { List } from '../models/List.js';
-import { lookup } from 'node:dns';
 import mongoose from 'mongoose';
 // import Executive from '../models/Executive.js';
 
@@ -91,7 +90,7 @@ export const catCreate = async (request, response, next) => {
 }
 export const catGettting = async (request, response, next) => {
     try {
-        const category = await Category.find({}).sort({createdAt : -1});
+        const category = await Category.find({}).sort({ createdAt: -1 });
         console.log(category);
         response.status(201).json(category);
     } catch (error) {
@@ -449,7 +448,7 @@ export const complianceApproveFilter = async (request, response, next) => {
 
         if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "") {
             console.log("you are  in all");
-            
+
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
 
             const dateObject = new Date(dateFilter);
@@ -2560,37 +2559,11 @@ export const elibraryGetting = async (request, respone, next) => {
 //     }
 // }
 
-// ---------------------- Audit ------------------------------------
-
-export const createAudit = async (request, response, next) => {
-    try {
-        const data = request.body
-        const { title, company, branch, state, executive, auditor, overdue, status, risk, start_date, end_date } = data
-        const audit = {
-            title, company, branch, state, executive, auditor, overdue, status, risk, start_date, end_date
-        }
-        const newAudit = new Audit(audit)
-        await newAudit.save()
-    } catch (error) {
-        next(error)
-    }
-}
-
-export const auditGetting = async (request, respone, next) => {
-    try {
-        const auditData = await Audit.find({})
-        respone.status(200).json(auditData)
-    } catch (error) {
-        next(error)
-    }
-}
-
-
-export const checklistOnCreateegetting = async(request, response,next) => {
+export const checklistOnCreateegetting = async (request, response, next) => {
     try {
         const newArr = await CheckList.aggregate([
             {
-                $match : {status : {$eq : 0 }}
+                $match: { status: { $eq: 0 } }
             },
             {
                 $lookup: {
@@ -2625,20 +2598,20 @@ export const checklistOnCreateegetting = async(request, response,next) => {
                 },
             },
             {
-                $project : {
-                    _id : 1,
-                    category : 1,
-                    company : 1,
-                    branchname : 1,
-                    compliance : 1,
-                    rule : 1,
-                    question : 1, 
-                    description : 1,
-                    image : 1,
-                    documents : 1,
-                    frequency : 1, 
-                    risk : 1,
-                    created_at : 1,
+                $project: {
+                    _id: 1,
+                    category: 1,
+                    company: 1,
+                    branchname: 1,
+                    compliance: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    image: 1,
+                    documents: 1,
+                    frequency: 1,
+                    risk: 1,
+                    created_at: 1,
                     executive: {
                         $concat: [
                             { $arrayElemAt: ["$executiveData.firstName", 0] },
@@ -2656,7 +2629,7 @@ export const checklistOnCreateegetting = async(request, response,next) => {
         ])
 
         // const checklist = await CheckList.find({ status: { $eq: 0 } } ).populate("category").populate('state').populate('compliance',"act").populate('branchname')
-        
+
 
         // let newArr = checklist.map(data => {
         //     return {
@@ -2703,7 +2676,7 @@ export const checklistApprovegetting = async (request, response, next) => {
                 $match: {
                     $and: [
                         { status: { $eq: 0 } },
-                        { executive: { $ne: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72")} }
+                        { executive: { $ne: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72") } }
                     ]
                 }
             },
@@ -2802,8 +2775,8 @@ export const checklistOnRejectegetting = async (request, response, next) => {
     try {
         const newArr = await CheckList.aggregate([
             {
-                $match : {
-                    status : { $eq : 2 }
+                $match: {
+                    status: { $eq: 2 }
                 }
             },
             {
@@ -2839,21 +2812,21 @@ export const checklistOnRejectegetting = async (request, response, next) => {
                 },
             },
             {
-                $project : {
-                    _id : 1,
-                    category : 1,
-                    company : 1,
-                    branchname : 1,
-                    compliance : 1,
-                    rule : 1,
-                    question : 1, 
-                    description : 1,
-                    image : 1,
-                    documents : 1,
-                    frequency : 1, 
-                    risk : 1,
-                    created_at : 1,
-                    rejected_at : 1,
+                $project: {
+                    _id: 1,
+                    category: 1,
+                    company: 1,
+                    branchname: 1,
+                    compliance: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    image: 1,
+                    documents: 1,
+                    frequency: 1,
+                    risk: 1,
+                    created_at: 1,
+                    rejected_at: 1,
                     executive: {
                         $concat: [
                             { $arrayElemAt: ["$executiveData.firstName", 0] },
@@ -2965,7 +2938,7 @@ export const gettingCompliances = async (request, response, next) => { /////////
             }
         ])
         console.log(newArr)
-        response.status(201).json({message : "Total : "+newArr.length,  data :newArr})
+        response.status(201).json({ message: "Total : " + newArr.length, data: newArr })
         // const compliance = await Compliance.find({ $and: [ { status: { $eq: 0 } }, { executive: { $ne: '659d4f2609c9923c9e7b8f72' } } ] }).populate("category").populate('state').populate("executive")
         // let newArr = compliance.map(data => {
         //     return {
@@ -2991,6 +2964,81 @@ export const gettingCompliances = async (request, response, next) => { /////////
         // response.status(201).json(newArr)
     }
     catch (error) {
+        next(error)
+    }
+}
+
+
+
+
+// ---------------------- Audit ------------------------------------
+
+export const gettingAuditor = async (request, response, next) => {
+    try {
+        // const auditor = await User.find( {role : {$eq : "Auditor"}})
+        const auditor = await User.aggregate([
+            {
+                $match: {
+                    role: { $eq: "Auditor" }
+                }
+            }
+        ])
+        response.status(200).json(auditor)
+    } catch (error) {
+        next(error)
+    }
+}
+export const gettingChecklist = async (request, response, next) => {
+    try {
+        // const checklist = await User.find( {role : {$eq : "Auditor"}})
+        const checklist = await CheckList.aggregate([
+            {
+                $match: {
+                    role: { $eq: "Auditor" }
+                }
+            }
+        ])
+        response.status(200).json(checklist)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const createAudit = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { title, company, branch, state, executive, auditor, overdue, status, risk, start_date, end_date } = data
+        const audit = {
+            title, company, branch, state, executive, auditor, checklist, overdue, status, risk, start_date, end_date
+        }
+        const newAudit = new Audit(audit)
+        await newAudit.save()
+        response.status(201).json(newAudit)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const auditGetting = async (request, response, next) => {
+    try {
+        const auditData = await Audit.find({})
+        response.status(200).json(auditData)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const updateAudit = async (request, response, next) => {
+    try {
+        const auditId = request.params.id
+        const data = request.body
+        const checkAuditIdExists = await Audit.findById({_id : auditId})
+        if (!checkAuditIdExists) {
+            response.status(400).json("Audit id doesn't exists")
+        }
+        const auditData = await Audit.findByIdAndUpdate({_id : auditId}, data, {new : true})
+        response.status(201).json(auditData)
+    } catch (error) {
         next(error)
     }
 }

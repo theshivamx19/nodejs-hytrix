@@ -2,7 +2,7 @@ import express from "express";
 import cors from 'cors'
 import { isAdmin,protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
-import {login,logout,catCreate,catGettting,catEditById,createCompliances, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById, complianceFilter, complianceRejectedFilter, checkListRejectedFilter, checkListCreateFilter, checkListApproveFilter, checkListAllFilter, createElibrary, elibraryGetting, checklistOnCreateegetting, checklistApprovegetting, checklistOnRejectegetting, gettingCompliances, complianceApproveFilter } from '../controllers/Admin.js';
+import {login,logout,catCreate,catGettting,catEditById,createCompliances, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById, complianceFilter, complianceRejectedFilter, checkListRejectedFilter, checkListCreateFilter, checkListApproveFilter, checkListAllFilter, createElibrary, elibraryGetting, checklistOnCreateegetting, checklistApprovegetting, checklistOnRejectegetting, gettingCompliances, complianceApproveFilter, gettingAuditor, gettingChecklist, createAudit, auditGetting,updateAudit } from '../controllers/Admin.js';
 
 import { upload } from "../middlewares/multerConfig.js";
 // import multer from "multer";
@@ -75,5 +75,13 @@ router.get('/getCheckData', getCheckData)
 // --------- Elibrary Routes ------------------
 router.post('/createElibrary', upload.single('image'), createElibrary)
 router.get('/elibraryGetting', elibraryGetting)
+
+// --------------- Audit Routes --------------------
+router.get('/gettingAuditor', gettingAuditor)
+router.get('/gettingChecklist', gettingChecklist)
+
+router.post('/createAudit', createAudit)
+router.get('/auditGetting', auditGetting)
+router.put('/updateAudit/:id', updateAudit)
 
 export default router;
