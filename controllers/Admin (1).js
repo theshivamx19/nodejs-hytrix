@@ -13,6 +13,7 @@ import sendMail from '../utils/sendMails.js';
 import generateToken from '../utils/generateToken.js';
 import sharp from 'sharp';
 import mongoose from 'mongoose'
+import { log } from 'console';
 export const login = async (req, res, next) => {
     try {
         const user = await Admin.findOne({ email: req.body.email });
@@ -1128,7 +1129,7 @@ export const complianceApproveFilter = async (request, response, next) => {
         const executiveFilter = request.body.executive;
         const dateFilter = request.body.created_at;
         const matchStage = {};
-        matchStage['status'] = { $eq: 1 };
+        matchStage['status'] = { $eq: 0 };
         if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "") {
             // Both state and createdAt are provided
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
@@ -2916,7 +2917,7 @@ export const checkListCreateFilter = async (request, response, next) => {
             matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString());
         }
         else if (companyFilter !== undefined && companyFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
-            matchStage['company'] = new mongoose.Types.ObjectId(companyFilterFilter.toString());
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString());
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
@@ -3256,7 +3257,8 @@ export const checkListRejectedFilter = async (request, response, next) => {
             matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString());
         }
         else if (companyFilter !== undefined && companyFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
-            matchStage['company'] = new mongoose.Types.ObjectId(companyFilterFilter.toString());
+            console.log("You are in company and date");
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString());
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
@@ -3298,6 +3300,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             matchStage['executiveFilter'] = new mongoose.Types.ObjectId(executiveFilter.toString())
         }
         else if (companyFilter !== undefined && companyFilter !== "") {
+            console.log('i am in company');
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
         }
         else if (branchFilter !== undefined && branchFilter !== "") {

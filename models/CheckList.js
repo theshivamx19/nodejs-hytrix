@@ -23,11 +23,11 @@ const checkListSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
     },
-    admin: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Admin",
-        default: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72")
-    },
+    // admin: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Admin",
+    //     default: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72")
+    // },
     status: {
         type: Number,
         default: 0,

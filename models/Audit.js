@@ -12,22 +12,24 @@ const auditSchema = new mongoose.Schema({
         ref: 'Company',
     },
     branch: {
-        type: String,
-        required: true,
-        trim: true,
-        index: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
     },
     state: {
-        type: String,
-        required: true,
-        trim: true,
-        index: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'State',
     },
     executive: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
     auditor: {
+        type: String,
+        required: true,
+        trim: true,
+        index: true,
+    },
+    checklist: {
         type: String,
         required: true,
         trim: true,
@@ -40,17 +42,14 @@ const auditSchema = new mongoose.Schema({
         index: true,
     },
     status: {
-        type: String,
-        enum: ["Ongoing", "Finding", "Completed", "Rejected"],
-        default: "Ongoing",
+        type: Number,
+        default : 0,
         required: true,
         trim: true,
         index: true
     },
     risk: {
         type: String,
-        enum: ["Ongoing", "High", "Low"],
-        default: "Low",
         required: true,
         trim: true,
         index: true
