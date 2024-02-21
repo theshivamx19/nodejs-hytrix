@@ -11,6 +11,7 @@ import generateToken from '../utils/generateToken.js';
 import Checkdata from '../models/CheckData.js'
 import Elibrary from '../models/Elibrary.js'
 import Audit from '../models/Audit.js';
+import Lisereg from '../models/LiseReg.js';
 import jwt from 'jsonwebtoken';
 import { createError } from '../utils/error.js';
 import { response } from 'express';
@@ -18,6 +19,8 @@ import fs from 'node:fs'
 import sharp from 'sharp';
 import { List } from '../models/List.js';
 import mongoose from 'mongoose';
+import { uuid } from 'uuidv4';
+const uniqueId = uuid()
 // import Executive from '../models/Executive.js';
 
 
@@ -2998,8 +3001,8 @@ export const gettingChecklist = async (request, response, next) => {
                 }              // $match : {} this will fetch the all the documents
             },
             {
-                $project : {
-                    _id : 1
+                $project: {
+                    _id: 1
                 }
             }
         ])
@@ -3047,3 +3050,94 @@ export const updateAudit = async (request, response, next) => {
         next(error)
     }
 }
+
+
+
+
+// --------------------- Lise & Reg Functions ------------------------
+
+
+
+export const createLiseReg = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { regNo, rate, docReqDate, docReqFollow, docReviewDate, appliedDate, remark, challlanFees, challanNumber, challanDate, directExpenses, licenseNumber, dateOfIssue, expireDate, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, status, company, executive, state, branch } = data
+        const documents = request.files.documents[0];
+        const acknowledge = request.files.acknowledge[0];
+        const licenseUpload = request.files.licenseUpload[0];
+        const challanUpload = request.files.challanUpload[0];
+
+        let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        const url = request.protocol + '://' + request.get('host');
+        if (documents) {
+            formattedDocName = Date.now() + documents.originalname.split(' ').join('-');
+            await sharp(documents.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedDocName);
+            docImageUrl = url + '/' + imageDirectory + formattedDocName;
+        }
+        if (acknowledge) {
+            formattedAckName = Date.now() + acknowledge.originalname.split(' ').join('-');
+            await sharp(acknowledge.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedAckName);
+            ackImageUrl = url + '/' + imageDirectory + formattedAckName;
+        }
+        if (licenseUpload) {
+            formattedLicName = Date.now() + licenseUpload.originalname.split(' ').join('-');
+            await sharp(licenseUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedLicName);
+            licImageUrl = url + '/' + imageDirectory + formattedLicName;
+        }
+        if (challanUpload) {
+            formattedChallanName = Date.now() + challanUpload.originalname.split(' ').join('-');
+            await sharp(challanUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedChallanName);
+            challanImageUrl = url + '/' + imageDirectory + formattedChallanName;
+        }
+
+
+
+        // if (documents) {
+
+        // }
+        // if (challanUpload) {
+
+        // }
+        // if (licenseUpload) {
+
+        // }
+        // if (acknowledge) {
+
+        // }
+
+        const liseReg = {
+            regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, appliedDate, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, licenseNumber, dateOfIssue, expireDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, status, company, executive, state, branch
+        }
+        const newLiseReg = new Lisereg(liseReg)
+        await newLiseReg.save()
+        response.status(201).json(newLiseReg)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const nameRateGetting = async (requxest, response, next) => {
+    try {
+        const nameRate = await NameRate.find({})
+        response.status(201).json(nameRate)
+    }
+    catch (error) {
+        next(error)
+    }
+}   

@@ -1,43 +1,43 @@
 import express from "express";
 import cors from 'cors'
-import { isAdmin,protectRoute } from '../middlewares/authMiddleware.js';
+import { isAdmin, protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
-import {login,logout,catCreate,catGettting,catEditById,createCompliances, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById, complianceFilter, complianceRejectedFilter, checkListRejectedFilter, checkListCreateFilter, checkListApproveFilter, checkListAllFilter, createElibrary, elibraryGetting, checklistOnCreateegetting, checklistApprovegetting, checklistOnRejectegetting, gettingCompliances, complianceApproveFilter, gettingAuditor, gettingChecklist, createAudit, auditGetting,updateAudit } from '../controllers/Admin.js';
+import { login, logout, catCreate, catGettting, catEditById, createCompliances, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById, complianceFilter, complianceRejectedFilter, checkListRejectedFilter, checkListCreateFilter, checkListApproveFilter, checkListAllFilter, createElibrary, elibraryGetting, checklistOnCreateegetting, checklistApprovegetting, checklistOnRejectegetting, gettingCompliances, complianceApproveFilter, gettingAuditor, gettingChecklist, createAudit, auditGetting, updateAudit, createLiseReg } from '../controllers/Admin.js';
 
 import { upload } from "../middlewares/multerConfig.js";
 // import multer from "multer";
 // import path from "path";
 const router = express.Router();
 
-router.post('/login',login); 
-router.get('/logout',logout);
-router.post('/catCreate',catCreate);
-router.get('/catGettting',catGettting);
+router.post('/login', login);
+router.get('/logout', logout);
+router.post('/catCreate', catCreate);
+router.get('/catGettting', catGettting);
 // router.post('/add-user',createUsers); //router.route('/add-user').post(protectRoute,createUsers); both the ways will work
 // router.route('/user-profile/:id').get(protectRoute,usersProfileById);  //this way of request routes is also be taken 
 // router.put('/update-user-profile/:id',protectRoute,updateUsersProfileById);
-router.put('/catEditById/:id',protectRoute,catEditById);
+router.put('/catEditById/:id', protectRoute, catEditById);
 // router.route('/allUsers/:id').get(protectRoute,isAdmin,allUsers);
 // router.post('/searchUsersRecords/:id',protectRoute,isAdmin,searchUsersRecordsNav);
 // router.get('/confirmuser/:token',confirmuser);       
 // router.delete('/delete/:id',deleteUsers);
 // const storage = multer.memoryStorage();
-  
+
 // var upload = multer({ storage: storage })
-router.post('/createCompliances',  upload.fields([{ name: 'form' }, { name: 'docattachment' }]), createCompliances )
-router.post('/complianceFilter', complianceFilter )
-router.post('/complianceRejectedFilter', complianceRejectedFilter )
-router.post('/complianceApproveFilter', complianceApproveFilter )
+router.post('/createCompliances', upload.fields([{ name: 'form' }, { name: 'docattachment' }]), createCompliances)
+router.post('/complianceFilter', complianceFilter)
+router.post('/complianceRejectedFilter', complianceRejectedFilter)
+router.post('/complianceApproveFilter', complianceApproveFilter)
 // router.get('/complianceGetting', complianceGetting )
-router.get('/gettingCompliances', gettingCompliances )
-router.put('/updateCompliancesById/:id', upload.fields([{ name: 'form' }, { name: 'docattachment' }]), updateCompliancesById )
+router.get('/gettingCompliances', gettingCompliances)
+router.put('/updateCompliancesById/:id', upload.fields([{ name: 'form' }, { name: 'docattachment' }]), updateCompliancesById)
 
 // --------- User Route ----------
-router.post('/userCreate', userCreate )
-router.get('/userGetting', userGetting )
+router.post('/userCreate', userCreate)
+router.get('/userGetting', userGetting)
 
 // --------State Route : -----------
-router.post('/stateCreate', stateCreate )
+router.post('/stateCreate', stateCreate)
 
 // -------------Checklist Route --------------
 router.post('/checkListCreate', upload.fields([{ name: 'image' }, { name: 'documents' }]), checkListCreate)
@@ -83,5 +83,9 @@ router.get('/gettingChecklist', gettingChecklist)
 router.post('/createAudit', createAudit)
 router.get('/auditGetting', auditGetting)
 router.put('/updateAudit/:id', updateAudit)
+
+
+// ----------------- Lise & Reg Routes ------------
+router.post('/createLiseReg', upload.fields([{ name: 'licenseUpload' }, { name: 'challanUpload' }, { name: 'acknowledge' }, { name: 'documents' }]), createLiseReg)
 
 export default router;
