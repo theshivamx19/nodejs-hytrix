@@ -50,17 +50,18 @@ const liseRegSchema = new mongoose.Schema({
 
     challlanFees: {
         type: String,
-        required: true,
         default: null,
+        // required: true,
         index: true,
         trim: true
     },
     challanNumber: {
         type: String,
-        required: true,
+        // required: true,
         unique: true,
         index: true,
-        trim: true
+        trim: true,
+        default : null
     },
     challanDate: {
         type: Date,
@@ -76,10 +77,22 @@ const liseRegSchema = new mongoose.Schema({
         index: true,
         trim: true
     },
+    inDirectExpenses: {
+        type: String,
+        default: null,
+        index: true,
+        trim: true
+    },
+    totalExpenses: {
+        type: String,
+        default: null,
+        index: true,
+        trim: true
+    },
     licenseNumber: {
         type: String,
         default: null,
-        requied: true,
+        // requied: true,
         index: true,
         trim: true
     },
@@ -104,7 +117,7 @@ const liseRegSchema = new mongoose.Schema({
     invoiceType: {
         type: String,
         default: null,
-        required: true,
+        // required: true,
         index: true
     },
     invoiceDate: {
@@ -114,7 +127,7 @@ const liseRegSchema = new mongoose.Schema({
     },
     invoiceNumber: {
         type: String,
-        required: true,
+        // required: true,
         unique: true,
         default: null,
         index: true,
@@ -128,7 +141,7 @@ const liseRegSchema = new mongoose.Schema({
     branchName: {
         type: String,
         default: null,
-        required: true,
+        // required: true,
         index: true,
         trim: true
     },
@@ -136,6 +149,17 @@ const liseRegSchema = new mongoose.Schema({
         type: Number,
         default: 0,
         index: true
+    },
+    applicationStatus : {
+        type: Number,
+        default: 0,
+        index: true
+    }, 
+    docRemark : {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
     company: {
         type: mongoose.Schema.Types.ObjectId,
