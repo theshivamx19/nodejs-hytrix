@@ -3185,7 +3185,7 @@ export const createLiseReg = async (request, response, next) => {
         const { regNo, rate, docReqDate, docReqFollow, docReviewDate, docRemark, docStatus, appliedDate, applicationStatus, applicationRemark, challlanFees, challanNumber, challanDate, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, invoiceType, invoiceDate, invoiceNumber, submissionDate, status, branchName, company, executive, state, branch, updated_at
         } = data
 
-        let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName, documents, acknowledge, licenseUpload, challanUpload, newLiseReg, liseReg;
+        let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName, documents, acknowledge, licenseUpload, challanUpload, newLiseReg, liseReg, findRegNo;
 
         const uploadsDirectory = './data/uploads/';
         const imageDirectory = 'images/';
@@ -3238,25 +3238,35 @@ export const createLiseReg = async (request, response, next) => {
                 challanImageUrl = url + '/' + imageDirectory + formattedChallanName;
             }
         }
+        
+        
+        
         const regNos = await Lisereg.findOne({ regNo: request.body.regNo });
-
-
-        if (regNo && rate && regNo === undefined && rate === undefined) {
-            if (regNos) {
-                return response.send("409");
-            }
+        
+        if (regNos) {
+            return response.send("409");
+        }
+        
+        if (regNo && rate) {
+            console.log('you are here');
             const liseReg = {
                 regNo, rate
             }
             newLiseReg = new Lisereg(liseReg)
             await newLiseReg.save()
+            
             // response.status(201).json(newLiseReg)
         }
+        const lastInsertedId = await Lisereg.find({}).sort({'created_at' : -1})
+        // console.log(lastInsertedId[0].regNo);
+        
+        // const  getregNoandrate = getregNoandrates();
 
-        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docStatus && docRemark) {
+
+        if (documents && docReqDate && docReqFollow && docReviewDate && docStatus && docRemark) {
             console.log('you are in docremark');
             liseReg = {
-                rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark
+                documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark
             }
             // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
             // response.status(201).json(newLiseReg)
@@ -3306,15 +3316,12 @@ export const createLiseReg = async (request, response, next) => {
             }
             // console.log(liseReg);
         }
-        newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
+
+        console.log('finish');
+        // console.log(regNo);
+        newLiseReg = await Lisereg.findOneAndUpdate({ regNo : lastInsertedId[0].regNo }, liseReg, { new: true })
         response.status(201).json(newLiseReg)
 
-        // // const liseReg = {
-        //     regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, appliedDate, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, licenseNumber, dateOfIssue, expireDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, status, company, executive, state, branch
-        // }
-        // const newLiseReg = new Lisereg(liseReg)
-        // await newLiseReg.save()
-        // response.status(201).json(newLiseReg)
     } catch (error) {
         next(error)
     }
@@ -3409,3 +3416,8 @@ export const liseRegGetting = async (requxest, response, next) => {
         next(error)
     }
 }   
+
+
+function getregNoandrates(){
+
+}
