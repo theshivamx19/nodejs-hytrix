@@ -3257,7 +3257,7 @@ export const createLiseReg = async (request, response, next) => {
 
             // response.status(201).json(newLiseReg)
         }
-        const lastInsertedId = await Lisereg.find({}).sort({ 'created_at': -1 })
+        const lastInsertedId = await Lisereg.find({}).sort({ 'created_at': -1 }).limit(1)
         // console.log(lastInsertedId[0].regNo);
 
         // const  getregNoandrate = getregNoandrates();
