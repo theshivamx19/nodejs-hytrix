@@ -6,7 +6,7 @@ const liseRegSchema = new mongoose.Schema({
         type: String,
         default: null,
         required: true,
-        unique: true,
+        // unique: true,
         index: true
     },
     rate: {
@@ -17,6 +17,9 @@ const liseRegSchema = new mongoose.Schema({
     },
     documents: {
         type: Object
+    },
+    imagetypedoc:{
+        type: Object,
     },
     docReqDate: {
         type: Date,
@@ -33,12 +36,26 @@ const liseRegSchema = new mongoose.Schema({
         default: null,
         index: true
     },
+    docStatus: {
+        type: Number,
+        index: true
+    },
+    docRemark : {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
     appliedDate: {
         type: Date,
         default: null,
         index: true
     },
-    remark: {
+    applicationStatus: {
+        type: Number,
+        index: true
+    },
+    applicationRemark: {
         type: String,
         default: null,
         trim: true,
@@ -150,17 +167,6 @@ const liseRegSchema = new mongoose.Schema({
         default: 0,
         index: true
     },
-    applicationStatus : {
-        type: Number,
-        default: 0,
-        index: true
-    }, 
-    docRemark : {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
     company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',
@@ -181,7 +187,16 @@ const liseRegSchema = new mongoose.Schema({
         ref: "Branch",
         default: null
     },
-}, { timestamps: true })
+    created_at : { 
+        type: Date, 
+        default: Date.now, 
+        index: true 
+    },
+    updated_at : { 
+        type: Date, 
+        index: true 
+    },
+})
 
 const Lisereg = mongoose.model('Lisereg', liseRegSchema)
 export default Lisereg;

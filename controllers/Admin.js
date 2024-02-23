@@ -3058,27 +3058,134 @@ export const updateAudit = async (request, response, next) => {
 
 
 
+// export const createLiseReg = async (request, response, next) => {
+//     try {
+//         const data = request.body
+//         const { regNo, rate, docReqDate, docReqFollow, docReviewDate, docRemark, status, appliedDate, applicationStatus, remark, challlanFees, challanNumber, challanDate, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, company, executive, state, branch
+//         } = data
+
+//         for (const key in data) {
+//             // if (data.hasOwnProperty(key)) {
+//             const value = data[key];
+//             if (value === undefined || value === null || (typeof value === 'string' && value.trim() === '')) {
+//                 response.status(400).json("Data is missing, Either empty, undefined or null") // Input data is empty, null, or undefined
+//             }
+//             // }
+//         }
+//         const documents = request.files.documents ? request.files.documents[0] : null;
+//         const acknowledge = request.files.acknowledge ? request.files.acknowledge[0] : null;
+//         const licenseUpload = request.files.licenseUpload ? request.files.licenseUpload[0] : null;
+//         const challanUpload = request.files.challanUpload ? request.files.challanUpload[0] : null;
+
+
+//         let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName
+
+//         const uploadsDirectory = './data/uploads/';
+//         const imageDirectory = 'images/';
+
+//         fs.access(uploadsDirectory, (err) => {
+//             if (err) {
+//                 fs.mkdirSync(uploadsDirectory, { recursive: true });
+//             }
+//         });
+
+//         // Ensure that the images directory exists
+//         fs.access(uploadsDirectory + imageDirectory, (err) => {
+//             if (err) {
+//                 fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+//             }
+//         });
+
+//         const url = request.protocol + '://' + request.get('host');
+
+//         if (documents) {
+//             formattedDocName = Date.now() + documents.originalname.split(' ').join('-');
+//             await sharp(documents.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedDocName);
+//             docImageUrl = url + '/' + imageDirectory + formattedDocName;
+//         }
+//         if (acknowledge) {
+//             formattedAckName = Date.now() + acknowledge.originalname.split(' ').join('-');
+//             await sharp(acknowledge.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedAckName);
+//             ackImageUrl = url + '/' + imageDirectory + formattedAckName;
+//         }
+//         if (licenseUpload) {
+//             formattedLicName = Date.now() + licenseUpload.originalname.split(' ').join('-');
+//             await sharp(licenseUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedLicName);
+//             licImageUrl = url + '/' + imageDirectory + formattedLicName;
+//         }
+//         if (challanUpload) {
+//             formattedChallanName = Date.now() + challanUpload.originalname.split(' ').join('-');
+//             await sharp(challanUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedChallanName);
+//             challanImageUrl = url + '/' + imageDirectory + formattedChallanName;
+//         }
+
+//         if (regNo && rate) {
+//             const liseReg = {
+//                 regNo, rate
+//             }
+//             new Lisereg(liseReg)
+//         }
+//         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && status && docRemark) {
+//             const liseReg = {
+//                 regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark
+//             }
+//             new Lisereg(liseReg)
+
+//         }
+//         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge) {
+
+//             const liseReg = {
+//                 regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl
+//             }
+//             new Lisereg(liseReg)
+//         }
+//         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses) {
+
+//             const liseReg = {
+//                 regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses
+//             }
+//             new Lisereg(liseReg)
+
+//         }
+//         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload) {
+
+//             const liseReg = {
+//                 regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl
+//             }
+//             new Lisereg(liseReg)
+
+//         }
+//         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload && invoiceType && invoiceDate && invoiceNumber && submissionDate) {
+
+//             const liseReg = {
+//                 regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate
+//             }
+//             new Lisereg(liseReg)
+
+//         }
+//         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload && invoiceType && invoiceDate && invoiceNumber && submissionDate && branchName && company && executive && state && branch) {
+
+//             const liseReg = {
+//                 regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, company, executive, state, branch
+//             }
+
+//             const newLiseReg = new Lisereg(liseReg)
+//             await newLiseReg.save()
+//             response.status(201).json(newLiseReg)
+//         }
+//     } catch (error) {
+//         next(error)
+//     }
+// }
+
+
 export const createLiseReg = async (request, response, next) => {
     try {
         const data = request.body
-        const { regNo, rate, docReqDate, docReqFollow, docReviewDate, docRemark, status, appliedDate, applicationStatus, remark, challlanFees, challanNumber, challanDate, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, company, executive, state, branch
+        const { regNo, rate, docReqDate, docReqFollow, docReviewDate, docRemark, docStatus, appliedDate, applicationStatus, applicationRemark, challlanFees, challanNumber, challanDate, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, invoiceType, invoiceDate, invoiceNumber, submissionDate, status, branchName, company, executive, state, branch, updated_at
         } = data
-
-        for (const key in data) {
-            // if (data.hasOwnProperty(key)) {
-            const value = data[key];
-            if (value === undefined || value === null || (typeof value === 'string' && value.trim() === '')) {
-                response.status(400).json("Data is missing, Either empty, undefined or null") // Input data is empty, null, or undefined
-            }
-            // }
-        }
-        const documents = request.files.documents ? request.files.documents[0] : null;
-        const acknowledge = request.files.acknowledge ? request.files.acknowledge[0] : null;
-        const licenseUpload = request.files.licenseUpload ? request.files.licenseUpload[0] : null;
-        const challanUpload = request.files.challanUpload ? request.files.challanUpload[0] : null;
-
-
-        let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName
+        
+        let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName, documents, acknowledge, licenseUpload, challanUpload, newLiseReg, liseReg;
 
         const uploadsDirectory = './data/uploads/';
         const imageDirectory = 'images/';
@@ -3097,82 +3204,116 @@ export const createLiseReg = async (request, response, next) => {
         });
 
         const url = request.protocol + '://' + request.get('host');
+        // console.log(request.files);return;
+        if (request.files?.documents !== undefined && request.files?.documents[0] !== undefined) {
+            documents = request.files.documents[0];
+            // console.log(documents);return;
+            if (documents) {
+                formattedDocName = Date.now() + documents.originalname.split(' ').join('-');
+                await sharp(documents.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedDocName);
+                docImageUrl = url + '/' + imageDirectory + formattedDocName;
+            }
+        }
+        if (request.files?.acknowledge !== undefined && request.files.acknowledge[0] !== undefined) {
+            acknowledge = request.files.acknowledge[0];
+            if (acknowledge) {
+                formattedAckName = Date.now() + acknowledge.originalname.split(' ').join('-');
+                await sharp(acknowledge.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedAckName);
+                ackImageUrl = url + '/' + imageDirectory + formattedAckName;
+            }
+        }
+        if (request.files?.licenseUpload !== undefined && request.files.licenseUpload[0] !== undefined) {
+            licenseUpload = request.files.licenseUpload[0];
+            if (licenseUpload) {
+                formattedLicName = Date.now() + licenseUpload.originalname.split(' ').join('-');
+                await sharp(licenseUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedLicName);
+                licImageUrl = url + '/' + imageDirectory + formattedLicName;
+            }
+        }
+        if (request.files?.challanUpload !== undefined && request.files.challanUpload[0] !== undefined) {
+            challanUpload = request.files.challanUpload[0];
+            if (challanUpload) {
+                formattedChallanName = Date.now() + challanUpload.originalname.split(' ').join('-');
+                await sharp(challanUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedChallanName);
+                challanImageUrl = url + '/' + imageDirectory + formattedChallanName;
+            }
+        }
+        // const regNos = await Lisereg.findOne({ regNo: request.body.regNo });
 
-        if (documents) {
-            formattedDocName = Date.now() + documents.originalname.split(' ').join('-');
-            await sharp(documents.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedDocName);
-            docImageUrl = url + '/' + imageDirectory + formattedDocName;
-        }
-        if (acknowledge) {
-            formattedAckName = Date.now() + acknowledge.originalname.split(' ').join('-');
-            await sharp(acknowledge.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedAckName);
-            ackImageUrl = url + '/' + imageDirectory + formattedAckName;
-        }
-        if (licenseUpload) {
-            formattedLicName = Date.now() + licenseUpload.originalname.split(' ').join('-');
-            await sharp(licenseUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedLicName);
-            licImageUrl = url + '/' + imageDirectory + formattedLicName;
-        }
-        if (challanUpload) {
-            formattedChallanName = Date.now() + challanUpload.originalname.split(' ').join('-');
-            await sharp(challanUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedChallanName);
-            challanImageUrl = url + '/' + imageDirectory + formattedChallanName;
-        }
-
+        // if (regNos) {
+        //     return response.send("409");
+        // }
         if (regNo && rate) {
             const liseReg = {
                 regNo, rate
             }
-            new Lisereg(liseReg)
-        }
-        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && status && docRemark) {
-            const liseReg = {
-                regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark
-            }
-            new Lisereg(liseReg)
-
-        }
-        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge) {
-
-            const liseReg = {
-                regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl
-            }
-            new Lisereg(liseReg)
-        }
-        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses) {
-
-            const liseReg = {
-                regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses
-            }
-            new Lisereg(liseReg)
-
-        }
-        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload) {
-
-            const liseReg = {
-                regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl
-            }
-            new Lisereg(liseReg)
-
-        }
-        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload && invoiceType && invoiceDate && invoiceNumber && submissionDate) {
-
-            const liseReg = {
-                regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate
-            }
-            new Lisereg(liseReg)
-
-        }
-        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload && invoiceType && invoiceDate && invoiceNumber && submissionDate && branchName && company && executive && state && branch) {
-
-            const liseReg = {
-                regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, company, executive, state, branch
-            }
-
-            const newLiseReg = new Lisereg(liseReg)
+            newLiseReg = new Lisereg(liseReg)
             await newLiseReg.save()
-            response.status(201).json(newLiseReg)
+            // response.status(201).json(newLiseReg)
         }
+
+        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docStatus && docRemark) {
+            console.log('you are in docremark');
+            liseReg = {
+                rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark
+            }
+            // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
+            // response.status(201).json(newLiseReg)
+        }
+        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && docStatus && applicationRemark && appliedDate && applicationStatus && acknowledge) {
+            console.log('you are in ack');
+
+            liseReg = {
+                rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl
+            }
+            // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
+            // response.status(201).json(newLiseReg)
+        }
+        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && docStatus && applicationRemark && appliedDate && applicationStatus && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses) {
+            console.log('you are in totalexpenses');
+            liseReg = {
+                rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses
+            }
+            // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
+            // response.status(201).json(newLiseReg)
+        }
+
+
+
+        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && docStatus && appliedDate && applicationStatus && applicationRemark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload) {
+            console.log('you are in licenseupload');
+            liseReg = {
+                rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, docRemark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl
+            }
+            // const newLiseReg = new Lisereg(liseReg)
+            // await newLiseReg.save()
+            // response.status(201).json(newLiseReg)
+        }
+        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && docStatus && applicationRemark && appliedDate && applicationStatus && applicationRemark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload && invoiceType && invoiceDate && invoiceNumber && submissionDate) {
+            console.log('you are in submission date');
+            liseReg = {
+                regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate
+            }
+            // const newLiseReg = new Lisereg(liseReg)
+            // await newLiseReg.save()
+            // response.status(201).json(newLiseReg)
+        }
+        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && docStatus && applicationRemark && appliedDate && applicationStatus && applicationRemark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload && invoiceType && invoiceDate && invoiceNumber && submissionDate, branchName, status, company, executive, branch, state, updated_at) {
+            console.log('you are in branch, Done!!');
+            liseReg = {
+                regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, status, company, executive, branch, state, updated_at
+            }
+            // console.log(liseReg);
+        }
+        newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
+        response.status(201).json(newLiseReg)
+
+        // // const liseReg = {
+        //     regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, appliedDate, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, licenseNumber, dateOfIssue, expireDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, status, company, executive, state, branch
+        // }
+        // const newLiseReg = new Lisereg(liseReg)
+        // await newLiseReg.save()
+        // response.status(201).json(newLiseReg)
     } catch (error) {
         next(error)
     }
