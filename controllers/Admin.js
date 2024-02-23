@@ -3250,15 +3250,15 @@ export const createLiseReg = async (request, response, next) => {
         if (regNo && rate) {
             console.log('you are here');
             const liseReg = {
-                regNo, rate
+                regNo, ratev
             }
             newLiseReg = new Lisereg(liseReg)
             await newLiseReg.save()
 
             // response.status(201).json(newLiseReg)
         }
-        const lastInsertedId = await Lisereg.find({}).sort({ 'created_at': -1 }).limit(1)
-        // console.log(lastInsertedId[0].regNo);
+        const lastInsertedId = await Lisereg.find({}).sort({ '_id': -1 }).limit(1)
+        console.log(lastInsertedId[0].regNo);
 
         // const  getregNoandrate = getregNoandrates();
 
