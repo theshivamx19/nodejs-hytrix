@@ -3238,15 +3238,15 @@ export const createLiseReg = async (request, response, next) => {
                 challanImageUrl = url + '/' + imageDirectory + formattedChallanName;
             }
         }
-        
-        
-        
+
+
+
         const regNos = await Lisereg.findOne({ regNo: request.body.regNo });
-        
+
         if (regNos) {
             return response.send("409");
         }
-        
+
         if (regNo && rate) {
             console.log('you are here');
             const liseReg = {
@@ -3254,12 +3254,12 @@ export const createLiseReg = async (request, response, next) => {
             }
             newLiseReg = new Lisereg(liseReg)
             await newLiseReg.save()
-            
+
             // response.status(201).json(newLiseReg)
         }
-        const lastInsertedId = await Lisereg.find({}).sort({'created_at' : -1})
+        const lastInsertedId = await Lisereg.find({}).sort({ 'created_at': -1 })
         // console.log(lastInsertedId[0].regNo);
-        
+
         // const  getregNoandrate = getregNoandrates();
 
 
@@ -3271,55 +3271,54 @@ export const createLiseReg = async (request, response, next) => {
             // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
             // response.status(201).json(newLiseReg)
         }
-        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && docStatus && applicationRemark && appliedDate && applicationStatus && acknowledge) {
+        if (applicationRemark && appliedDate && applicationStatus && acknowledge) {
             console.log('you are in ack');
 
             liseReg = {
-                rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl
+                appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl
             }
             // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
             // response.status(201).json(newLiseReg)
         }
-        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && docStatus && applicationRemark && appliedDate && applicationStatus && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses) {
+        if (challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses) {
             console.log('you are in totalexpenses');
             liseReg = {
-                rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses
+                challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses
             }
             // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
             // response.status(201).json(newLiseReg)
         }
 
 
-
-        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && docStatus && appliedDate && applicationStatus && applicationRemark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload) {
+        if (licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload) {
             console.log('you are in licenseupload');
             liseReg = {
-                rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, docRemark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl
+                licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl
             }
             // const newLiseReg = new Lisereg(liseReg)
             // await newLiseReg.save()
             // response.status(201).json(newLiseReg)
         }
-        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && docStatus && applicationRemark && appliedDate && applicationStatus && applicationRemark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload && invoiceType && invoiceDate && invoiceNumber && submissionDate) {
+        if (invoiceType && invoiceDate && invoiceNumber && submissionDate) {
             console.log('you are in submission date');
             liseReg = {
-                rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate
+                invoiceType, invoiceDate, invoiceNumber, submissionDate
             }
             // const newLiseReg = new Lisereg(liseReg)
             // await newLiseReg.save()
             // response.status(201).json(newLiseReg)
         }
-        if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && docStatus && applicationRemark && appliedDate && applicationStatus && applicationRemark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload && invoiceType && invoiceDate && invoiceNumber && submissionDate, branchName, status, company, executive, branch, state, updated_at) {
+        if (branchName, status, company, executive, branch, state, updated_at) {
             console.log('you are in branch, Done!!');
             liseReg = {
-                rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, status, company, executive, branch, state, updated_at
+                branchName, status, company, executive, branch, state, updated_at
             }
             // console.log(liseReg);
         }
 
         console.log('finish');
         // console.log(regNo);
-        newLiseReg = await Lisereg.findOneAndUpdate({ regNo : lastInsertedId[0].regNo }, liseReg, { new: true })
+        newLiseReg = await Lisereg.findOneAndUpdate({ regNo: lastInsertedId[0].regNo }, liseReg, { new: true })
         response.status(201).json(newLiseReg)
 
     } catch (error) {
@@ -3415,9 +3414,9 @@ export const liseRegGetting = async (requxest, response, next) => {
     catch (error) {
         next(error)
     }
-}   
+}
 
 
-function getregNoandrates(){
+function getregNoandrates() {
 
 }
