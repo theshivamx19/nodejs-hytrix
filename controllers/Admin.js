@@ -3184,7 +3184,7 @@ export const createLiseReg = async (request, response, next) => {
         const data = request.body
         const { regNo, rate, docReqDate, docReqFollow, docReviewDate, docRemark, docStatus, appliedDate, applicationStatus, applicationRemark, challlanFees, challanNumber, challanDate, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, invoiceType, invoiceDate, invoiceNumber, submissionDate, status, branchName, company, executive, state, branch, updated_at
         } = data
-        
+
         let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName, documents, acknowledge, licenseUpload, challanUpload, newLiseReg, liseReg;
 
         const uploadsDirectory = './data/uploads/';
@@ -3238,12 +3238,13 @@ export const createLiseReg = async (request, response, next) => {
                 challanImageUrl = url + '/' + imageDirectory + formattedChallanName;
             }
         }
-        // const regNos = await Lisereg.findOne({ regNo: request.body.regNo });
+        const regNos = await Lisereg.findOne({ regNo: request.body.regNo });
 
-        // if (regNos) {
-        //     return response.send("409");
-        // }
-        if (regNo && rate) {
+
+        if (regNo && rate && regNo === undefined && rate === undefined) {
+            if (regNos) {
+                return response.send("409");
+            }
             const liseReg = {
                 regNo, rate
             }
@@ -3292,7 +3293,7 @@ export const createLiseReg = async (request, response, next) => {
         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && docStatus && applicationRemark && appliedDate && applicationStatus && applicationRemark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload && invoiceType && invoiceDate && invoiceNumber && submissionDate) {
             console.log('you are in submission date');
             liseReg = {
-                regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate
+                rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate
             }
             // const newLiseReg = new Lisereg(liseReg)
             // await newLiseReg.save()
@@ -3301,7 +3302,7 @@ export const createLiseReg = async (request, response, next) => {
         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && docStatus && applicationRemark && appliedDate && applicationStatus && applicationRemark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload && invoiceType && invoiceDate && invoiceNumber && submissionDate, branchName, status, company, executive, branch, state, updated_at) {
             console.log('you are in branch, Done!!');
             liseReg = {
-                regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, status, company, executive, branch, state, updated_at
+                rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, status, company, executive, branch, state, updated_at
             }
             // console.log(liseReg);
         }
