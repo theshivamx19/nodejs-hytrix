@@ -3447,3 +3447,332 @@ export const liseRegGetting = async (requxest, response, next) => {
 
 
 
+export const liseRegHistoryFilter = async (request, response, next) => {
+    try {
+        const stateFilter = request.body.state;
+        const companyFilter = request.body.company;
+        const executiveFilter = request.body.executive;
+        const branchFilter = request.body.branchname;
+        const dateFilter = request.body.created_at;
+
+        const matchStage = {};
+        matchStage['status'] = { $eq: 0 }
+
+        if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && companyFilter !== undefined && branchFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "" && companyFilter !== "" && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        // ------------- 4 Filter -----------------
+        else if (stateFilter !== undefined && stateFilter !== "" && companyFilter !== undefined && companyFilter !== "" && executiveFilter !== undefined && executiveFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && companyFilter !== undefined && companyFilter !== "" && executiveFilter !== undefined && executiveFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && companyFilter !== undefined && companyFilter !== "" && branchFilter !== undefined && branchFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && executiveFilter !== undefined && executiveFilter !== "" && branchFilter !== undefined && branchFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+
+        // ------------ 3 Filter --------------
+        else if (stateFilter !== undefined && stateFilter !== "" && companyFilter !== undefined && companyFilter !== "" && executiveFilter !== undefined && executiveFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && companyFilter !== undefined && companyFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && companyFilter !== undefined && companyFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && executiveFilter !== undefined && executiveFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && executiveFilter !== undefined && executiveFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && branchFilter !== undefined && branchFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (companyFilter !== undefined && companyFilter !== "" && executiveFilter !== undefined && executiveFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+
+        }
+        else if (companyFilter !== undefined && companyFilter !== "" && executiveFilter !== undefined && executiveFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (companyFilter !== undefined && companyFilter !== "" && branchFilter !== undefined && branchFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            // Both state and createdAt are provided
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (executiveFilter !== undefined && executiveFilter !== "" && branchFilter !== undefined && branchFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+
+        // ------------------ 2 Filter ----------------
+
+        else if (stateFilter !== undefined && stateFilter !== "" && companyFilter !== undefined && companyFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && executiveFilter !== undefined && executiveFilter !== "") {
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            // Only state is provided
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (companyFilter !== undefined && companyFilter !== "" && executiveFilter !== undefined && executiveFilter !== "") {
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+        }
+        else if (companyFilter !== undefined && companyFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString());
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString());
+        }
+        else if (companyFilter !== undefined && companyFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString());
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (executiveFilter !== undefined && executiveFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+        }
+        else if (executiveFilter !== undefined && executiveFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (branchFilter !== undefined && branchFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+
+        // ------------------ 1 Filter ----------------------
+        else if (stateFilter !== undefined && stateFilter !== "") {
+            // Only state is provided
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+        }
+        else if (executiveFilter !== undefined && executiveFilter !== "") {
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+        }
+        else if (companyFilter !== undefined && companyFilter !== "") {
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+        }
+        else if (branchFilter !== undefined && branchFilter !== "") {
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+        }
+        else if (dateFilter !== undefined && dateFilter !== "") {
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+
+        // console.log(matchStage);
+        const filter = await Lisereg.aggregate([
+            {
+                $match: matchStage,
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branchname",
+                    foreignField: "_id",
+                    as: "branchData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    approvedate: 1,
+                    approvalStatus: 1,
+                    sentData : 1,
+                    created_at: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.name", 0] },
+                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
+                }
+            }
+
+        ]);
+
+        response.status(201).json(filter);
+    } catch (error) {
+        next(error);
+    }
+};
+
