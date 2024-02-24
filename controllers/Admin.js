@@ -3341,14 +3341,119 @@ export const createLiseReg = async (request, response, next) => {
 export const liseRegUpdateById = async (request, response, next) => {
     try {
         const liseRegId = request.params.id
-        const data = request.body
-        console.log(data);
         const checkLiseRegId = await Lisereg.findById({ _id: liseRegId })
         if (!checkLiseRegId) {
-            response.status(404).json("No such lisereg id exists")
+            response.status(404).json("Given lisereg id doesn't exists")
         }
-        const liseReg = await Lisereg.findByIdAndUpdate({ _id: liseRegId }, data, { new: true })
-        response.status(200).json(liseReg)
+
+        const data = request.body
+
+        let { regNo, rate, docReqDate, docReqFollow, docReviewDate, docRemark, docStatus, imagetypedoc, appliedDate, applicationStatus, applicationRemark, acknowledgeType, challlanFees, challanNumber, challanDate, directExpenses, challanUploadType, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUploadType, invoiceType, invoiceDate, invoiceNumber, submissionDate, status, company, executive, state, branch, created_at
+        } = data
+
+        let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName, documents, acknowledge, licenseUpload, challanUpload, newLiseReg, liseReg;
+
+        console.log(data);
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        const url = request.protocol + '://' + request.get('host');
+        if (request.files?.documents !== undefined && request.files?.documents[0] !== undefined) {
+            documents = request.files.documents[0];
+            if (documents) {
+                formattedDocName = Date.now() + documents.originalname.split(' ').join('-');
+                await sharp(documents.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedDocName);
+                docImageUrl = url + '/' + imageDirectory + formattedDocName;
+            }
+        }
+        if (request.files?.acknowledge !== undefined && request.files.acknowledge[0] !== undefined) {
+            acknowledge = request.files.acknowledge[0];
+            if (acknowledge) {
+                formattedAckName = Date.now() + acknowledge.originalname.split(' ').join('-');
+                await sharp(acknowledge.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedAckName);
+                ackImageUrl = url + '/' + imageDirectory + formattedAckName;
+            }
+        }
+        if (request.files?.licenseUpload !== undefined && request.files.licenseUpload[0] !== undefined) {
+            licenseUpload = request.files.licenseUpload[0];
+            if (licenseUpload) {
+                formattedLicName = Date.now() + licenseUpload.originalname.split(' ').join('-');
+                await sharp(licenseUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedLicName);
+                licImageUrl = url + '/' + imageDirectory + formattedLicName;
+            }
+        }
+        if (request.files?.challanUpload !== undefined && request.files.challanUpload[0] !== undefined) {
+            challanUpload = request.files.challanUpload[0];
+            if (challanUpload) {
+                formattedChallanName = Date.now() + challanUpload.originalname.split(' ').join('-');
+                await sharp(challanUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedChallanName);
+                challanImageUrl = url + '/' + imageDirectory + formattedChallanName;
+            }
+        }
+        if (regNo && rate) {
+            console.log('you are here');
+            liseReg = {
+                regNo, rate
+            }
+        }
+        if (documents && docReqDate && docReqFollow && docReviewDate && docStatus && docRemark) {
+            console.log('you are in docremark');
+            liseReg = {
+                documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, imagetypedoc
+            }
+        }
+        if (applicationRemark && appliedDate && applicationStatus && acknowledge) {
+            console.log('you are in ack');
+            liseReg = {
+                appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, acknowledgeType
+            }
+        }
+        if (challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses) {
+            console.log('you are in totalexpenses');
+            // const checkChallanNumber = await Lisereg.findOne({ challanNumber })
+            // if (checkChallanNumber) {
+            //     return response.send({ message: "409, Challan Number already exists" })
+            // }
+            liseReg = {
+                challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, challanUploadType
+            }
+        }
+        if (dateOfIssue && expireDate && renewalDate && licenseUpload) {
+            console.log('you are in licenseupload');
+            liseReg = {
+                licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, licenseUploadType
+            }
+            console.log(liseReg);
+        }
+        if (invoiceType && invoiceDate && invoiceNumber && submissionDate) {
+            console.log('you are in submission date');
+
+            liseReg = {
+                invoiceType, invoiceDate, invoiceNumber, submissionDate
+            }
+        }
+        if (branch && company && executive && state) {
+            console.log('you are in branch, Done!!');
+            liseReg = {
+                company, executive, branch, state, created_at
+            }
+        }
+        console.log('finish');
+        newLiseReg = await Lisereg.findByIdAndUpdate({ _id: liseRegId }, liseReg, { new: true })
+        response.status(201).json(newLiseReg)
+
     } catch (error) {
         next(error)
     }
@@ -3753,7 +3858,7 @@ export const liseRegHistoryFilter = async (request, response, next) => {
                     _id: 1,
                     approvedate: 1,
                     approvalStatus: 1,
-                    sentData : 1,
+                    sentData: 1,
                     created_at: 1,
                     executive: {
                         $concat: [

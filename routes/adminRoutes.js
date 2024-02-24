@@ -88,7 +88,7 @@ router.put('/updateAudit/:id', updateAudit)
 // ----------------- Lise & Reg Routes ------------
 router.post('/createLiseReg', upload.fields([{ name: 'licenseUpload' }, { name: 'challanUpload' }, { name: 'acknowledge' }, { name: 'documents' }]), createLiseReg)
 router.get('/liseRegGetting', liseRegGetting)
-router.patch('/liseRegUpdateById/:id', liseRegUpdateById)
+router.put('/liseRegUpdateById/:id', liseRegUpdateById)
 router.post('/liseRegHistoryFilter', liseRegHistoryFilter)
 
 export default router;
