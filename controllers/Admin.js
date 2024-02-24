@@ -3245,7 +3245,7 @@ export const createLiseReg = async (request, response, next) => {
         const regNos = await Lisereg.findOne({ regNo: request.body.regNo });
 
         if (regNos) {
-            return response.send({message : "409, Registration/License Number already exists"});
+            return response.send({ message: "409, Registration/License Number already exists" });
         }
 
 
@@ -3286,7 +3286,7 @@ export const createLiseReg = async (request, response, next) => {
             console.log('you are in totalexpenses');
             const checkChallanNumber = await Lisereg.findOne({ challanNumber })
             if (checkChallanNumber) {
-                return response.send({message : "409, Challan Number already exists"})
+                return response.send({ message: "409, Challan Number already exists" })
             }
             liseReg = {
                 challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, challanUploadType
@@ -3311,7 +3311,7 @@ export const createLiseReg = async (request, response, next) => {
 
             const checkInvoiceNumber = await Lisereg.findOne({ invoiceNumber })
             if (checkInvoiceNumber) {
-                return response.send({message : "409, Invoice Number already exists"})
+                return response.send({ message: "409, Invoice Number already exists" })
             }
             liseReg = {
                 invoiceType, invoiceDate, invoiceNumber, submissionDate
@@ -3333,6 +3333,22 @@ export const createLiseReg = async (request, response, next) => {
         newLiseReg = await Lisereg.findOneAndUpdate({ regNo: lastInsertedId[0].regNo }, liseReg, { new: true })
         response.status(201).json(newLiseReg)
 
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const liseRegUpdateById = async (request, response, next) => {
+    try {
+        const liseRegId = request.params.id
+        const data = request.body
+        console.log(data);
+        const checkLiseRegId = await Lisereg.findById({ _id: liseRegId })
+        if (!checkLiseRegId) {
+            response.status(404).json("No such lisereg id exists")
+        }
+        const liseReg = await Lisereg.findByIdAndUpdate({ _id: liseRegId }, data, { new: true })
+        response.status(200).json(liseReg)
     } catch (error) {
         next(error)
     }
@@ -3430,6 +3446,4 @@ export const liseRegGetting = async (requxest, response, next) => {
 }
 
 
-function getregNoandrates() {
 
-}
