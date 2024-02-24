@@ -18,9 +18,9 @@ const liseRegSchema = new mongoose.Schema({
     documents: {
         type: Object
     },
-    imagetypedoc:{
-        type: Object,
-    },
+    // imagetypedoc:{
+    //     type: Object,
+    // },
     docReqDate: {
         type: Date,
         default: null,
@@ -64,11 +64,12 @@ const liseRegSchema = new mongoose.Schema({
     acknowledge: {
         type: Object
     },
-
+    // acknowledgeType:{
+    //     type: Object
+    // },
     challlanFees: {
-        type: String,
+        type: mongoose.Types.Decimal128,
         default: null,
-        // required: true,
         index: true,
         trim: true
     },
@@ -88,31 +89,33 @@ const liseRegSchema = new mongoose.Schema({
     challanUpload: {
         type: Object
     },
+    // challanUploadType: {
+    //     type: Object
+    // },
     directExpenses: {
-        type: String,
+        type: mongoose.Types.Decimal128,
         default: null,
         index: true,
         trim: true
     },
     inDirectExpenses: {
-        type: String,
+        type: mongoose.Types.Decimal128,
         default: null,
         index: true,
         trim: true
     },
     totalExpenses: {
-        type: String,
+        type: mongoose.Types.Decimal128,
         default: null,
         index: true,
         trim: true
     },
-    licenseNumber: {
-        type: String,
-        default: null,
-        // requied: true,
-        index: true,
-        trim: true
-    },
+    // licenseNumber: {
+    //     type: String,
+    //     default: null,
+    //     index: true,
+    //     trim: true
+    // },
     dateOfIssue: {
         type: Date,
         default: null,
@@ -131,6 +134,9 @@ const liseRegSchema = new mongoose.Schema({
     licenseUpload: {
         type: Object
     },
+    // licenseUploadType: {
+    //     type: Object
+    // },
     invoiceType: {
         type: String,
         default: null,
@@ -155,12 +161,10 @@ const liseRegSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    branchName: {
-        type: String,
-        default: null,
-        // required: true,
-        index: true,
-        trim: true
+    branch: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        default: null
     },
     status: {
         type: Number,

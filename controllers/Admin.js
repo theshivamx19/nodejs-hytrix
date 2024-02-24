@@ -3179,10 +3179,11 @@ export const updateAudit = async (request, response, next) => {
 // }
 
 
+
 export const createLiseReg = async (request, response, next) => {
     try {
         const data = request.body
-        const { regNo, rate, docReqDate, docReqFollow, docReviewDate, docRemark, docStatus, appliedDate, applicationStatus, applicationRemark, challlanFees, challanNumber, challanDate, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, invoiceType, invoiceDate, invoiceNumber, submissionDate, status, branchName, company, executive, state, branch, updated_at
+        let { regNo, rate, docReqDate, docReqFollow, docReviewDate, docRemark, docStatus, imagetypedoc, appliedDate, applicationStatus, applicationRemark, acknowledgeType, challlanFees, challanNumber, challanDate, directExpenses, challanUploadType, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUploadType, invoiceType, invoiceDate, invoiceNumber, submissionDate, status, company, executive, state, branch, created_at
         } = data
 
         let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName, documents, acknowledge, licenseUpload, challanUpload, newLiseReg, liseReg, findRegNo;
@@ -3244,13 +3245,14 @@ export const createLiseReg = async (request, response, next) => {
         const regNos = await Lisereg.findOne({ regNo: request.body.regNo });
 
         if (regNos) {
-            return response.send("409");
+            return response.send({message : "409, Registration/License Number already exists"});
         }
+
 
         if (regNo && rate) {
             console.log('you are here');
             const liseReg = {
-                regNo, ratev
+                regNo, rate
             }
             newLiseReg = new Lisereg(liseReg)
             await newLiseReg.save()
@@ -3266,7 +3268,7 @@ export const createLiseReg = async (request, response, next) => {
         if (documents && docReqDate && docReqFollow && docReviewDate && docStatus && docRemark) {
             console.log('you are in docremark');
             liseReg = {
-                documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark
+                documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, imagetypedoc
             }
             // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
             // response.status(201).json(newLiseReg)
@@ -3275,32 +3277,42 @@ export const createLiseReg = async (request, response, next) => {
             console.log('you are in ack');
 
             liseReg = {
-                appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl
+                appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, acknowledgeType
             }
             // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
             // response.status(201).json(newLiseReg)
         }
         if (challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses) {
             console.log('you are in totalexpenses');
+            const checkChallanNumber = await Lisereg.findOne({ challanNumber })
+            if (checkChallanNumber) {
+                return response.send({message : "409, Challan Number already exists"})
+            }
             liseReg = {
-                challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses
+                challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, challanUploadType
             }
             // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
             // response.status(201).json(newLiseReg)
         }
 
 
-        if (licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload) {
+        if (dateOfIssue && expireDate && renewalDate && licenseUpload) {
             console.log('you are in licenseupload');
             liseReg = {
-                licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl
+                licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, licenseUploadType
             }
+            console.log(liseReg);
             // const newLiseReg = new Lisereg(liseReg)
             // await newLiseReg.save()
             // response.status(201).json(newLiseReg)
         }
         if (invoiceType && invoiceDate && invoiceNumber && submissionDate) {
             console.log('you are in submission date');
+
+            const checkInvoiceNumber = await Lisereg.findOne({ invoiceNumber })
+            if (checkInvoiceNumber) {
+                return response.send({message : "409, Invoice Number already exists"})
+            }
             liseReg = {
                 invoiceType, invoiceDate, invoiceNumber, submissionDate
             }
@@ -3308,14 +3320,14 @@ export const createLiseReg = async (request, response, next) => {
             // await newLiseReg.save()
             // response.status(201).json(newLiseReg)
         }
-        if (branchName, status, company, executive, branch, state, updated_at) {
+        if (branch && company && executive && state) {
             console.log('you are in branch, Done!!');
             liseReg = {
-                branchName, status, company, executive, branch, state, updated_at
+                company, executive, branch, state, created_at
             }
             // console.log(liseReg);
         }
-
+        // console.log(liseReg); return;
         console.log('finish');
         // console.log(regNo);
         newLiseReg = await Lisereg.findOneAndUpdate({ regNo: lastInsertedId[0].regNo }, liseReg, { new: true })
@@ -3325,6 +3337,7 @@ export const createLiseReg = async (request, response, next) => {
         next(error)
     }
 }
+
 
 export const liseRegGetting = async (requxest, response, next) => {
     try {
