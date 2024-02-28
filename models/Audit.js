@@ -27,7 +27,6 @@ const auditSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "State"
     },
-
     auditor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"

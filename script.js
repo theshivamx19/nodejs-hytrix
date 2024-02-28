@@ -113,7 +113,7 @@ const uri = "https://api.github.com/users/theshivamx19"
 // }
 // console.log(newObj);
 
-const arr = ['hello', 'everyone', 'Shivam', 'this', 'side']
+// const arr = ['hello', 'everyone', 'Shivam', 'this', 'side']
 
 // const newArr = []
 
@@ -130,9 +130,17 @@ const arr = ['hello', 'everyone', 'Shivam', 'this', 'side']
 // }
 // console.log(newObj);
 
-const newArr = arr.map(item=>{
-    console.log(item.split("").join(" "));
-    return item.split("")
-    
-})
-console.log(newArr);
+// const newArr = arr.map(item=>{
+//     console.log(item.split("").join(" "));
+//     return item.split("")
+
+// })
+// console.log(newArr);
+
+const filters = {
+    state: "state",
+    company: "company"
+}
+// console.log(Object.keys(filters))
+const filterKeys = Object.keys(filters).filter(key=> filters[key] !== undefined && filters[key]!== "")
+console.log(filterKeys);

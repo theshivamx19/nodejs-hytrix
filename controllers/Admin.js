@@ -3084,7 +3084,7 @@ export const auditChecklistFilter = async (request, response, next) => {
         }
 
         // console.log(matchStage);
-        const filter = await Checklist.aggregate([
+        const filter = await CheckList.aggregate([
             {
                 $match: matchStage,
             },
@@ -3152,8 +3152,96 @@ export const auditChecklistFilter = async (request, response, next) => {
 };
 
 
-export const auditFilter = async (request, response, next)=>{
-    
+export const auditFilter = async (request, response, next) => {
+    try {
+        const data = request.body
+        const matchStage = {}
+        const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus } = data
+        const filters = { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus }
+
+        const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "")
+
+        if (filterKeys.length > 0) {
+            for (const key of filterKeys) {
+                if (key === "company" || key === "state" || key === "branch" || key === "executive" || key === "auditor") {
+                    matchStage[key] = new mongoose.Types.ObjectId(filters[key])
+                }
+                // else if(key === "auditstatus"){
+                //     matchStage[key] = {}
+                // }
+                else if(key === "start_date" || key === "end_date") {
+                    const dateObject = new Date(filters[key]);
+                    const nextDay = new Date(dateObject);
+                    nextDay.setDate(dateObject.getDate() + 1);
+                    matchStage[key] = {
+                        $gte: dateObject,
+                        $lt: nextDay
+                    };
+                }
+            }
+        }
+        const filter = await Audit.aggregate([
+            {
+                $match : matchStage
+            },
+            {
+                $lookup : {
+                    from : "users",
+                    localField : "auditor",
+                    foreignField : "_id",
+                    as : "executiveData"
+                }
+            }, 
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branchname",
+                    foreignField: "_id",
+                    as: "branchData",
+                },
+            },
+            {
+                $project : {
+                    title : 1,
+                    start_date : 1,
+                    end_date : 1,
+                    overdue : 1,
+                    status : 1,
+                    risk : 1,
+                    
+                }
+            }
+
+        ])
+        response.status(200).json(filter)
+
+    } catch (error) {
+        next(error)
+    }
 }
 
 
