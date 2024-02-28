@@ -92,9 +92,47 @@ const uri = "https://api.github.com/users/theshivamx19"
 // }
 
 
-for (let i = 0; i <= 5; i++) {
-    console.log("\t");
-    for (let j = 0; j <= i; j++) {
-        console.log("*");
-    }
-}
+// for (let i = 0; i <= 5; i++) {
+//     console.log("\t");
+//     for (let j = 0; j <= i; j++) {
+//         console.log("*");
+//     }
+// }
+
+// const str = 'Hello everyone, Shivam this side, i am going to tell you more about my company named as Shivam Industries'
+
+// let newObj = {}
+
+// for (let s of str) {
+//     if(newObj[s]){
+//         newObj[s] += 1
+//     }
+//     else {
+//         newObj[s] = 1
+//     }
+// }
+// console.log(newObj);
+
+const arr = ['hello', 'everyone', 'Shivam', 'this', 'side']
+
+// const newArr = []
+
+// const str = arr.toString().split(",").join(" ")
+// console.log(str);
+// const newObj = {}
+// for(let s of str){
+//     if(newObj[s]){
+//         newObj[s] += 1
+//     }
+//     else {
+//         newObj[s] = 1
+//     }
+// }
+// console.log(newObj);
+
+const newArr = arr.map(item=>{
+    console.log(item.split("").join(" "));
+    return item.split("")
+    
+})
+console.log(newArr);

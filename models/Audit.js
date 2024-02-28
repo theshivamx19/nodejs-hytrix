@@ -15,56 +15,72 @@ const auditSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Branch',
     },
-    state: {
+    compliance:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'State',
+        ref: "Compliance"
     },
     executive: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
+    state: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State"
+    },
     auditor: {
-        type: String,
-        required: true,
-        trim: true,
-        index: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     },
-    checklist: {
+    // overdue: {
+    //     type: String,
+    //     default: null
+    // },
+    auditstatus: {
         type: String,
-        required: true,
-        trim: true,
-        index: true,
-    },
-    overdue: {
-        type: String,
-        required: true,
-        trim: true,
-        index: true,
-    },
-    status: {
-        type: Number,
-        default : 0,
-        required: true,
-        trim: true,
+        default:null,
         index: true
     },
     risk: {
         type: String,
-        required: true,
-        trim: true,
         index: true
+    },
+    score: {
+        type: Number,
+        index: true,
+        default:null
+    },
+    briefauditor: {
+        type: String,
+        index: true,
+        default:null
+    },
+    checkboxlist: {
+        type: Array,
+        index: true,
+        default: null
     },
     start_date: {
         type: Date,
-        default: Date.now
+        default: null
     },
     end_date: {
         type: Date,
+        default: null
+    },
+    status: {
+        type: Number,
+        default:0,
+        index: true
+    },
+    created_at:{
+        type: Date,
         default: Date.now
     },
-
-
-}, { timestamps: true })
+    updated_at:{
+        type: Date,
+        default: null
+    }
+})
 
 const Audit = mongoose.model('Audit', auditSchema)
 export default Audit;

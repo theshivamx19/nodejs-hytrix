@@ -10,68 +10,53 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelector('#add-task').disabled = true
+      document.querySelector('#task').onkeyup = () => {
+        if (document.querySelector('#task').value.length > 0) {
+          document.querySelector('#add-task').disabled = false
+        }
+        else{
+          document.querySelector('#add-task').disabled = true
+        }
+      }
+
+      document.querySelector('#add-task').onclick = () => {
+        if (!document.querySelector('#task').value == "") {
+          const li = document.createElement('li')
+          li.innerHTML = document.querySelector('#task').value
+          document.querySelector('#new-task').append(li)
+          document.querySelector('#task').value = ""
+          document.querySelector('#add-task').disabled = true
+        }
+      }
+    })
+  </script>
 </head>
 
 <body>
-  <form action="" method="post">
-  <div class="container w-25">
-    <label for="">Enter name</label>
-    <div class="form-group d-flex justify-content-center align-items-center">
-      <input type="text" class="form-control" name="name" id="name" aria-describedby="helpId" placeholder="Name">
-      <button type="submit" class="btn btn-primary" id="btn" name="btn">Add</button>
-    </div>
+
+  <div
+    style="display: flex; justify-content: start; align-items:flex-start; height: 100vh; flex-direction: column; gap: 20px; margin-left: 30px;">
+
+    <h1>Tasks</h1>
+    <ul id="new-task"></ul>
+    <input type="text" class="form-control" name="" id="task" aria-describedby="helpId" placeholder="Task"
+      style="width: 20%;">
+    <button class="btn btn-primary" id="add-task">Add Task</button>
+
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-  <!-- <script>
-    const btn = document.getElementById('btn')
-    const name = document.getElementById('name')
-    const container = document.querySelector('.container')
-    
-    const cloneField = function () {
-      const inputField = document.createElement('input')
-      const br = document.createElement('br')
-      inputField.placeholder = "Name"
-      inputField.setAttribute("class", "form-control")
-      container.append(inputField,br, btn)
 
-    }
-    btn.addEventListener("click", cloneField)
-    
-    </script> -->
-
-  <script>
-    let counter = 1; // Counter for unique IDs and names
-
-    const btn = document.getElementById('btn')
-    const name = document.getElementById('name')
-    const container = document.querySelector('.container')
-
-    const cloneField = function () {
-      const inputField = document.createElement('input')
-      const br = document.createElement('br')
-
-      inputField.placeholder = "Name"
-      inputField.setAttribute("class", "form-control")
-      inputField.setAttribute("name", "name" + counter)
-      inputField.setAttribute("id", "name" + counter)
-
-      container.append(inputField, br)
-      counter++;
-    }
-
-    btn.addEventListener("click", cloneField)
-  </script>
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-  integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-  crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-  integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-  crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-  integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-  crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
 </body>
 
 

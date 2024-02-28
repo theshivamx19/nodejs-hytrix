@@ -2499,69 +2499,6 @@ export const getCheckData = async (request, response, next) => {
     }
 }
 
-// ---------------------------------- Elibrary -------------------------------------------
-
-export const createElibrary = async (request, response, next) => {
-    try {
-        const data = request.body
-        const { category, placeholder, label, date, description } = data
-        const image = request.file
-        const url = request.protocol + '://' + request.get('host');
-        const formattedImageFileName = Date.now() + image.originalname.split(' ').join('-');
-
-        const uploadsDirectory = './data/uploads/';
-        const imageDirectory = 'images/';
-
-        fs.access(uploadsDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory, { recursive: true });
-            }
-        });
-
-        // Ensure that the images directory exists
-        fs.access(uploadsDirectory + imageDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
-            }
-        });
-
-        await sharp(image.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
-        const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-        const elibrary = {
-            category, placeholder, label, date, description, image: imageUrl
-        }
-        const newElibrary = new Elibrary(elibrary)
-        await newElibrary.save()
-        response.status(201).json(newElibrary)
-    } catch (error) {
-        next(error)
-    }
-}
-
-
-export const elibraryGetting = async (request, respone, next) => {
-    try {
-        const elibraryData = await Elibrary.find({})
-        respone.status(200).json(elibraryData)
-    } catch (error) {
-        next(error)
-    }
-}
-
-
-// ---------------------------using then catch --------------------------
-// export const elibraryGetting = (request, res, next) => {
-//     try {
-//         Elibrary.find({}).then(response => {
-//             response.map(data => {
-//                 console.log(data.label);
-//             })
-//         })
-//     } catch (error) {
-//         next(error)
-//     }
-// }
-
 export const checklistOnCreateegetting = async (request, response, next) => {
     try {
         const newArr = await CheckList.aggregate([
@@ -3015,9 +2952,9 @@ export const gettingChecklist = async (request, response, next) => {
 export const createAudit = async (request, response, next) => {
     try {
         const data = request.body
-        const { title, company, branch, state, executive, auditor, overdue, status, risk, start_date, end_date } = data
+        const { title, company, branch, state, executive, auditor, scope, briefauditor, checkboxlist, auditstatus, status, risk, start_date, end_date } = data
         const audit = {
-            title, company, branch, state, executive, auditor, checklist, overdue, status, risk, start_date, end_date
+            title, company, branch, state, executive, auditor, scope, briefauditor, checkboxlist, auditstatus, status, risk, start_date, end_date
         }
         const newAudit = new Audit(audit)
         await newAudit.save()
@@ -3030,7 +2967,12 @@ export const createAudit = async (request, response, next) => {
 export const auditGetting = async (request, response, next) => {
     try {
         const auditData = await Audit.find({})
-        response.status(200).json(auditData)
+        let totalDue = 0
+        auditData.forEach(item=>{
+            totalDue += Number(item.overdue)
+            return totalDue
+        })
+        response.status(200).json({Total : totalDue, data :auditData})
     } catch (error) {
         next(error)
     }
@@ -3173,6 +3115,92 @@ export const updateAudit = async (request, response, next) => {
 //             await newLiseReg.save()
 //             response.status(201).json(newLiseReg)
 //         }
+//     } catch (error) {
+//         next(error)
+//     }
+// }
+
+
+
+
+// ---------------------------------- Elibrary -------------------------------------------
+
+export const createElibrary = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { category, placeholder, label, date, description } = data
+        const image = request.file
+        const url = request.protocol + '://' + request.get('host');
+        const formattedImageFileName = Date.now() + image.originalname.split(' ').join('-');
+
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        await sharp(image.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+        const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+        const elibrary = {
+            category, placeholder, label, date, description, image: imageUrl
+        }
+        const newElibrary = new Elibrary(elibrary)
+        await newElibrary.save()
+        response.status(201).json(newElibrary)
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const elibraryGetting = async (request, response, next) => {
+    try {
+        const elibraryData = await Elibrary.find({})
+        response.status(200).json(elibraryData)
+    } catch (error) {
+        next(error)
+    }
+}
+export const elibraryGettingById = async (request, response, next) => {
+    try {
+        const { id: elibraryId } = request.params
+        const checkElibraryId = await Elibrary.findById({ _id: elibraryId })
+        if (!checkElibraryId) {
+            response.status(404).json("This elibrary doesn't exists")
+        }
+        response.status(200).json(checkElibraryId)
+        // const filter = await Elibrary.aggregate([
+        //     {
+        //         $match : {
+        //             _id : new mongoose.Types.ObjectId(elibraryId.toString())
+        //         }
+        //     }
+        // ])
+        // response.status(200).json(filter)
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+// ---------------------------using then catch --------------------------
+// export const elibraryGetting = (request, res, next) => {
+//     try {
+//         Elibrary.find({}).then(response => {
+//             response.map(data => {
+//                 console.log(data.label);
+//             })
+//         })
 //     } catch (error) {
 //         next(error)
 //     }
@@ -3881,3 +3909,11 @@ export const liseRegHistoryFilter = async (request, response, next) => {
     }
 };
 
+
+
+
+// **************************** ------DASHBOARD------- *************************
+
+export const dashboard = async (request, response, next)=>{
+
+}
