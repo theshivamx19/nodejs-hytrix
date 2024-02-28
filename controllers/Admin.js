@@ -2968,11 +2968,15 @@ export const auditGetting = async (request, response, next) => {
     try {
         const auditData = await Audit.find({})
         let totalDue = 0
-        auditData.forEach(item=>{
-            totalDue += Number(item.overdue)
-            return totalDue
+        auditData.forEach(item => {
+            const newDueDate = new Date(item.duedate)
+            if (newDueDate > newDueDate + 1) {
+                totalDue += 1
+                console.log(totalDue);
+                return totalDue
+            }
         })
-        response.status(200).json({Total : totalDue, data :auditData})
+        response.status(200).json({ total: totalDue, data: auditData })
     } catch (error) {
         next(error)
     }
@@ -2992,6 +2996,168 @@ export const updateAudit = async (request, response, next) => {
         next(error)
     }
 }
+
+// ---------------------- Audit Checklist Filter ----------------------
+
+export const auditChecklistFilter = async (request, response, next) => {
+    try {
+        const stateFilter = request.body.state;
+        const branchFilter = request.body.branchname;
+        const categoryFilter = request.body.company;
+        const complianceFilter = request.body.compliance;
+
+        const matchStage = {};
+        matchStage['status'] = { $eq: 0 }
+
+        if (stateFilter !== undefined && complianceFilter !== undefined && categoryFilter !== undefined && branchFilter !== undefined && stateFilter !== "" && complianceFilter !== "" && categoryFilter !== "" && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['company'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString())
+        }
+
+        // ------------ 3 Filter --------------
+        else if (stateFilter !== undefined && stateFilter !== "" && categoryFilter !== undefined && categoryFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && complianceFilter !== undefined && complianceFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && categoryFilter !== undefined && categoryFilter !== "" && complianceFilter !== undefined && complianceFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString());
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
+
+        }
+        else if (categoryFilter !== undefined && categoryFilter !== "" && complianceFilter !== undefined && complianceFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString())
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+
+        }
+
+        // ------------------ 2 Filter ----------------
+
+        else if (stateFilter !== undefined && stateFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && complianceFilter !== undefined && complianceFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString())
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && categoryFilter !== undefined && categoryFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+        }
+        else if (branchFilter !== undefined && branchFilter !== "" && categoryFilter !== undefined && categoryFilter !== "") {
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+        }
+        else if (branchFilter !== undefined && branchFilter !== "" && complianceFilter !== undefined && complianceFilter !== "") {
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+        }
+        else if (categoryFilter !== undefined && categoryFilter !== "" && complianceFilter !== undefined && complianceFilter !== "") {
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+        }
+
+        // ------------------ 1 Filter ----------------------
+        else if (stateFilter !== undefined && stateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+        }
+        else if (complianceFilter !== undefined && complianceFilter !== "") {
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
+        }
+        else if (categoryFilter !== undefined && categoryFilter !== "") {
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+        }
+        else if (branchFilter !== undefined && branchFilter !== "") {
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+        }
+
+        // console.log(matchStage);
+        const filter = await Checklist.aggregate([
+            {
+                $match: matchStage,
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "compliances",
+                    localField: "compliance",
+                    foreignField: "_id",
+                    as: "complianceData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branchname",
+                    foreignField: "_id",
+                    as: "branchData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    state: 1,
+                    act: 1,
+                    rule: 1,
+                    category: 1,
+                    form: 1,
+                    document: 1,
+                    question: 1,
+                    description: 1,
+                    compliance: 1,
+                    risk: 1,
+                    consequences: 1,
+                    frequency: 1,
+                    duedate: 1,
+                    remark: 1,
+                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.name", 0] },
+                    branch: { $arrayElemAt: ["$branchData.name", 0] },
+                }
+            }
+        ]);
+
+        response.status(201).json(filter);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+export const auditFilter = async (request, response, next)=>{
+    
+}
+
+
+
 
 
 
@@ -3914,6 +4080,6 @@ export const liseRegHistoryFilter = async (request, response, next) => {
 
 // **************************** ------DASHBOARD------- *************************
 
-export const dashboard = async (request, response, next)=>{
+export const dashboard = async (request, response, next) => {
 
 }
