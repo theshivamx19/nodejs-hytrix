@@ -35,7 +35,7 @@ const auditSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-    status: {
+    auditstatus: {
         type: String,
         default:null,
         index: true
@@ -66,6 +66,11 @@ const auditSchema = new mongoose.Schema({
     end_date: {
         type: Date,
         default: null
+    },
+    status: {
+        type: Number,
+        default:0,
+        index: true
     },
     created_at:{
         type: Date,
