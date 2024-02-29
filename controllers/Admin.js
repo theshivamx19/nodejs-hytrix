@@ -3169,7 +3169,7 @@ export const auditFilter = async (request, response, next) => {
                 // else if(key === "auditstatus"){
                 //     matchStage[key] = {}
                 // }
-                else if(key === "start_date" || key === "end_date") {
+                else if (key === "start_date" || key === "end_date") {
                     const dateObject = new Date(filters[key]);
                     const nextDay = new Date(dateObject);
                     nextDay.setDate(dateObject.getDate() + 1);
@@ -3182,16 +3182,16 @@ export const auditFilter = async (request, response, next) => {
         }
         const filter = await Audit.aggregate([
             {
-                $match : matchStage
+                $match: matchStage
             },
             {
-                $lookup : {
-                    from : "users",
-                    localField : "auditor",
-                    foreignField : "_id",
-                    as : "executiveData"
+                $lookup: {
+                    from: "users",
+                    localField: "auditor",
+                    foreignField: "_id",
+                    as: "executiveData"
                 }
-            }, 
+            },
             {
                 $lookup: {
                     from: "states",
@@ -3225,14 +3225,24 @@ export const auditFilter = async (request, response, next) => {
                 },
             },
             {
-                $project : {
-                    title : 1,
-                    start_date : 1,
-                    end_date : 1,
-                    overdue : 1,
-                    status : 1,
-                    risk : 1,
-                    
+                $project: {
+                    title: 1,
+                    start_date: 1,
+                    end_date: 1,
+                    overdue: 1,
+                    status: 1,
+                    risk: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.name", 0] },
+                    branch: { $arrayElemAt: ["$branchData.name", 0] }
                 }
             }
 
