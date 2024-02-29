@@ -2964,23 +2964,277 @@ export const createAudit = async (request, response, next) => {
     }
 }
 
+// const dateObject = new Date(dateFilter);
+//             const nextDay = new Date(dateObject);
+//             nextDay.setDate(dateObject.getDate() + 1);
+//             matchStage['createdAt'] = {
+//                 $gte: dateObject,
+//                 $lt: nextDay
+//             };
+
+// export const auditGetting = async (request, response, next) => {
+//     try {
+//         const auditData = await Audit.aggregate([
+//             {
+//                 $match: {}
+//             },
+
+//             {
+//                 $lookup: {
+//                     from: "companies",
+//                     localField: "company",
+//                     foreignField: "_id",
+//                     as: "companyData"
+//                 }
+//             },
+//             {
+//                 $lookup: {
+//                     from: "states",
+//                     localField: "state",
+//                     foreignField: "_id",
+//                     as: "stateData"
+//                 }
+//             },
+//             {
+//                 $lookup: {
+//                     from: "branches",
+//                     localField: "branch",
+//                     foreignField: "_id",
+//                     as: "branchData"
+//                 }
+//             },
+//             {
+//                 $lookup: {
+//                     from: "users",
+//                     localField: "executive",
+//                     foreignField: "_id",
+//                     as: "executiveData"
+//                 }
+//             },
+//             {
+//                 $lookup: {
+//                     from: "users",
+//                     localField: "auditor",
+//                     foreignField: "_id",
+//                     as: "auditorData"
+//                 }
+//             },
+//             {
+//                 $project: {
+//                     title: 1,
+//                     start_date: 1,
+//                     end_date: 1,
+//                     overdue: 1,
+//                     auditstatus: 1,
+//                     risk: 1,
+//                     score: 1,
+//                     executive: {
+//                         $concat: [
+//                             { $arrayElemAt: ["$executiveData.firstName", 0] },
+//                             " ",
+//                             { $arrayElemAt: ["$executiveData.lastName", 0] }
+//                         ]
+//                     },
+//                     auditor: {
+//                         $concat: [
+//                             { $arrayElemAt: ["$auditorData.firstName", 0] },
+//                             " ",
+//                             { $arrayElemAt: ["$auditorData.lastName", 0] }
+//                         ]
+//                     },
+//                     state: { $arrayElemAt: ["$stateData.name", 0] },
+//                     company: { $arrayElemAt: ["$companyData.companyname", 0] },
+//                     branch: { $arrayElemAt: ["$branchData.name", 0] },
+//                     overdue : overDue()
+//                 }
+//             }
+//         ])
+
+//         const overDue = function() {
+
+//             let result
+//             let yy, mm, dd
+
+//             auditData.forEach(data => {
+//                 let currentDate = new Date()
+//                 let endDate = data.end_date
+//                 let ed = endDate.getDate()
+//                 let em = endDate.getMonth() + 1
+//                 let ey = endDate.getFullYear()
+
+//                 let cd = currentDate.getDate()
+//                 let cm = currentDate.getMonth() + 1
+//                 let cy = currentDate.getFullYear()
+
+//                 yy = cy - ey
+
+//                 if (cm >= em) {
+//                     mm = cm - em
+//                 }
+//                 else {
+//                     yy--
+//                     mm = 12 + cm - em
+//                 }
+//                 if (cd >= ed) {
+//                     dd = cd - ed
+//                 }
+//                 else {
+//                     mm--
+//                     dd = getMonthDays(ey, em) + cd - ed
+//                 }
+//                 if (mm < 0) {
+//                     mm = 11
+//                     yy--
+//                 }
+//                 function getMonthDays(year, month) {
+//                     return new Date(year, month, 0).getDate()
+//                 }
+//                 // const dayOfYear = date =>
+//                 // Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86_400_000);
+//                 // console.log(dayOfYear("2024-02-24"));
+//                 result = dd + mm * getMonthDays(ey, em) + yy
+//                 console.log(dd + mm * getMonthDays(ey, em) + yy);
+//                 return result
+//             })
+//         }
+
+//         response.status(200).json(auditData)
+//     } catch (error) {
+//         next(error)
+//     }
+// }
+
+
+
+
 export const auditGetting = async (request, response, next) => {
     try {
-        const auditData = await Audit.find({})
-        // let totalDue = 0
-        // auditData.forEach(item => {
-        //     const newDueDate = new Date(item.duedate)
-        //     if (newDueDate > newDueDate + 1) {
-        //         totalDue += 1
-        //         console.log(totalDue);
-        //         return totalDue
-        //     }
-        // })
-        response.status(200).json(auditData)
+        const auditData = await Audit.aggregate([
+            {
+                $match: {}
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branch",
+                    foreignField: "_id",
+                    as: "branchData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "auditor",
+                    foreignField: "_id",
+                    as: "auditorData"
+                }
+            },
+            {
+                $project: {
+                    title: 1,
+                    start_date: 1,
+                    end_date: 1,
+                    overdue: {
+                        $let: {
+                            vars: {
+                                currentDate: new Date(),
+                                endDate: "$end_date"
+                            },
+                            in: {
+                                $let: {
+                                    vars: {
+                                        ed: { $dayOfMonth: "$$endDate" },
+                                        em: { $month: "$$endDate" },
+                                        ey: { $year: "$$endDate" },
+                                        cd: { $dayOfMonth: "$$currentDate" },
+                                        cm: { $month: "$$currentDate" },
+                                        cy: { $year: "$$currentDate" }
+                                    },
+                                    in: {
+                                        $let: {
+                                            vars: {
+                                                yy: { $subtract: ["$$cy", "$$ey"] },
+                                                mm: {
+                                                    $cond: {
+                                                        if: { $gte: ["$$cm", "$$em"] },
+                                                        then: { $subtract: ["$$cm", "$$em"] },
+                                                        else: { $subtract: [{ $add: ["$$cm", 12] }, "$$em"] }
+                                                    }
+                                                },
+                                                dd: {
+                                                    $cond: {
+                                                        if: { $gte: ["$$cd", "$$ed"] },
+                                                        then: { $subtract: ["$$cd", "$$ed"] },
+                                                        else: {
+                                                            $subtract: [
+                                                                { $add: ["$$cd", { $dayOfMonth: { $dateFromParts: { year: "$$ey", month: "$$em", day: 0 } } }] },
+                                                                "$$ed"
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            in: { $add: ["$$dd", { $multiply: ["$$mm", { $dayOfMonth: { $dateFromParts: { year: "$$ey", month: "$$em", day: 0 } } }] }, { $multiply: ["$$yy", { $dayOfMonth: { $dateFromParts: { year: "$$ey", month: "$$em", day: 0 } } }] }] }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    auditstatus: 1,
+                    risk: 1,
+                    score: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    auditor: {
+                        $concat: [
+                            { $arrayElemAt: ["$auditorData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$auditorData.lastName", 0] }
+                        ]
+                    },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    branch: { $arrayElemAt: ["$branchData.name", 0] }
+                }
+            }
+        ]);
+
+        response.status(200).json(auditData);
     } catch (error) {
-        next(error)
+        next(error);
     }
-}
+};
+
 
 export const updateAudit = async (request, response, next) => {
     try {
