@@ -2967,16 +2967,16 @@ export const createAudit = async (request, response, next) => {
 export const auditGetting = async (request, response, next) => {
     try {
         const auditData = await Audit.find({})
-        let totalDue = 0
-        auditData.forEach(item => {
-            const newDueDate = new Date(item.duedate)
-            if (newDueDate > newDueDate + 1) {
-                totalDue += 1
-                console.log(totalDue);
-                return totalDue
-            }
-        })
-        response.status(200).json({ total: totalDue, data: auditData })
+        // let totalDue = 0
+        // auditData.forEach(item => {
+        //     const newDueDate = new Date(item.duedate)
+        //     if (newDueDate > newDueDate + 1) {
+        //         totalDue += 1
+        //         console.log(totalDue);
+        //         return totalDue
+        //     }
+        // })
+        response.status(200).json(auditData)
     } catch (error) {
         next(error)
     }
