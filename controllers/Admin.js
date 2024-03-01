@@ -3624,6 +3624,9 @@ export const auditFilter = async (request, response, next) => {
                 // else if(key === "auditstatus"){
                 //     matchStage[key] = {}
                 // }
+                else if (key === 'overdue'){
+                    matchStage['overdue'] = filters[key]
+                }
                 else if (key === "start_date" || key === "end_date") {
                     const dateObject = new Date(filters[key]);
                     const nextDay = new Date(dateObject);
@@ -3686,6 +3689,27 @@ export const auditFilter = async (request, response, next) => {
                     end_date: 1,
                     overdue: 1,
                     status: 1,
+                    overdue: {
+                        $cond: {
+                            if: { $lt: ["$end_date", new Date()] },
+                            then: {
+                                $subtract: [
+                                    {
+                                        $ceil: {
+                                            $divide: [
+                                                {
+                                                    $subtract: [new Date(), "$end_date"]
+                                                },
+                                                1000 * 60 * 60 * 24 // Convert milliseconds to days
+                                            ]
+                                        }
+                                    },
+                                    1 // Subtract 1 day from the calculated overdue days
+                                ]
+                            },
+                            else: 0 // Project is not overdue
+                        }
+                    },
                     risk: 1,
                     executive: {
                         $concat: [
