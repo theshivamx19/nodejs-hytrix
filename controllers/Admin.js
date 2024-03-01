@@ -2954,7 +2954,7 @@ export const createAudit = async (request, response, next) => {
         const data = request.body
         const { title, company, branch, state, executive, auditor, scope, briefauditor, checkboxlist, auditstatus, status, risk, start_date, end_date } = data
         const audit = {
-            title, company, branch, state, executive, auditor, scope, briefauditor, checkboxlist, auditstatus, status, risk, start_date , end_date
+            title, company, branch, state, executive, auditor, scope, briefauditor, checkboxlist, auditstatus, status, risk, start_date, end_date
         }
         const newAudit = new Audit(audit)
         await newAudit.save()
@@ -3607,25 +3607,189 @@ export const auditChecklistFilter = async (request, response, next) => {
 };
 
 
+// export const auditFilter = async (request, response, next) => {
+//     try {
+//         const data = request.body
+//         const matchStage = {}
+//         const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data
+//         let overDueData = await Audit.find({})
+//         let result, cd, cm, cy, dd, md, yd, ed, em, ey
+//         overDueData.forEach(data => {
+//             let currentDate = new Date()
+//             let endDate = data.end_date
+//             ed = endDate.getDate()
+//             em = endDate.getMonth() + 1
+//             ey = endDate.getFullYear()
+
+//             cd = currentDate.getDate()
+//             cm = currentDate.getMonth() + 1
+//             cy = currentDate.getFullYear()
+
+//             dd = cd - ed
+//             md = cm - em
+//             yd = cy - ey
+//             result = Math.abs(dd + md * getMonthDays(ey, em))
+//             // console.log(result);
+
+//             return result
+
+
+//             function getMonthDays(year, month) {
+//                 return new Date(year, month, 0).getDate()
+//             }
+//         })
+//         overDueData.forEach(item=>{
+//             console.log(item.overdue = result);
+//         })
+
+//         const filters = { company, state, branch, executive, auditor, start_date, end_date, overdue: result, auditstatus, risk }
+//         console.log(filters);
+
+//         const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "")
+
+//         if (filterKeys.length > 0) {
+//             for (const key of filterKeys) {
+//                 if (key === "company" || key === "state" || key === "branch" || key === "executive" || key === "auditor") {
+//                     matchStage[key] = new mongoose.Types.ObjectId(filters[key])
+//                 }
+//                 else if (key === "auditstatus" || key === "risk" || key === 'overdue') {
+//                     matchStage[key] = filters[key]
+//                 }
+//                 // else if (key === 'overdue'){
+//                 //     matchStage['overdue'] = filters[key]
+//                 // }
+//                 else if (key === "start_date" || key === "end_date") {
+//                     const dateObject = new Date(filters[key]);
+//                     const nextDay = new Date(dateObject);
+//                     nextDay.setDate(dateObject.getDate() + 1);
+//                     matchStage[key] = {
+//                         $gte: dateObject,
+//                         $lt: nextDay
+//                     };
+//                 }
+//             }
+//         }
+//         const filter = await Audit.aggregate([
+//             {
+//                 $match: matchStage
+//             },
+//             {
+//                 $lookup: {
+//                     from: "users",
+//                     localField: "auditor",
+//                     foreignField: "_id",
+//                     as: "executiveData"
+//                 }
+//             },
+//             {
+//                 $lookup: {
+//                     from: "states",
+//                     localField: "state",
+//                     foreignField: "_id",
+//                     as: "stateData",
+//                 },
+//             },
+//             {
+//                 $lookup: {
+//                     from: "categories",
+//                     localField: "category",
+//                     foreignField: "_id",
+//                     as: "categoryData",
+//                 },
+//             },
+//             {
+//                 $lookup: {
+//                     from: "companies",
+//                     localField: "company",
+//                     foreignField: "_id",
+//                     as: "companyData",
+//                 },
+//             },
+//             {
+//                 $lookup: {
+//                     from: "branches",
+//                     localField: "branchname",
+//                     foreignField: "_id",
+//                     as: "branchData",
+//                 },
+//             },
+
+//             {
+//                 $project: {
+//                     title: 1,
+//                     start_date: 1,
+//                     end_date: 1,
+//                     overdue: 1,
+//                     status: 1,
+//                     overdue: {
+//                         $cond: {
+//                             if: { $lt: ["$end_date", new Date()] },
+//                             then: {
+//                                 $subtract: [
+//                                     {
+//                                         $ceil: {
+//                                             $divide: [
+//                                                 {
+//                                                     $subtract: [new Date(), "$end_date"]
+//                                                 },
+//                                                 1000 * 60 * 60 * 24 // Convert milliseconds to days
+//                                             ]
+//                                         }
+//                                     },
+//                                     1 // Subtract 1 day from the calculated overdue days
+//                                 ]
+//                             },
+//                             else: 0 // Project is not overdue
+//                         }
+//                     },
+//             risk: 1,
+//             executive: {
+//                 $concat: [
+//                     { $arrayElemAt: ["$executiveData.firstName", 0] },
+//                     " ",
+//                     { $arrayElemAt: ["$executiveData.lastName", 0] }
+//                 ]
+//             },
+//             state: { $arrayElemAt: ["$stateData.name", 0] },
+//             category: { $arrayElemAt: ["$categoryData.name", 0] },
+//             company: { $arrayElemAt: ["$companyData.name", 0] },
+//             branch: { $arrayElemAt: ["$branchData.name", 0] }
+//                 }
+//             }
+
+//         ])
+// // filter.forEach(data => {
+// //     console.log(data.overdue);
+// // })
+// response.status(200).json(filter)
+
+//     } catch (error) {
+//     next(error)
+// }
+// }
+
+
 export const auditFilter = async (request, response, next) => {
     try {
-        const data = request.body
-        const matchStage = {}
-        const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data
-        const filters = { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk }
+        const data = request.body;
+        const matchStage = {};
+        const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data;
+        let auditDataFilter
+      
+        // Define filters
+        const filters = { company, state, branch, executive, auditor, start_date, end_date, auditstatus, risk };
+        const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "");
 
-        const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "")
-
+        // Build match stage based on filters
         if (filterKeys.length > 0) {
             for (const key of filterKeys) {
                 if (key === "company" || key === "state" || key === "branch" || key === "executive" || key === "auditor") {
-                    matchStage[key] = new mongoose.Types.ObjectId(filters[key])
-                }
-                else if(key === "auditstatus" || key === "risk" || key === 'overdue'){
-                    matchStage[key] = filters[key]
-                }
-                // else if (key === 'overdue'){
-                //     matchStage['overdue'] = filters[key]
+                    matchStage[key] = new mongoose.Types.ObjectId(filters[key]);
+                } else if (key === "auditstatus" || key === "risk") {
+                    matchStage[key] = filters[key];
+                } 
+                // else if(key === "overdue"){
+
                 // }
                 else if (key === "start_date" || key === "end_date") {
                     const dateObject = new Date(filters[key]);
@@ -3638,10 +3802,11 @@ export const auditFilter = async (request, response, next) => {
                 }
             }
         }
-        const filter = await Audit.aggregate([
-            {
-                $match: matchStage
-            },
+
+        // Perform aggregation
+        auditDataFilter = await Audit.aggregate([
+            { $match: matchStage },
+            // Add your lookup and project stages here
             {
                 $lookup: {
                     from: "users",
@@ -3726,13 +3891,117 @@ export const auditFilter = async (request, response, next) => {
                 }
             }
 
-        ])
-        response.status(200).json(filter)
+        ]);
+        // console.log(auditDataFilter);
+        if (overdue !== undefined) {
+            const currentDate = new Date();
+            auditDataFilter = auditDataFilter.filter(doc => {
+                return doc.overdue == overdue
+            });
+        }
+        // console.log(auditDataFilter);
 
+        response.status(200).json(auditDataFilter);
     } catch (error) {
-        next(error)
+        next(error);
     }
-}
+};
+
+// export const auditFilter = async (request, response, next) => {
+//     try {
+//         const data = request.body;
+//         const matchStage = {};
+//         const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data;
+
+//         // Define filters
+//         const filters = { company, state, branch, executive, auditor, start_date, end_date, auditstatus, risk };
+//         const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "");
+
+//         // Build match stage based on filters
+//         if (filterKeys.length > 0) {
+//             for (const key of filterKeys) {
+//                 if (key === "company" || key === "state" || key === "branch" || key === "executive" || key === "auditor") {
+//                     matchStage[key] = new mongoose.Types.ObjectId(filters[key]);
+//                 } else if (key === "auditstatus" || key === "risk" || key === 'overdue') {
+//                     matchStage[key] = filters[key];
+//                 } else if (key === "start_date" || key === "end_date") {
+//                     const dateObject = new Date(filters[key]);
+//                     const nextDay = new Date(dateObject);
+//                     nextDay.setDate(dateObject.getDate() + 1);
+//                     matchStage[key] = {
+//                         $gte: dateObject,
+//                         $lt: nextDay
+//                     };
+//                 }
+//             }
+//         }
+
+//         // Fetch documents from the database based on the match stage
+//         let documents = await Audit.find(matchStage);
+
+//         // Filter documents based on dynamic overdue calculation
+//         documents = documents.filter(doc => {
+//             // Calculate overdue dynamically for each document
+//             const currentDate = new Date();
+//             const endDate = doc.end_date;
+//             const diffInDays = Math.ceil((currentDate - endDate) / (1000 * 60 * 60 * 24));
+//             return diffInDays === overdue;
+//         });
+
+//         response.status(200).json(documents);
+//     } catch (error) {
+//         next(error);
+//     }
+// };
+
+// export const auditFilter = async (request, response, next) => {
+//     try {
+//         const data = request.body;
+//         const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data;
+
+//         // Define filters
+//         const filters = { company, state, branch, executive, auditor, start_date, end_date, auditstatus, risk };
+//         const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "");
+
+//         // Build match stage based on filters
+//         const matchStage = {};
+//         if (filterKeys.length > 0) {
+//             for (const key of filterKeys) {
+//                 if (key === "company" || key === "state" || key === "branch" || key === "executive" || key === "auditor") {
+//                     matchStage[key] = new mongoose.Types.ObjectId(filters[key]);
+//                 } else if (key === "auditstatus" || key === "risk" || key === 'overdue') {
+//                     matchStage[key] = filters[key];
+//                 } else if (key === "start_date" || key === "end_date") {
+//                     const dateObject = new Date(filters[key]);
+//                     const nextDay = new Date(dateObject);
+//                     nextDay.setDate(dateObject.getDate() + 1);
+//                     matchStage[key] = {
+//                         $gte: dateObject,
+//                         $lt: nextDay
+//                     };
+//                 }
+//             }
+//         }
+
+//         // Fetch documents from the database based on the match stage
+//         let documents = await Audit.find(matchStage);
+//         console.log(documents);
+
+//         // Filter documents based on the calculated overdue
+//         if (overdue !== undefined) {
+//             const currentDate = new Date();
+//             documents = documents.filter(doc => {
+//                 const endDate = new Date(doc.end_date);
+//                 const diffInDays = Math.ceil((currentDate - endDate) / (1000 * 60 * 60 * 24));
+//                 return diffInDays === overdue;
+//             });
+//         }
+
+//         response.status(200).json(documents);
+//     } catch (error) {
+//         next(error);
+//     }
+// };
 
 
 
