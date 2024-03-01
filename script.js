@@ -146,30 +146,39 @@ const uri = "https://api.github.com/users/theshivamx19"
 // console.log(filterKeys);
 
 // Function to calculate overdue days
-function calculateOverdueDays(start_date, end_date) {
-    // Convert start_date and end_date to Date objects
-    const startDate = new Date(start_date);
-    const endDate = new Date(end_date);
+// function calculateOverdueDays(start_date, end_date) {
+//     // Convert start_date and end_date to Date objects
+//     const startDate = new Date(start_date);
+//     const endDate = new Date(end_date);
     
-    // Get the current date
-    const currentDate = new Date();
+//     // Get the current date
+//     const currentDate = new Date();
 
-    // Calculate the difference in milliseconds
-    const difference = currentDate - endDate;
+//     // Calculate the difference in milliseconds
+//     const difference = currentDate - endDate;
 
-    // Check if the project is overdue
-    if (difference > 0) {
-        // Convert milliseconds to days
-        const overdueDays = Math.ceil(difference / (1000 * 60 * 60 * 24));
-        return overdueDays;
-    } else {
-        return 0; // Project is not overdue
-    }
-}
+//     // Check if the project is overdue
+//     if (difference > 0) {
+//         // Convert milliseconds to days
+//         const overdueDays = Math.ceil(difference / (1000 * 60 * 60 * 24));
+//         return overdueDays;
+//     } else {
+//         return 0; // Project is not overdue
+//     }
+// }
 
-// Example usage
-const start_date = '2023-12-01'; // Project start date
-const end_date = '2024-02-25'; // Project end date
+// // Example usage
+// const start_date = '2023-12-01'; // Project start date
+// const end_date = '2024-02-25'; // Project end date
 
-const overdueDays = calculateOverdueDays(start_date, end_date);
-console.log("Overdue Days:", overdueDays-1);
+// const overdueDays = calculateOverdueDays(start_date, end_date);
+// console.log("Overdue Days:", overdueDays-1);
+
+
+
+
+const dob = new Date()
+const nowDate = Date.now()
+
+console.log(dob);
+console.log(nowDate.toLocaleString());

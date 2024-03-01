@@ -2954,7 +2954,7 @@ export const createAudit = async (request, response, next) => {
         const data = request.body
         const { title, company, branch, state, executive, auditor, scope, briefauditor, checkboxlist, auditstatus, status, risk, start_date, end_date } = data
         const audit = {
-            title, company, branch, state, executive, auditor, scope, briefauditor, checkboxlist, auditstatus, status, risk, start_date, end_date
+            title, company, branch, state, executive, auditor, scope, briefauditor, checkboxlist, auditstatus, status, risk, start_date , end_date
         }
         const newAudit = new Audit(audit)
         await newAudit.save()
@@ -3611,8 +3611,8 @@ export const auditFilter = async (request, response, next) => {
     try {
         const data = request.body
         const matchStage = {}
-        const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus } = data
-        const filters = { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus }
+        const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data
+        const filters = { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk }
 
         const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "")
 
@@ -3621,12 +3621,12 @@ export const auditFilter = async (request, response, next) => {
                 if (key === "company" || key === "state" || key === "branch" || key === "executive" || key === "auditor") {
                     matchStage[key] = new mongoose.Types.ObjectId(filters[key])
                 }
-                // else if(key === "auditstatus"){
-                //     matchStage[key] = {}
-                // }
-                else if (key === 'overdue'){
-                    matchStage['overdue'] = filters[key]
+                else if(key === "auditstatus" || key === "risk" || key === 'overdue'){
+                    matchStage[key] = filters[key]
                 }
+                // else if (key === 'overdue'){
+                //     matchStage['overdue'] = filters[key]
+                // }
                 else if (key === "start_date" || key === "end_date") {
                     const dateObject = new Date(filters[key]);
                     const nextDay = new Date(dateObject);
@@ -3682,6 +3682,7 @@ export const auditFilter = async (request, response, next) => {
                     as: "branchData",
                 },
             },
+
             {
                 $project: {
                     title: 1,
@@ -3732,10 +3733,6 @@ export const auditFilter = async (request, response, next) => {
         next(error)
     }
 }
-
-
-
-
 
 
 
