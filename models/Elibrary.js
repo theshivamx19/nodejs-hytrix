@@ -3,7 +3,12 @@ import mongoose from "mongoose";
 
 const elibrarySchema = new mongoose.Schema({
     category: {
-        type: mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        ref : "Category"
+    },
+    executive: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref : "Executive"
     },
     placeholder: {
         type: String,
@@ -29,6 +34,16 @@ const elibrarySchema = new mongoose.Schema({
     },
     image : {
         type : Object
+    },
+    approveStatus : {
+        type : String,
+        required : true,
+        trim : true,
+        index : true
+    }, 
+    status : {
+        type : Number,
+        default : 0
     }
 
 }, { timestamps: true })

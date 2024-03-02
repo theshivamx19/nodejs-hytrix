@@ -20,6 +20,7 @@ import sharp from 'sharp';
 import { List } from '../models/List.js';
 import mongoose from 'mongoose';
 import { uuid } from 'uuidv4';
+import { log } from 'node:console';
 const uniqueId = uuid()
 // import Executive from '../models/Executive.js';
 
@@ -3336,7 +3337,7 @@ export const createAudit = async (request, response, next) => {
 
 export const auditGetting = async (request, response, next) => {
     try {
-        const auditData = await Audit.aggregate([
+        let auditData = await Audit.aggregate([
             {
                 $match: {}
             },
@@ -3429,8 +3430,18 @@ export const auditGetting = async (request, response, next) => {
                 }
             }
         ]);
-
-        response.status(200).json(auditData);
+        let users = await User.find({})
+        let auditorData = users.filter(user => {
+            return user.role === "Auditor"
+        })
+        let count = 0
+        auditData.filter(doc => {     
+            const result = auditorData.map(data=>data.firstName+" "+data.lastName).includes(doc.auditor)
+            if(result && doc.overdue>0){
+                return count++
+            }
+        })
+        response.status(200).json(({total : count, data : auditData}));
     } catch (error) {
         next(error);
     }
@@ -3775,7 +3786,7 @@ export const auditFilter = async (request, response, next) => {
         const matchStage = {};
         const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data;
         let auditDataFilter
-      
+
         // Define filters
         const filters = { company, state, branch, executive, auditor, start_date, end_date, auditstatus, risk };
         const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "");
@@ -3787,7 +3798,7 @@ export const auditFilter = async (request, response, next) => {
                     matchStage[key] = new mongoose.Types.ObjectId(filters[key]);
                 } else if (key === "auditstatus" || key === "risk") {
                     matchStage[key] = filters[key];
-                } 
+                }
                 // else if(key === "overdue"){
 
                 // }
@@ -3886,14 +3897,14 @@ export const auditFilter = async (request, response, next) => {
                     },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
-                    company: { $arrayElemAt: ["$companyData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
                     branch: { $arrayElemAt: ["$branchData.name", 0] }
                 }
             }
 
         ]);
         // console.log(auditDataFilter);
-        if (overdue !== undefined) {
+        if (overdue !== undefined & overdue !== "") {
             const currentDate = new Date();
             auditDataFilter = auditDataFilter.filter(doc => {
                 return doc.overdue == overdue
@@ -3901,7 +3912,7 @@ export const auditFilter = async (request, response, next) => {
         }
         // console.log(auditDataFilter);
 
-        response.status(200).json(auditDataFilter);
+        response.status(200).json({ Total: auditDataFilter.length, data: auditDataFilter });
     } catch (error) {
         next(error);
     }
@@ -4174,7 +4185,44 @@ export const createElibrary = async (request, response, next) => {
 
 export const elibraryGetting = async (request, response, next) => {
     try {
-        const elibraryData = await Elibrary.find({})
+        const elibraryData = await Elibrary.aggregate([
+            {
+                $match: {}
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData"
+                }
+            },
+            {
+                $project: {
+                    placeholder: 1,
+                    image: 1,
+                    approveStatus: 1,
+                    createdAt: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+
+                    category: { $arrayElemAt: ["$categoryData.name", 0] }
+                }
+            }
+        ])
         response.status(200).json(elibraryData)
     } catch (error) {
         next(error)
@@ -4198,6 +4246,35 @@ export const elibraryGettingById = async (request, response, next) => {
         // response.status(200).json(filter)
     } catch (error) {
         next(error)
+    }
+}
+
+export const elibraryApproved = async (request, response, next) => {
+    try {
+        const elibraryData = await Elibrary.aggregate([
+            {
+                $match: {
+                    status: { $eq: 1 }
+                }
+            }
+        ])
+        response.status(200).json(elibraryData)
+    } catch (error) {
+
+    }
+}
+export const elibraryRejected = async (request, response, next) => {
+    try {
+        const elibraryData = await Elibrary.aggregate([
+            {
+                $match: {
+                    status: { $eq: 2 }
+                }
+            }
+        ])
+        response.status(200).json(elibraryData)
+    } catch (error) {
+
     }
 }
 
