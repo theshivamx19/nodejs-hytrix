@@ -10,6 +10,7 @@ const labourContractorSchema = new mongoose.Schema({
     isEngagedDet: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     isEngagedFile: {
@@ -18,6 +19,7 @@ const labourContractorSchema = new mongoose.Schema({
     isEngagedRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     dateOfRegistration: {
@@ -29,6 +31,7 @@ const labourContractorSchema = new mongoose.Schema({
     dateOfRegDet: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     dateOfRegFile: {
@@ -37,6 +40,7 @@ const labourContractorSchema = new mongoose.Schema({
     dateOfRegRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     noOfContractEmployees: {
@@ -48,7 +52,8 @@ const labourContractorSchema = new mongoose.Schema({
     noOfContractEmpDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     noOfContractEmpFile: {
         type: Object
@@ -56,6 +61,7 @@ const labourContractorSchema = new mongoose.Schema({
     noOfContractEmpRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     noOfContractors: {
@@ -67,7 +73,8 @@ const labourContractorSchema = new mongoose.Schema({
     noOfContractorsDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     noOfContractorsFile: {
         type: Object
@@ -75,19 +82,22 @@ const labourContractorSchema = new mongoose.Schema({
     noOfContractorsRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     // -------------- E.1. Dets of the Labor Contractotrs---------------------
     nameOfContractor: {
         type: String,
-        required: true,
+    
+    default : null,    required: true,
         trim: true,
         index: true
     },
     nameOfContractorsDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     nameOfContractorsFile: {
         type: Object
@@ -95,6 +105,7 @@ const labourContractorSchema = new mongoose.Schema({
     nameOfContractorsRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     nameOfEstablishment: {
@@ -106,7 +117,8 @@ const labourContractorSchema = new mongoose.Schema({
     nameOfEstablishmentDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     nameOfEstablishmentFile: {
         type: Object
@@ -114,6 +126,7 @@ const labourContractorSchema = new mongoose.Schema({
     nameOfEstablishmentRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     regAddContractor: {
@@ -145,7 +158,8 @@ const labourContractorSchema = new mongoose.Schema({
     regAddContractorDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     regAddContractorFile: {
         type: Object
@@ -153,6 +167,7 @@ const labourContractorSchema = new mongoose.Schema({
     regAddContractorRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     // ----------------- E.2. Agreement Date -----------------------
@@ -164,7 +179,8 @@ const labourContractorSchema = new mongoose.Schema({
     agreementExpiryDateDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     // nameOfEstablishmentFile: {
     //     type: Object
@@ -172,6 +188,7 @@ const labourContractorSchema = new mongoose.Schema({
     agreementExpiryDateRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     agreementRenewalDate: {
@@ -182,7 +199,8 @@ const labourContractorSchema = new mongoose.Schema({
     agreementRenewalDateDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     // nameOfEstablishmentFile: {
     //     type: Object
@@ -190,6 +208,7 @@ const labourContractorSchema = new mongoose.Schema({
     agreementRenewalDateRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     natureOfWorkAgreement: {
@@ -201,7 +220,8 @@ const labourContractorSchema = new mongoose.Schema({
     natureOfWorkAgreementDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     natureOfWorkAgreementFile: {
         type: Object
@@ -209,6 +229,7 @@ const labourContractorSchema = new mongoose.Schema({
     natureOfWorkAgreementRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     noOfEmpDeployedAgreement: {
@@ -220,7 +241,8 @@ const labourContractorSchema = new mongoose.Schema({
     noOfEmpDeployedAgreementDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     noOfEmpDeployedAgreementFile: {
         type: Object
@@ -228,19 +250,22 @@ const labourContractorSchema = new mongoose.Schema({
     noOfEmpDeployedAgreementRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     // -------------------------- E.3. Contractors Registration Dets -------------------------
     companyTypeLabour: {
         type: String,
-        required: true,
+    
+    default : null,    required: true,
         trim : true,
         index: true
     },
     companyTypeLabourDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     companyTypeLabourFile: {
         type: Object
@@ -248,6 +273,7 @@ const labourContractorSchema = new mongoose.Schema({
     companyTypeLabourRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     contractLabourLicNo: {
@@ -259,7 +285,8 @@ const labourContractorSchema = new mongoose.Schema({
     contractLabourLicNoDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     contractLabourLicNoFile: {
         type: Object
@@ -267,6 +294,7 @@ const labourContractorSchema = new mongoose.Schema({
     contractLabourLicNoRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     contractLicDate: {
@@ -277,7 +305,8 @@ const labourContractorSchema = new mongoose.Schema({
     contractLicDateDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     // contractLicDateFile: {
     //     type: Object
@@ -285,6 +314,7 @@ const labourContractorSchema = new mongoose.Schema({
     contractLicDateRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     contractExpiryDate: {
@@ -295,7 +325,8 @@ const labourContractorSchema = new mongoose.Schema({
     contractExpiryDateDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     // contractExpiryDateFile: {
     //     type: Object
@@ -303,6 +334,7 @@ const labourContractorSchema = new mongoose.Schema({
     contractExpiryDateRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     contractRenewalDueDate: {
@@ -313,7 +345,8 @@ const labourContractorSchema = new mongoose.Schema({
     contractRenewalDueDateDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     // contractRenewalDueDateFile: {
     //     type: Object
@@ -321,6 +354,7 @@ const labourContractorSchema = new mongoose.Schema({
     contractRenewalDueDateRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     noOfWorkersContract: {
@@ -332,7 +366,8 @@ const labourContractorSchema = new mongoose.Schema({
     noOfWorkersContractDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     noOfWorkersContractFile: {
         type: Object
@@ -340,6 +375,7 @@ const labourContractorSchema = new mongoose.Schema({
     noOfWorkersContractRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     panContractors: {
@@ -351,7 +387,8 @@ const labourContractorSchema = new mongoose.Schema({
     panContractorsDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     panContractorsFile: {
         type: Object
@@ -359,6 +396,7 @@ const labourContractorSchema = new mongoose.Schema({
     panContractorsRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     gstContractors: {
@@ -370,7 +408,8 @@ const labourContractorSchema = new mongoose.Schema({
     gstContractorsDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     gstContractorsFile: {
         type: Object
@@ -378,6 +417,7 @@ const labourContractorSchema = new mongoose.Schema({
     gstContractorsRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     pfRegContractors: {
@@ -389,7 +429,8 @@ const labourContractorSchema = new mongoose.Schema({
     pfRegContractorsDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     pfRegContractorsFile: {
         type: Object
@@ -397,6 +438,7 @@ const labourContractorSchema = new mongoose.Schema({
     pfRegContractorsRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     esicRegContractors: {
@@ -408,7 +450,8 @@ const labourContractorSchema = new mongoose.Schema({
     esicRegContractorsDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     esicRegContractorsFile: {
         type: Object
@@ -416,6 +459,7 @@ const labourContractorSchema = new mongoose.Schema({
     esicRegContractorsRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     shopsandEstContractors: {
@@ -427,7 +471,8 @@ const labourContractorSchema = new mongoose.Schema({
     shopsandEstContractorsDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     shopsandEstContractorsFile: {
         type: Object
@@ -435,6 +480,7 @@ const labourContractorSchema = new mongoose.Schema({
     shopsandEstContractorsRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     lwfRegContractors: {
@@ -446,7 +492,8 @@ const labourContractorSchema = new mongoose.Schema({
     lwfRegContractorsDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     lwfRegContractorsFile: {
         type: Object
@@ -454,6 +501,7 @@ const labourContractorSchema = new mongoose.Schema({
     lwfRegContractorsRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
     profTaxContractors: {
@@ -465,7 +513,8 @@ const labourContractorSchema = new mongoose.Schema({
     profTaxContractorsDet: {
         type: String,
         trim: true,
-        index: true
+    
+    default : null,    index: true
     },
     profTaxContractorsFile: {
         type: Object
@@ -473,6 +522,7 @@ const labourContractorSchema = new mongoose.Schema({
     profTaxContractorsRemark: {
         type: String,
         trim: true,
+        default : null,
         index: true
     },
 
