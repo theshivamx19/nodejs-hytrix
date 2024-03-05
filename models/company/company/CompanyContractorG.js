@@ -811,4 +811,9 @@ const companyContractorSchema = new mongoose.Schema({
         default: null,
         index: true
     },
+    status : {
+        type : Number,
+        default : 0,
+        index : true
+    }
 }, {timestamps : true})

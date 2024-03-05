@@ -1955,6 +1955,11 @@ const branchDetailSchema = new mongoose.Schema({
         trim: true,
         default: null,
         index: true
+    },
+    status : {
+        type : Number,
+        default : 0,
+        index : true
     }
 
 }, { timestamps: true })
