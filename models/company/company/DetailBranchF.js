@@ -3,72 +3,72 @@ import mongoose from "mongoose";
 // -------------------------- F. Details of the Branch's(1) ---------------------------
 
 const branchDetailSchema = new mongoose.Schema({
-    noOfBranches: {
+    noOfBranchesF: {
         type: String,
         required: true,
         trim: true,
         index: true,
     },
-    branchDet: {
+    branchFDet: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    branchFile: {
+    branchFFile: {
         type: Object,
         default: null
     },
-    branchRemark: {
+    branchFRemark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    branchName: {
+    branchNameF: {
         type: String,
         required: true,
         trim: true,
         index: true,
     },
-    branchNameDet: {
+    branchNameFDet: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    branchNameFile: {
+    branchNameFFile: {
         type: Object,
         default: null
     },
-    branchNameRemark: {
+    branchNameFRemark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    isFactorySE: {
+    isFactorySEF: {
         type: Boolean,
         default: false,
         index: true
     },
-    isFactorySEDet: {
+    isFactorySEFDet: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    isFactorySEFile: {
+    isFactorySEFFile: {
         type: Object,
         default: null
     },
-    isFactorySERemark: {
+    isFactorySEFRemark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    contractorAddressBranch: {
+    contractorAddBranchF: {
         address: {
             type: String,
             required: true,
@@ -94,60 +94,60 @@ const branchDetailSchema = new mongoose.Schema({
             index: true
         }
     },
-    contractorAddBranchDet: {
+    contractorAddBranchFDet: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    contractorAddBranchFile: {
+    contractorAddBranchFFile: {
         type: Object,
         default: null
     },
-    contractorAddBranchRemark: {
+    contractorAddBranchFRemark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    branchOpeningDate: {
+    branchOpeningDateF: {
         type: Date,
         required: true,
         index: true
     },
-    branchOpeningDateDet: {
+    branchOpeningDateFDet: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    // branchOpeningDateFile: {
-    //     type: Object,
-    //     default: null
-    // },
-    branchOpeningDateRemark: {
+    branchOpeningDateFFile: {
+        type: Object,
+        default: null
+    },
+    branchOpeningDateFRemark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    noOfEmployeesBranch: {
+    noOfEmpBranchF: {
         type: String,
         required: true,
         trim: true,
         index: true,
     },
-    noOfEmpBranchDet: {
+    noOfEmpBranchFDet: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    noOfEmpBranchFile: {
+    noOfEmpBranchFFile: {
         type: Object,
         default: null
     },
-    noOfEmpBranchRemark: {
+    noOfEmpBranchFRemark: {
         type: String,
         trim: true,
         default: null,
@@ -155,117 +155,111 @@ const branchDetailSchema = new mongoose.Schema({
     },
     // ---------------------- F.1. Manager Details --------------------
 
-    managerName: {
+    managerNameF1: {
         type: String,
         required: true,
         trim: true,
         index: true,
     },
-    managerNameDet: {
+    managerNameF1Det: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    managerNameFile: {
+    managerNameF1File: {
         type: Object,
         default: null
     },
-    managerNameRemark: {
+    managerNameF1Remark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    managerMobileNo: {
+    managerMobNoF1: {
         type: String,
         required: true,
         trim: true,
         index: true,
     },
-    managerMobileNoDet: {
+    managerMobNoF1Det: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    managerMobileNoFile: {
+    managerMobNoF1File: {
         type: Object,
         default: null
     },
-    managerMobileNoRemark: {
+    managerMobNoF1Remark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    managerEmail: {
+    managerEmailF1: {
         type: String,
         required: true,
         trim: true,
         index: true,
     },
-    managerEmailDet: {
+    managerEmailF1Det: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    // managerEmailFile: {
-    //     type: Object,
-    //     default: null
-    // },
-    managerEmailRemark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    managerAadharNo: {
-        type: String,
-        required: true,
-        trim: true,
-        index: true,
-    },
-    managerAadharNoDet: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    managerAadharNoFile: {
+    managerEmailF1File: {
         type: Object,
         default: null
     },
-    managerAadharNoRemark: {
+    managerEmailF1Remark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    managerEmailRemark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    managerPan: {
+    managerAadharNoF1: {
         type: String,
         required: true,
         trim: true,
         index: true,
     },
-    managerPanDet: {
+    managerAadharNoF1Det: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    managerPanFile: {
+    managerAadharNoF1File: {
         type: Object,
         default: null
     },
-    managerPanRemark: {
+    managerAadharNoF1Remark: {
+        type: String,
+        trim: true,
+        default: null,
+        index: true
+    },
+    managerPanF1: {
+        type: String,
+        required: true,
+        trim: true,
+        index: true,
+    },
+    managerPanF1Det: {
+        type: String,
+        trim: true,
+        default: null,
+        index: true
+    },
+    managerPanF1File: {
+        type: Object,
+        default: null
+    },
+    managerPanF1Remark: {
         type: String,
         trim: true,
         default: null,
@@ -328,10 +322,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // regDateF2File: {
-    //     type: Object,
-    //     default: null
-    // },
+    regDateF2File: {
+        type: Object,
+        default: null
+    },
     regDateF2Remark: {
         type: String,
         trim: true,
@@ -350,10 +344,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // expiryDateF2File: {
-    //     type: Object,
-    //     default: null
-    // },
+    expiryDateF2File: {
+        type: Object,
+        default: null
+    },
     expiryDateF2Remark: {
         type: String,
         trim: true,
@@ -372,10 +366,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // renewalDateF2File: {
-    //     type: Object,
-    //     default: null
-    // },
+    renewalDateF2File: {
+        type: Object,
+        default: null
+    },
     renewalDateF2Remark: {
         type: String,
         trim: true,
@@ -527,10 +521,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // regDateF3File: {
-    //     type: Object,
-    //     default: null
-    // },
+    regDateF3File: {
+        type: Object,
+        default: null
+    },
     regDateF3Remark: {
         type: String,
         trim: true,
@@ -549,10 +543,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // expiryDateF3File: {
-    //     type: Object,
-    //     default: null
-    // },
+    expiryDateF3File: {
+        type: Object,
+        default: null
+    },
     expiryDateF3Remark: {
         type: String,
         trim: true,
@@ -571,10 +565,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // renewalDateF3File: {
-    //     type: Object,
-    //     default: null
-    // },
+    renewalDateF3File: {
+        type: Object,
+        default: null
+    },
     renewalDateF3Remark: {
         type: String,
         trim: true,
@@ -726,10 +720,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // regDateF4File: {
-    //     type: Object,
-    //     default: null
-    // },
+    regDateF4File: {
+        type: Object,
+        default: null
+    },
     regDateF4Remark: {
         type: String,
         trim: true,
@@ -793,10 +787,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // regDateF5File: {
-    //     type: Object,
-    //     default: null
-    // },
+    regDateF5File: {
+        type: Object,
+        default: null
+    },
     regDateF5Remark: {
         type: String,
         trim: true,
