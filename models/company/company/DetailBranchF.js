@@ -821,27 +821,27 @@ const branchDetailSchema = new mongoose.Schema({
     },
     // ------------------------ F.5. Details of the Labor Contractors --------------
     isContractLabourEngagedF5: {
-        type: String,
-        required: true,
+        type: Boolean,
+        default : false,
         trim: true,
         index: true,
     },
-    isContractLabourEngagedF5Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    isContractLabourEngagedF5File: {
-        type: Object,
-        default: null
-    },
-    isContractLabourEngagedF5Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // isContractLabourEngagedF5Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // isContractLabourEngagedF5File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // isContractLabourEngagedF5Remark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     contractLabRegNoF5: {
         type: String,
         required: true,
@@ -876,10 +876,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // regDateContractorF5File: {
-    //     type: Object,
-    //     default: null
-    // },
+    regDateContractorF5File: {
+        type: Object,
+        default: null
+    },
     regDateContractorF5Remark: {
         type: String,
         trim: true,
@@ -1030,10 +1030,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // expiryDateF52File: {
-    //     type: Object,
-    //     default: null
-    // },
+    expiryDateF52File: {
+        type: Object,
+        default: null
+    },
     expiryDateF52Remark: {
         type: String,
         trim: true,
@@ -1052,10 +1052,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // renewalDateF52File: {
-    //     type: Object,
-    //     default: null
-    // },
+    renewalDateF52File: {
+        type: Object,
+        default: null
+    },
     renewalDateF52Remark: {
         type: String,
         trim: true,
@@ -1106,96 +1106,6 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // --------------- F.5.2. Agreement Date --------------
-    expiryDateF52: {
-        type: Date,
-        required: true,
-        trim: true,
-        index: true,
-    },
-    expiryDateF52Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // expiryDateF52File: {
-    //     type: Object,
-    //     default: null
-    // },
-    expiryDateF52Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    renewalDateF52: {
-        type: Date,
-        required: true,
-        trim: true,
-        index: true,
-    },
-    renewalDateF52Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // renewalDateF52File: {
-    //     type: Object,
-    //     default: null
-    // },
-    renewalDateF52Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    natureOfWorkF52: {
-        type: String,
-        required: true,
-        trim: true,
-        index: true,
-    },
-    natureOfWorkF52Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    natureOfWorkF52File: {
-        type: Object,
-        default: null
-    },
-    natureOfWorkF52Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    noOfEmpDeployedF52: {
-        type: String,
-        required: true,
-        trim: true,
-        index: true,
-    },
-    noOfEmpDeployedF52Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    noOfEmpDeployedF52File: {
-        type: Object,
-        default: null
-    },
-    noOfEmpDeployedF52Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-
     // ---------------------- F.5.3. Contractors Registration Details --------------
     companyTypeF53: {
         type: String,
@@ -1302,28 +1212,6 @@ const branchDetailSchema = new mongoose.Schema({
         default: null
     },
     renewalDateF53Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    noOfWorkerF53: {
-        type: String,
-        required: true,
-        trim: true,
-        index: true,
-    },
-    noOfWorkerF53Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    noOfWorkerF53File: {
-        type: Object,
-        default: null
-    },
-    noOfWorkerF53Remark: {
         type: String,
         trim: true,
         default: null,
@@ -1540,10 +1428,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // regDate54File: {
-    //     type: Object,
-    //     default: null
-    // },
+    regDate54File: {
+        type: Object,
+        default: null
+    },
     regDate54Remark: {
         type: String,
         trim: true,
@@ -1562,10 +1450,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // expiryDate54File: {
-    //     type: Object,
-    //     default: null
-    // },
+    expiryDate54File: {
+        type: Object,
+        default: null
+    },
     expiryDate54Remark: {
         type: String,
         trim: true,
@@ -1584,10 +1472,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // renewalDate54File: {
-    //     type: Object,
-    //     default: null
-    // },
+    renewalDate54File: {
+        type: Object,
+        default: null
+    },
     renewalDate54Remark: {
         type: String,
         trim: true,
@@ -1606,10 +1494,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // issuingAuthority54File: {
-    //     type: Object,
-    //     default: null
-    // },
+    issuingAuthority54File: {
+        type: Object,
+        default: null
+    },
     issuingAuthority54Remark: {
         type: String,
         trim: true,
@@ -1651,10 +1539,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // regDate55File: {
-    //     type: Object,
-    //     default: null
-    // },
+    regDate55File: {
+        type: Object,
+        default: null
+    },
     regDate55Remark: {
         type: String,
         trim: true,
@@ -1673,10 +1561,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // expiryDate55File: {
-    //     type: Object,
-    //     default: null
-    // },
+    expiryDate55File: {
+        type: Object,
+        default: null
+    },
     expiryDate55Remark: {
         type: String,
         trim: true,
@@ -1695,10 +1583,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // renewalDate55File: {
-    //     type: Object,
-    //     default: null
-    // },
+    renewalDate55File: {
+        type: Object,
+        default: null
+    },
     renewalDate55Remark: {
         type: String,
         trim: true,

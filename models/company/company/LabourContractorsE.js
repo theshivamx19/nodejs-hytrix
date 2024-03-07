@@ -15,8 +15,8 @@ const labourContractorSchema = new mongoose.Schema({
         index: true
     },
     isEngagedFile: {
-        type: Obj,
-        default: nullect
+        type: Object,
+        default: null
     },
     isEngagedRemark: {
         type: String,
@@ -35,8 +35,8 @@ const labourContractorSchema = new mongoose.Schema({
         index: true
     },
     contLabRegNoEFile: {
-        type: Obj,
-        default: nullect
+        type: Object,
+        default: null
     },
     contLabRegNoERemark: {
         type: String,
@@ -56,7 +56,7 @@ const labourContractorSchema = new mongoose.Schema({
     },
     dateOfRegEFile: {
         type: Object,
-        default: nullect
+        default: null
     },
     dateOfRegERemark: {
         type: String,
@@ -216,7 +216,7 @@ const labourContractorSchema = new mongoose.Schema({
     },
     agreementRenewalDateE2DetFile: {
         type: Object,
-    default : null
+        default: null
     },
     agreementRenewalDateE2Remark: {
         type: String,
@@ -316,7 +316,7 @@ const labourContractorSchema = new mongoose.Schema({
     },
     contractLicDateE3File: {
         type: Object,
-    default : null
+        default: null
     },
     contractLicDateE3Remark: {
         type: String,
@@ -335,7 +335,7 @@ const labourContractorSchema = new mongoose.Schema({
     },
     contractExpiryDateE3File: {
         type: Object,
-    default : null
+        default: null
     },
     contractExpiryDateE3Remark: {
         type: String,
@@ -354,7 +354,7 @@ const labourContractorSchema = new mongoose.Schema({
     },
     contractRenewalDueDateE3File: {
         type: Object,
-    default : null
+        default: null
     },
     contractRenewalDueDateE3Remark: {
         type: String,
