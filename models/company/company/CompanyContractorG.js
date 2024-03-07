@@ -176,29 +176,29 @@ const companyContractorSchema = new mongoose.Schema({
     // },
     // ------------------- G.1.1. Details of the Contract Work -----------------
  
-    noOfLocContractWork: {
+    noOfLocContractWorkG11: {
         type: String,
         required : true,
         trim : true,
         index: true,
     },
-    noOfLocContractWorkDet: {
+    noOfLocContractWorkG11Det: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    noOfLocContractWorkFile: {
+    noOfLocContractWorkG11File: {
         type: Object,
         default: null
     },
-    noOfLocContractWorkRemark: {
+    noOfLocContractWorkG11Remark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    firstRegAddOfClient: {
+    regAddOfClientG11: {
         address: {
             type: String,
             required: true,
@@ -224,128 +224,128 @@ const companyContractorSchema = new mongoose.Schema({
             index: true
         }
     },
-    firstRegAddOfClientDet: {
+    regAddOfClientG11Det: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    firstRegAddOfClientFile: {
+    regAddOfClientG11File: {
         type: Object,
         default: null
     },
-    firstRegAddOfClientRemark: {
+    regAddOfClientG11Remark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    secondRegAddOfClient: {
-        address: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true
-        },
-        state: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true
-        },
-        district: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true
-        },
-        pincode: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true
-        }
-    },
-    secondRegAddOfClientDet: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    secondRegAddOfClientFile: {
-        type: Object,
-        default: null
-    },
-    secondRegAddOfClientRemark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    client2G11: {
-        type: Date,
-        required : true,
-        trim : true,
-        index: true,
-    },
-    client2G11Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    client2G11File: {
-        type: Object,
-        default: null
-    },
-    client2G11Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    regAddOfClient2G11: {
-        address: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true
-        },
-        state: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true
-        },
-        district: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true
-        },
-        pincode: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true
-        }
-    },
-    regAddOfClient2G11Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    regAddOfClient2G11File: {
-        type: Object,
-        default: null
-    },
-    regAddOfClient2G11Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // secondRegAddOfClient: {
+    //     address: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         index: true
+    //     },
+    //     state: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         index: true
+    //     },
+    //     district: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         index: true
+    //     },
+    //     pincode: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         index: true
+    //     }
+    // },
+    // secondRegAddOfClientDet: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // secondRegAddOfClientFile: {
+    //     type: Object,
+    //     default: null
+    // },
+    // secondRegAddOfClientRemark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // client2G11: {
+    //     type: Date,
+    //     required : true,
+    //     trim : true,
+    //     index: true,
+    // },
+    // client2G11Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // client2G11File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // client2G11Remark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // regAddOfClient2G11: {
+    //     address: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         index: true
+    //     },
+    //     state: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         index: true
+    //     },
+    //     district: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         index: true
+    //     },
+    //     pincode: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         index: true
+    //     }
+    // },
+    // regAddOfClient2G11Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // regAddOfClient2G11File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // regAddOfClient2G11Remark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
 
     // ---------------- G.1.2. Nature of the Contract Work ----------------
     agreementRefNoG12: {
@@ -382,10 +382,10 @@ const companyContractorSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // agreementDateG12File: {
-    //     type: Object,
-    //     default: null
-    // },
+    agreementDateG12File: {
+        type: Object,
+        default: null
+    },
     agreementDateG12Remark: {
         type: String,
         trim: true,
@@ -404,10 +404,10 @@ const companyContractorSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // agreementValidityG12File: {
-    //     type: Object,
-    //     default: null
-    // },
+    agreementValidityG12File: {
+        type: Object,
+        default: null
+    },
     agreementValidityG12Remark: {
         type: String,
         trim: true,
