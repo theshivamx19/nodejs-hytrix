@@ -463,22 +463,22 @@ const companyContractorSchema = new mongoose.Schema({
         default : false,
         index: true,
     },
-    isClraApplicableG12Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    isClraApplicableG12File: {
-        type: Object,
-        default: null
-    },
-    isClraApplicableG12Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // isClraApplicableG12Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // isClraApplicableG12File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // isClraApplicableG12Remark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     // ----------------- G.1.3. Details of CLRA License -------------------
     noOfForm5G13: {
         type: String,
@@ -514,10 +514,10 @@ const companyContractorSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // form5DateG13File: {
-    //     type: Object,
-    //     default: null
-    // },
+    form5DateG13File: {
+        type: Object,
+        default: null
+    },
     form5DateG13Remark: {
         type: String,
         trim: true,
@@ -536,33 +536,33 @@ const companyContractorSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // workCommencedDateG13File: {
-    //     type: Object,
-    //     default: null
-    // },
+    workCommencedDateG13File: {
+        type: Object,
+        default: null
+    },
     workCommencedDateG13Remark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    clraLicenseNumberG13: {
+    clraLicenseNoG13: {
         type: String,
         required : true,
         trim : true,
         index: true,
     },
-    clraLicenseNumberG13Det: {
+    clraLicenseNoG13Det: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    clraLicenseNumberG13File: {
+    clraLicenseNoG13File: {
         type: Object,
         default: null
     },
-    clraLicenseNumberG13Remark: {
+    clraLicenseNoG13Remark: {
         type: String,
         trim: true,
         default: null,
@@ -580,10 +580,10 @@ const companyContractorSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // clraLicenseDateG13File: {
-    //     type: Object,
-    //     default: null
-    // },
+    clraLicenseDateG13File: {
+        type: Object,
+        default: null
+    },
     clraLicenseDateG13Remark: {
         type: String,
         trim: true,
@@ -602,10 +602,10 @@ const companyContractorSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // clraValidityG13File: {
-    //     type: Object,
-    //     default: null
-    // },
+    clraValidityG13File: {
+        type: Object,
+        default: null
+    },
     clraValidityG13Remark: {
         type: String,
         trim: true,
@@ -624,10 +624,10 @@ const companyContractorSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // clraRenewalDueG13File: {
-    //     type: Object,
-    //     default: null
-    // },
+    clraRenewalDueG13File: {
+        type: Object,
+        default: null
+    },
     clraRenewalDueG13Remark: {
         type: String,
         trim: true,
@@ -735,10 +735,10 @@ const companyContractorSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // contWorkCompletedDateFile: {
-    //     type: Object,
-    //     default: null
-    // },
+    contWorkCompletedDateFile: {
+        type: Object,
+        default: null
+    },
     contWorkCompletedDateRemark: {
         type: String,
         trim: true,
@@ -757,10 +757,10 @@ const companyContractorSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // contWorkComplitionNoticeFile: {
-    //     type: Object,
-    //     default: null
-    // },
+    contWorkComplitionNoticeFile: {
+        type: Object,
+        default: null
+    },
     contWorkComplitionNoticeRemark: {
         type: String,
         trim: true,
@@ -779,10 +779,10 @@ const companyContractorSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // refundSecDepNoticeFile: {
-    //     type: Object,
-    //     default: null
-    // },
+    refundSecDepNoticeFile: {
+        type: Object,
+        default: null
+    },
     refundSecDepNoticeRemark: {
         type: String,
         trim: true,
@@ -801,10 +801,10 @@ const companyContractorSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // licSurrenderedDateFile: {
-    //     type: Object,
-    //     default: null
-    // },
+    licSurrenderedDateFile: {
+        type: Object,
+        default: null
+    },
     licSurrenderedDateRemark: {
         type: String,
         trim: true,
