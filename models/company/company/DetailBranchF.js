@@ -1651,10 +1651,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // regDate56File: {
-    //     type: Object,
-    //     default: null
-    // },
+    regDate56File: {
+        type: Object,
+        default: null
+    },
     regDate56Remark: {
         type: String,
         trim: true,
@@ -1673,10 +1673,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // expiryDate56File: {
-    //     type: Object,
-    //     default: null
-    // },
+    expiryDate56File: {
+        type: Object,
+        default: null
+    },
     expiryDate56Remark: {
         type: String,
         trim: true,
@@ -1695,10 +1695,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // renewalDate56File: {
-    //     type: Object,
-    //     default: null
-    // },
+    renewalDate56File: {
+        type: Object,
+        default: null
+    },
     renewalDate56Remark: {
         type: String,
         trim: true,
@@ -1762,10 +1762,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // regDate57File: {
-    //     type: Object,
-    //     default: null
-    // },
+    regDate57File: {
+        type: Object,
+        default: null
+    },
     regDate57Remark: {
         type: String,
         trim: true,
@@ -1784,10 +1784,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // expiryDate57File: {
-    //     type: Object,
-    //     default: null
-    // },
+    expiryDate57File: {
+        type: Object,
+        default: null
+    },
     expiryDate57Remark: {
         type: String,
         trim: true,
@@ -1806,10 +1806,10 @@ const branchDetailSchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    // renewalDate57File: {
-    //     type: Object,
-    //     default: null
-    // },
+    renewalDate57File: {
+        type: Object,
+        default: null
+    },
     renewalDate57Remark: {
         type: String,
         trim: true,

@@ -3,72 +3,72 @@ import mongoose from "mongoose";
 // ------------------ G. Is the Company a Contractor ------------------
 
 const companyContractorSchema = new mongoose.Schema({
-    isLabourEngaged: {
+    isLabourEngagedG: {
         type: Boolean,
         default : false,
         index: true,
     },
-    isLabourEngagedDet: {
+    isLabourEngagedGDet: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    isLabourEngagedFile: {
+    isLabourEngagedGFile: {
         type: Object,
         default: null
     },
-    isLabourEngagedRemark: {
+    isLabourEngagedGRemark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    noOfClient: {
+    noOfClientG: {
         type: String,
         required : true,
         trim : true,
         index: true,
     },
-    noOfClientDet: {
+    noOfClientGDet: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    noOfClientFile: {
+    noOfClientGFile: {
         type: Object,
         default: null
     },
-    noOfClientRemark: {
+    noOfClientGRemark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    client1: {
+    clientG: {
         type: Date,
         required : true,
         trim : true,
         index: true,
     },
-    client1Det: {
+    clientGDet: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    client1File: {
+    clientGFile: {
         type: Object,
         default: null
     },
-    client1Remark: {
+    clientGRemark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    regOfficeAddClient1: {
+    regOfficeAddClientG: {
         address: {
             type: String,
             required: true,
@@ -94,86 +94,86 @@ const companyContractorSchema = new mongoose.Schema({
             index: true
         }
     },
-    regOfficeAddClient1Det: {
+    regOfficeAddClientGDet: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    regOfficeAddClient1File: {
+    regOfficeAddClientGFile: {
         type: Object,
         default: null
     },
-    regOfficeAddClient1Remark: {
+    regOfficeAddClientGRemark: {
         type: String,
         trim: true,
         default: null,
         index: true
     },
-    client2: {
-        type: Date,
-        required : true,
-        trim : true,
-        index: true,
-    },
-    client2Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    client2File: {
-        type: Object,
-        default: null
-    },
-    client2Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    regOfficeAddClient2: {
-        address: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true
-        },
-        state: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true
-        },
-        district: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true
-        },
-        pincode: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true
-        }
-    },
-    regOfficeAddClient2Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    regOfficeAddClient2File: {
-        type: Object,
-        default: null
-    },
-    regOfficeAddClient2Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // client2: {
+    //     type: Date,
+    //     required : true,
+    //     trim : true,
+    //     index: true,
+    // },
+    // client2Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // client2File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // client2Remark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // regOfficeAddClient2: {
+    //     address: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         index: true
+    //     },
+    //     state: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         index: true
+    //     },
+    //     district: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         index: true
+    //     },
+    //     pincode: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         index: true
+    //     }
+    // },
+    // regOfficeAddClient2Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // regOfficeAddClient2File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // regOfficeAddClient2Remark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     // ------------------- G.1.1. Details of the Contract Work -----------------
  
     noOfLocContractWork: {
