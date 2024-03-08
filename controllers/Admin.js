@@ -3435,13 +3435,13 @@ export const auditGetting = async (request, response, next) => {
             return user.role === "Auditor"
         })
         let count = 0
-        auditData.filter(doc => {     
-            const result = auditorData.map(data=>data.firstName+" "+data.lastName).includes(doc.auditor)
-            if(result && doc.overdue>0){
+        auditData.filter(doc => {
+            const result = auditorData.map(data => data.firstName + " " + data.lastName).includes(doc.auditor)
+            if (result && doc.overdue > 0) {
                 return count++
             }
         })
-        response.status(200).json(({total : count, data : auditData}));
+        response.status(200).json(({ total: count, data: auditData }));
     } catch (error) {
         next(error);
     }
@@ -5007,6 +5007,146 @@ export const dashboard = async (request, response, next) => {
 
 // ************************ --------- Company ---------- **********************
 
-export const companyCreate = async (request, response, next)=>{
-    
+
+// ************************ --------- Company Create ---------- **********************
+
+export const companyCreate = async (request, response, next) => {
+    try {
+        const data = request.body
+        const {
+            companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at, updated_at
+        } = data
+
+        let dataB1, dataB2, dataB3, originalName
+        const images = request.files
+        images.forEach(image => {
+            originalName = image.originalname
+            return originalName
+        })
+        // const companyregistrationimage = request.files.companyregistrationimage ? request.files.companyregistrationimage[0] : null;
+        // const companyciniamge = request.files.companyciniamge ? request.files.companyciniamge[0] : null;
+        // const companyauthorityimage = request.files.companyauthorityimage ? request.files.companyauthorityimage[0] : null;
+        // const companyissuedplaceimage = request.files.companyissuedplaceimage ? request.files.companyissuedplaceimage[0] : null;
+        // const companytanimage = request.files.companytanimage ? request.files.companytanimage[0] : null;
+        // const companytinimage = request.files.companytinimage ? request.files.companytinimage[0] : null;
+        // const companygstimage = request.files.companygstimage ? request.files.companygstimage[0] : null;
+
+        const url = request.protocol + '://' + request.get('host');
+        const uploadImage = async (imageFile) => {
+            const uploadsDirectory = './data/uploads/';
+            const imageDirectory = 'images/';
+            const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
+            const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
+            await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
+            const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            return imageUrl;
+        };
+
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        // formattedImageFileName = Date.now() + imageName.originalname.split(' ').join('-');
+        // formattedImageFileName = Date.now() + originalName.split(' ').join('-');
+
+        // await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+        // imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+
+        if (RegistrationB1.length > 0) {
+            dataB1 = RegistrationB1.map(item => {
+                return {
+                    name: item.name,
+                    details: item.details,
+                    remarks: item.remarks,
+                    din: item.din,
+                    dindetails: item.dindetails,
+                    dinremark: item.dinremark,
+                    pan: item.pan,
+                    pandetails: item.pandetails,
+                    panremark: item.panremark,
+                    aadhaar: item.aadhaar,
+                    aadhaardetails: item.aadhaardetails,
+                    aadhaarremark: item.aadhaarremark,
+                    mobile: item.mobile,
+                    mobiledetail: item.mobiledetail,
+                    mobileremark: item.mobileremark,
+                    email: item.email,
+                    emaildetails: item.emaildetails,
+                    emailremark: item.emailremark
+                };
+            });
+        }
+        if (RegistrationB2.length > 0) {
+            dataB2 = RegistrationB2.map(item => {
+                return {
+                    name: item.name,
+                    details: item.details,
+                    image: item.image,
+                    remarks: item.remarks,
+                    designation: item.designation,
+                    designationdetails: item.designationdetails,
+                    designationimage: item.designationimage,
+                    designationremark: item.designationremark,
+                    pan: item.pan,
+                    pandetails: item.pandetails,
+                    panimage: item.panimage,
+                    panremark: item.panremark,
+                    aadhaar: item.aadhaar,
+                    aadhaardetails: item.aadhaardetails,
+                    aadhaarimage: item.aadhaarimage,
+                    aadhaarremark: item.aadhaarremark,
+                    mobile: item.mobile,
+                    mobiledetail: item.mobiledetail,
+                    mobileremark: item.mobileremark,
+                    email: item.email,
+                    emaildetails: item.emaildetails,
+                    emailremark: item.emailremark,
+                    authletter: item.authletter,
+                    authletterdetails: item.authletterdetails,
+                    authletterremark: item.authletterremark
+                };
+            });
+        }
+        if (RegistrationB3.length > 0) {
+            dataB3 = RegistrationB3.map(item => {
+                return {
+                    name: item.name,
+                    details: item.details,
+                    remarks: item.remarks,
+                    pan: item.pan,
+                    pandetails: item.pandetails,
+                    panremark: item.panremark,
+                    aadhaar: item.aadhaar,
+                    aadhaardetails: item.aadhaardetails,
+                    aadhaarremark: item.aadhaarremark,
+                    mobile: item.mobile,
+                    mobiledetail: item.mobiledetail,
+                    mobileremark: item.mobileremark,
+                    email: item.email,
+                    emaildetails: item.emaildetails,
+                    emailremark: item.emailremark,
+                    prefferd: item.prefferd,
+                    prefferdetails: item.prefferdetails,
+                    prefferdremark: item.prefferdremark
+                };
+            });
+        }
+
+        const company = {
+            companyregistration, companyregistrationdetails, companyregistrationimage, companyregistrationremark, companycin, companycindetails, companyciniamge, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceimage, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityimage, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanimage, companypanremark, companytan, companytandetails, companytanimage, companytanremark, companytin, companytindetails, companytinimage, companytinremark, companygst, companygstdetails, companygstimage, companygstremark, RegistrationB1: dataB1, RegistrationB2: dataB2, RegistrationB3: dataB3, created_at, updated_at
+        }
+        const newCompany = new company(company)
+        await newCompany.save()
+    } catch (error) {
+        next(error)
+    }
+
 }
