@@ -817,3 +817,6 @@ const companyContractorSchema = new mongoose.Schema({
         index : true
     }
 }, {timestamps : true})
+
+const Companycontractor = mongoose.model('Companycontractor', companyContractorSchema)
+export default Companycontractor

@@ -530,5 +530,5 @@ const labourContractorSchema = new mongoose.Schema({
 
     { timestamps: true })
 
-const LabourContractor = mongoose.model('LabourContractor', labourContractorSchema)
-export default LabourContractor
+const Labourcontractor = mongoose.model('Labourcontractor', labourContractorSchema)
+export default Labourcontractor

@@ -1846,5 +1846,5 @@ const branchDetailSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
-const BranchDetail = mongoose.model('BranchDetail', branchDetailSchema)
-export default BranchDetail;
+const Branchdetail = mongoose.model('Branchdetail', branchDetailSchema)
+export default Branchdetail;
