@@ -2,7 +2,7 @@ import express from "express";
 import cors from 'cors'
 import { isAdmin, protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
-import { login, logout, catCreate, catGettting, catEditById, createCompliances, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById, complianceFilter, complianceRejectedFilter, checkListRejectedFilter, checkListCreateFilter, checkListApproveFilter, checkListAllFilter, createElibrary, elibraryGetting, elibraryApproved, elibraryRejected, checklistOnCreateegetting, checklistApprovegetting, checklistOnRejectegetting, gettingCompliances, complianceApproveFilter, gettingAuditor, gettingChecklist, createAudit, auditGetting, updateAudit, createLiseReg, liseRegGetting, liseRegUpdateById, liseRegHistoryFilter, elibraryGettingById, auditFilter } from '../controllers/Admin.js';
+import { login, logout, catCreate, catGettting, catEditById, createCompliances, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById, complianceFilter, complianceRejectedFilter, checkListRejectedFilter, checkListCreateFilter, checkListApproveFilter, checkListAllFilter, createElibrary, elibraryGetting, elibraryApproved, elibraryRejected, checklistOnCreateegetting, checklistApprovegetting, checklistOnRejectegetting, gettingCompliances, complianceApproveFilter, gettingAuditor, gettingChecklist, createAudit, auditGetting, updateAudit, createLiseReg, liseRegGetting, liseRegUpdateById, liseRegHistoryFilter, elibraryGettingById, auditFilter, companyCreate } from '../controllers/Admin.js';
 
 import { upload } from "../middlewares/multerConfig.js";
 // import multer from "multer";
@@ -94,5 +94,9 @@ router.post('/createLiseReg', upload.fields([{ name: 'licenseUpload' }, { name: 
 router.get('/liseRegGetting', liseRegGetting)
 router.put('/liseRegUpdateById/:id', liseRegUpdateById)
 router.post('/liseRegHistoryFilter', liseRegHistoryFilter)
+
+// -------------------- Company Create -------------------
+
+router.post('/companyCreate', upload.any(), companyCreate )
 
 export default router;

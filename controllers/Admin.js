@@ -12,6 +12,7 @@ import Checkdata from '../models/CheckData.js'
 import Elibrary from '../models/Elibrary.js'
 import Audit from '../models/Audit.js';
 import Lisereg from '../models/LiseReg.js';
+import Registration from '../models/company/company/RegistrationB.js'
 import jwt from 'jsonwebtoken';
 import { createError } from '../utils/error.js';
 import { response } from 'express';
@@ -5013,16 +5014,13 @@ export const dashboard = async (request, response, next) => {
 export const companyCreate = async (request, response, next) => {
     try {
         const data = request.body
+        console.log(data);
         const {
             companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at, updated_at
         } = data
 
         let dataB1, dataB2, dataB3, originalName
-        const images = request.files
-        images.forEach(image => {
-            originalName = image.originalname
-            return originalName
-        })
+        
         // const companyregistrationimage = request.files.companyregistrationimage ? request.files.companyregistrationimage[0] : null;
         // const companyciniamge = request.files.companyciniamge ? request.files.companyciniamge[0] : null;
         // const companyauthorityimage = request.files.companyauthorityimage ? request.files.companyauthorityimage[0] : null;
@@ -5030,10 +5028,11 @@ export const companyCreate = async (request, response, next) => {
         // const companytanimage = request.files.companytanimage ? request.files.companytanimage[0] : null;
         // const companytinimage = request.files.companytinimage ? request.files.companytinimage[0] : null;
         // const companygstimage = request.files.companygstimage ? request.files.companygstimage[0] : null;
+        // const companypanimage = request.files.companypanimage ? request.files.companypanimage[0] : null;
 
-        const url = request.protocol + '://' + request.get('host');
         const uploadImage = async (imageFile) => {
-
+            const url = request.protocol + '://' + request.get('host');
+            console.log(imageFile);
             const uploadsDirectory = './data/uploads/';
             const imageDirectory = 'images/';
             fs.access(uploadsDirectory, (err) => {
@@ -5051,17 +5050,13 @@ export const companyCreate = async (request, response, next) => {
             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
             const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-            return imageUrl;
+            // return imageUrl;
+            console.log(imageUrl);
         };
-
-
-
-        // formattedImageFileName = Date.now() + imageName.originalname.split(' ').join('-');
-        // formattedImageFileName = Date.now() + originalName.split(' ').join('-');
-
-        // await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
-        // imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-
+        const images = request.files
+        images.forEach(image => {
+            return uploadImage(image)
+        })
         if (RegistrationB1.length > 0) {
             dataB1 = RegistrationB1.map(item => {
                 return {
@@ -5091,19 +5086,19 @@ export const companyCreate = async (request, response, next) => {
                 return {
                     name: item.name,
                     details: item.details,
-                    image: item.image,
+                    image: uploadImage(item.image),
                     remarks: item.remarks,
                     designation: item.designation,
                     designationdetails: item.designationdetails,
-                    designationimage: item.designationimage,
+                    designationimage: uploadImage(item.designationimage),
                     designationremark: item.designationremark,
                     pan: item.pan,
                     pandetails: item.pandetails,
-                    panimage: item.panimage,
+                    panimage: uploadImage(item.panimage),
                     panremark: item.panremark,
                     aadhaar: item.aadhaar,
                     aadhaardetails: item.aadhaardetails,
-                    aadhaarimage: item.aadhaarimage,
+                    aadhaarimage: uploadImage(item.aadhaarimage),
                     aadhaarremark: item.aadhaarremark,
                     mobile: item.mobile,
                     mobiledetail: item.mobiledetail,
@@ -5143,12 +5138,43 @@ export const companyCreate = async (request, response, next) => {
         }
 
         const company = {
-            companyregistration, companyregistrationdetails, companyregistrationimage, companyregistrationremark, companycin, companycindetails, companyciniamge, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceimage, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityimage, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanimage, companypanremark, companytan, companytandetails, companytanimage, companytanremark, companytin, companytindetails, companytinimage, companytinremark, companygst, companygstdetails, companygstimage, companygstremark, RegistrationB1: dataB1, RegistrationB2: dataB2, RegistrationB3: dataB3, created_at, updated_at
+            companyregistration, companyregistrationdetails, companyregistrationimage: uploadImage(companyregistrationimage), companyregistrationremark, companycin, companycindetails, companyciniamge: uploadImage(companyciniamge), companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceimage: uploadImage(companyissuedplaceimage), companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityimage: uploadImage(companyauthorityimage), companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanimage: uploadImage(companypanimage), companypanremark, companytan, companytandetails, companytanimage: uploadImage(companytanimage), companytanremark, companytin, companytindetails, companytinimage: uploadImage(companytinimage), companytinremark, companygst, companygstdetails, companygstimage: uploadImage(companygstimage), companygstremark, RegistrationB1: dataB1, RegistrationB2: dataB2, RegistrationB3: dataB3, created_at, updated_at
         }
-        const newCompany = new company(company)
+        const newCompany = new Registration(company)
         await newCompany.save()
+        response.status(201).json(newCompany)
     } catch (error) {
         next(error)
     }
 
 }
+
+
+
+
+
+// RegistrationB2[0].name
+// RegistrationB2[0].details
+// RegistrationB2[0].image
+// RegistrationB2[0].remarks
+// RegistrationB2[0].designation
+// RegistrationB2[0].designationdetails
+// RegistrationB2[0].designationimage
+// RegistrationB2[0].designationremark
+// RegistrationB2[0].pan
+// RegistrationB2[0].pandetails
+// RegistrationB2[0].panimage
+// RegistrationB2[0].panremark
+// RegistrationB2[0].aadhaar
+// RegistrationB2[0].aadhaardetails
+// RegistrationB2[0].aadhaarimage
+// RegistrationB2[0].aadhaarremark
+// RegistrationB2[0].mobile
+// RegistrationB2[0].mobiledetail
+// RegistrationB2[0].mobileremark
+// RegistrationB2[0].email
+// RegistrationB2[0].emaildetails
+// RegistrationB2[0].emailremark
+// RegistrationB2[0].authletter
+// RegistrationB2[0].authletterdetails
+// RegistrationB2[0].authletterremark
