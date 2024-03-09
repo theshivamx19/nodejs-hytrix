@@ -5033,8 +5033,20 @@ export const companyCreate = async (request, response, next) => {
 
         const url = request.protocol + '://' + request.get('host');
         const uploadImage = async (imageFile) => {
+
             const uploadsDirectory = './data/uploads/';
             const imageDirectory = 'images/';
+            fs.access(uploadsDirectory, (err) => {
+                if (err) {
+                    fs.mkdirSync(uploadsDirectory, { recursive: true });
+                }
+            });
+            fs.access(uploadsDirectory + imageDirectory, (err) => {
+                if (err) {
+                    fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+                }
+            });
+
             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
@@ -5043,16 +5055,6 @@ export const companyCreate = async (request, response, next) => {
         };
 
 
-        fs.access(uploadsDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory, { recursive: true });
-            }
-        });
-        fs.access(uploadsDirectory + imageDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
-            }
-        });
 
         // formattedImageFileName = Date.now() + imageName.originalname.split(' ').join('-');
         // formattedImageFileName = Date.now() + originalName.split(' ').join('-');
