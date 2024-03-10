@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const registrationBSchema = new mongoose.Schema({
     companyregistration: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
         index: true
     },
@@ -24,7 +24,7 @@ const registrationBSchema = new mongoose.Schema({
     },
     companycin: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
         index: true
     },
@@ -43,7 +43,7 @@ const registrationBSchema = new mongoose.Schema({
     },
     companyissuedplace: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
         index: true
     },
@@ -62,7 +62,7 @@ const registrationBSchema = new mongoose.Schema({
     },
     companyauthority: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
         index: true
     },
@@ -83,13 +83,13 @@ const registrationBSchema = new mongoose.Schema({
     },            
     companyregistrationdate: {
         type: Date,
-        required: true,
+        // required: true,
         default:null,
         index: true
     },
     companypan: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
         index: true
     },
@@ -108,7 +108,7 @@ const registrationBSchema = new mongoose.Schema({
     },            
     companytan: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
         index: true
     },
@@ -127,7 +127,7 @@ const registrationBSchema = new mongoose.Schema({
     },            
     companytin: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
         index: true
     },
@@ -146,7 +146,7 @@ const registrationBSchema = new mongoose.Schema({
     },            
     companygst: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
         index: true
     },
@@ -160,7 +160,7 @@ const registrationBSchema = new mongoose.Schema({
     },
     companygstremark: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
         index: true
     },            
