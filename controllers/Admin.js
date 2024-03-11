@@ -5379,23 +5379,26 @@ export const companyCreate = async (request, response, next) => {
             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
             return imageUrl;
         };
-
+        request.files.find(img => console.log(img.fieldname))
+        
         // Process RegistrationB1
-        const dataB1 = await Promise.all(RegistrationB1.map(async (item) => ({
+        const dataB1 = await Promise.all(RegistrationB1.map(async (item, index) => ({
             ...item,
-            nameimage: await uploadImage(request.files.find(img => img.fieldname === "nameimage")),
-            dinimage: await uploadImage(request.files.find(img => img.fieldname === "dinimage")),
-            panimage: await uploadImage(request.files.find(img => img.fieldname === "panimage")),
-            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === "aadhaarimage")),
+            nameimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][nameimage]`)),
+            dinimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][dinimage]`)),
+            panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][panimage]`)),
+            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][aadhaarimage]`)),
         })));
+        
+        console.log(RegistrationB2);
 
         // Process RegistrationB2
-        const dataB2 = await Promise.all(RegistrationB2.map(async (item) => ({
+        const dataB2 = await Promise.all(RegistrationB2.map(async (item, index) => ({
             ...item,
-            image: await uploadImage(request.files.find(img => img.fieldname === "image")),
-            designationimage: await uploadImage(request.files.find(img => img.fieldname === "designationimage")),
-            panimage: await uploadImage(request.files.find(img => img.fieldname === "panimage")),
-            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === "aadhaarimage")),
+            image: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][image]`)),
+            // designationimage: await uploadImage(request.files.find(img => img.fieldname === "designationimage")),
+            panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][panimage]`)),
+            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][aadhaarimage]`)),
         })));
         console.log(dataB2[0].image);
 
