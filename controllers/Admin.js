@@ -5011,146 +5011,145 @@ export const dashboard = async (request, response, next) => {
 
 // ************************ --------- Company Create ---------- **********************
 
-export const companyCreate = async (request, response, next) => {
-    try {
-        const data = request.body
-        const {
-            companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at, updated_at
-        } = data
-        let dataB1, dataB2, dataB3
+// export const companyCreate = async (request, response, next) => {
+//     try {
+//         const data = request.body
+//         const {
+//             companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at, updated_at
+//         } = data
+//         let dataB1, dataB2, dataB3
 
-        const uploadImage = async (imageFile) => {
-            const url = request.protocol + '://' + request.get('host');
-            const uploadsDirectory = './data/uploads/';
-            const imageDirectory = 'images/';
-            // return await Promise.all(imageFile.map(async (img) => {
-            fs.access(uploadsDirectory, (err) => {
-                if (err) {
-                    fs.mkdirSync(uploadsDirectory, { recursive: true });
-                }
-            });
-            fs.access(uploadsDirectory + imageDirectory, (err) => {
-                if (err) {
-                    fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
-                }
-            });
-            const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
-            const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-            console.log(imageUrl);
-            const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
-            await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
-            return imageUrl;
-            // }))
-        };
-        // console.log(request.files);
-        const res = RegistrationB2.map(doc=> doc).forEach(item => console.log(item.name === "Shivam Industries"))
-        
+//         const uploadImage = async (imageFile) => {
+//             const url = request.protocol + '://' + request.get('host');
+//             const uploadsDirectory = './data/uploads/';
+//             const imageDirectory = 'images/';
+//             // return await Promise.all(imageFile.map(async (img) => {
+//             fs.access(uploadsDirectory, (err) => {
+//                 if (err) {
+//                     fs.mkdirSync(uploadsDirectory, { recursive: true });
+//                 }
+//             });
+//             fs.access(uploadsDirectory + imageDirectory, (err) => {
+//                 if (err) {
+//                     fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+//                 }
+//             });
+//             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
+//             const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+//             console.log(imageUrl);
+//             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
+//             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
+//             return imageUrl;
+//             // }))
+//         };
+
+//         // const images = request.files
+//         // console.log(images.length);
+//         // images.forEach(image => {
+//         //     return uploadImage(image)
+//         // })
+
+//         if (RegistrationB1.length > 0) {
+//             dataB1 = RegistrationB1.map(item => {
+//                 return {
+//                     name: item.name,
+//                     nameimage: item.nameimage,
+//                     details: item.details,
+//                     remarks: item.remarks,
+//                     din: item.din,
+//                     dindetails: item.dindetails,
+//                     dinremark: item.dinremark,
+//                     dinimage: item.dinimage,
+//                     pan: item.pan,
+//                     pandetails: item.pandetails,
+//                     panremark: item.panremark,
+//                     panimage: item.panimage,
+//                     aadhaar: item.aadhaar,
+//                     aadhaardetails: item.aadhaardetails,
+//                     aadhaarremark: item.aadhaarremark,
+//                     aadhaarimage: item.aadhaarimage,
+//                     mobile: item.mobile,
+//                     mobiledetail: item.mobiledetail,
+//                     mobileremark: item.mobileremark,
+//                     email: item.email,
+//                     emaildetails: item.emaildetails,
+//                     emailremark: item.emailremark
+//                 };
+//             });
+//             console.log(dataB1);
+//         }
+//         if (RegistrationB2.length > 0) {
+//             dataB2 = RegistrationB2.map(function (item) {
+//                 return {
+//                     name: item.name,
+//                     details: item.details,
+//                     image: uploadImage(request.files.find(img => img.fieldname === "image")),
+//                     remarks: item.remarks,
+//                     designation: item.designation,
+//                     designationdetails: item.designationdetails,
+//                     designationimage: uploadImage(request.files[10]),
+//                     designationremark: item.designationremark,
+//                     pan: item.pan,
+//                     pandetails: item.pandetails,
+//                     panimage: uploadImage(request.files[11]),
+//                     panremark: item.panremark,
+//                     aadhaar: item.aadhaar,
+//                     aadhaardetails: item.aadhaardetails,
+//                     aadhaarimage: uploadImage(request.files[12]),
+//                     aadhaarremark: item.aadhaarremark,
+//                     mobile: item.mobile,
+//                     mobiledetail: item.mobiledetail,
+//                     mobileremark: item.mobileremark,
+//                     email: item.email,
+//                     emaildetails: item.emaildetails,
+//                     emailremark: item.emailremark,
+//                     authletter: item.authletter,
+//                     authletterdetails: item.authletterdetails,
+//                     authletterremark: item.authletterremark
+//                 };
+//             });
+//             console.log(dataB2);
+//         }
+
+//         if (RegistrationB3.length > 0) {
+//             dataB3 = RegistrationB3.map(item => {
+//                 return {
+//                     name: item.name,
+//                     details: item.details,
+//                     remarks: item.remarks,
+//                     pan: item.pan,
+//                     pandetails: item.pandetails,
+//                     panremark: item.panremark,
+//                     aadhaar: item.aadhaar,
+//                     aadhaardetails: item.aadhaardetails,
+//                     aadhaarremark: item.aadhaarremark,
+//                     mobile: item.mobile,
+//                     mobiledetail: item.mobiledetail,
+//                     mobileremark: item.mobileremark,
+//                     email: item.email,
+//                     emaildetails: item.emaildetails,
+//                     emailremark: item.emailremark,
+//                     prefferd: item.prefferd,
+//                     prefferdetails: item.prefferdetails,
+//                     prefferdremark: item.prefferdremark
+//                 };
+//             });
+//             console.log(dataB3);
+//         }
 
 
-        console.log(res);
-        // const images = request.files
-        // console.log(images.length);
-        // images.forEach(image => {
-        //     return uploadImage(image)
-        // })
-        // if (RegistrationB1.length > 0) {
-        //     dataB1 = RegistrationB1.map(item => {
-        //         return {
-        //             name: item.name,
-        //             details: item.details,
-        //             remarks: item.remarks,
-        //             din: item.din,
-        //             dindetails: item.dindetails,
-        //             dinremark: item.dinremark,
-        //             pan: item.pan,
-        //             pandetails: item.pandetails,
-        //             panremark: item.panremark,
-        //             aadhaar: item.aadhaar,
-        //             aadhaardetails: item.aadhaardetails,
-        //             aadhaarremark: item.aadhaarremark,
-        //             mobile: item.mobile,
-        //             mobiledetail: item.mobiledetail,
-        //             mobileremark: item.mobileremark,
-        //             email: item.email,
-        //             emaildetails: item.emaildetails,
-        //             emailremark: item.emailremark
-        //         };
-        //     });
-        //     console.log(dataB1);
-        // }
-        // if (RegistrationB2.length > 0) {
-        //     dataB2 = RegistrationB2.map(function(item){
-        //         console.log(item);
-        //         return newObj = {
-        //             name: request.body.companycin   ,
-        //             details: item.details,
-        //             image: uploadImage(request.files[9]),
-        //             remarks: item.remarks,
-        //             designation: item.designation,
-        //             designationdetails: item.designationdetails,
-        //             designationimage: uploadImage(request.files[10]),
-        //             designationremark: item.designationremark,
-        //             pan: item.pan,
-        //             pandetails: item.pandetails,
-        //             panimage: uploadImage(request.files[11]),
-        //             panremark: item.panremark,
-        //             aadhaar: item.aadhaar,
-        //             aadhaardetails: item.aadhaardetails,
-        //             aadhaarimage: uploadImage(request.files[12]),
-        //             aadhaarremark: item.aadhaarremark,
-        //             mobile: item.mobile,
-        //             mobiledetail: item.mobiledetail,
-        //             mobileremark: item.mobileremark,
-        //             email: item.email,
-        //             emaildetails: item.emaildetails,
-        //             emailremark: item.emailremark,
-        //             authletter: item.authletter,
-        //             authletterdetails: item.authletterdetails,
-        //             authletterremark: item.authletterremark
-        //         };
-        //     });
-        // console.log(dataB2);
-        // }
+//         const company = {
+//             companyregistration, companyregistrationdetails, companyregistrationimage: await uploadImage(request.files[1]), companyregistrationremark, companycin, companycindetails, companyciniamge: await uploadImage(request.files[2]), companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceimage: await uploadImage(request.files[3]), companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityimage: await uploadImage(request.files[4]), companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanimage: await uploadImage(request.files[5]), companypanremark, companytan, companytandetails, companytanimage: await uploadImage(request.files[6]), companytanremark, companytin, companytindetails, companytinimage: await uploadImage(request.files[7]), companytinremark, companygst, companygstdetails, companygstimage: await uploadImage(request.files[8]), companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at, updated_at
 
-        // if (RegistrationB3.length > 0) {
-        //     dataB3 = RegistrationB3.map(item => {
-        //         return {
-        //             name: item.name,
-        //             details: item.details,
-        //             remarks: item.remarks,
-        //             pan: item.pan,
-        //             pandetails: item.pandetails,
-        //             panremark: item.panremark,
-        //             aadhaar: item.aadhaar,
-        //             aadhaardetails: item.aadhaardetails,
-        //             aadhaarremark: item.aadhaarremark,
-        //             mobile: item.mobile,
-        //             mobiledetail: item.mobiledetail,
-        //             mobileremark: item.mobileremark,
-        //             email: item.email,
-        //             emaildetails: item.emaildetails,
-        //             emailremark: item.emailremark,
-        //             prefferd: item.prefferd,
-        //             prefferdetails: item.prefferdetails,
-        //             prefferdremark: item.prefferdremark
-        //         };
-        //     });
-        //     console.log(dataB3);
-        // }
+//         }
+//         const newCompany = new Registration(company)
+//         await newCompany.save()
+//         response.status(201).json(newCompany)
+//     } catch (error) {
+//         next(error)
+//     }
 
-        // console.log( await uploadImage(request.files[1]));
-        const company = {
-            // companyregistration, companyregistrationdetails, companyregistrationimage: await uploadImage(request.files[1]), companyregistrationremark, companycin, companycindetails, companyciniamge: await uploadImage(request.files[2]), companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceimage: await uploadImage(request.files[3]), companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityimage: await uploadImage(request.files[4]), companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanimage: await uploadImage(request.files[5]), companypanremark, companytan, companytandetails, companytanimage: await uploadImage(request.files[6]), companytanremark, companytin, companytindetails, companytinimage: await uploadImage(request.files[7]), companytinremark, companygst, companygstdetails, companygstimage: await uploadImage(request.files[8]), companygstremark, RegistrationB1: dataB1, RegistrationB2, RegistrationB3: dataB3, created_at, updated_at
-            RegistrationB2
-        }
-        const newCompany = new Registration(company)
-        await newCompany.save()
-        response.status(201).json(newCompany)
-    } catch (error) {
-        next(error)
-    }
-
-}
+// }
 
 
 
@@ -5356,3 +5355,77 @@ export const companyCreate = async (request, response, next) => {
 //         next(error);
 //     }
 // };
+
+
+
+export const companyCreate = async (request, response, next) => {
+    try {
+        const data = request.body;
+        const {
+            companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at, updated_at
+        } = data;
+
+        const uploadImage = async (imageFile) => {
+            if (!imageFile) {
+                return null; // Return null if image is not provided
+            }
+            const url = request.protocol + '://' + request.get('host');
+            const uploadsDirectory = './data/uploads/';
+            const imageDirectory = 'images/';
+            const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
+            const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            // console.log(imageUrl);
+            const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
+            await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
+            return imageUrl;
+        };
+
+        // Process RegistrationB1
+        const dataB1 = await Promise.all(RegistrationB1.map(async (item) => ({
+            ...item,
+            nameimage: await uploadImage(request.files.find(img => img.fieldname === "nameimage")),
+            dinimage: await uploadImage(request.files.find(img => img.fieldname === "dinimage")),
+            panimage: await uploadImage(request.files.find(img => img.fieldname === "panimage")),
+            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === "aadhaarimage")),
+        })));
+
+        // Process RegistrationB2
+        const dataB2 = await Promise.all(RegistrationB2.map(async (item) => ({
+            ...item,
+            image: await uploadImage(request.files.find(img => img.fieldname === "image")),
+            designationimage: await uploadImage(request.files.find(img => img.fieldname === "designationimage")),
+            panimage: await uploadImage(request.files.find(img => img.fieldname === "panimage")),
+            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === "aadhaarimage")),
+        })));
+        console.log(dataB2[0].image);
+
+        // Process RegistrationB3
+        const dataB3 = await Promise.all(RegistrationB3.map(async (item) => ({
+            ...item,
+            panimage: await uploadImage(request.files.find(img => img.fieldname === "panimage")),
+            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === "aadhaarimage")),
+        })));
+
+        // Upload company images
+        const company = {
+            companyregistration,
+            companyregistrationdetails,
+            companyregistrationimage: await uploadImage(request.files.find(img => img.fieldname === "companyregistrationimage")),
+            companyciniamge: await uploadImage(request.files.find(img => img.fieldname === "companyciniamge")),
+            companyissuedplaceimage: await uploadImage(request.files.find(img => img.fieldname === "companyissuedplaceimage")),
+            companyauthorityimage: await uploadImage(request.files.find(img => img.fieldname === "companyauthorityimage")),
+            companypanimage: await uploadImage(request.files.find(img => img.fieldname === "companypanimage")),
+            companytanimage: await uploadImage(request.files.find(img => img.fieldname === "companytanimage")),
+            companytinimage: await uploadImage(request.files.find(img => img.fieldname === "companytinimage")),
+            companygstimage: await uploadImage(request.files.find(img => img.fieldname === "companygstimage")),
+            companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1: dataB1, RegistrationB2: dataB2, RegistrationB3: dataB3, created_at, updated_at
+        };
+
+        // Save company data to database
+        const newCompany = new Registration(company);
+        await newCompany.save();
+        response.status(201).json(newCompany);
+    } catch (error) {
+        next(error);
+    }
+};
