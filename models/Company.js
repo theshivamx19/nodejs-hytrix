@@ -6,6 +6,7 @@ companyname: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companydetails: {
@@ -27,24 +28,28 @@ companyaddress: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companystate: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companydistrict: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companypin: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 comapnyaddressdetails :{
@@ -106,6 +111,7 @@ companynatureofbusiness: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 companynatureofbusinessdetails: {
@@ -129,6 +135,7 @@ companyregistration: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companyregistrationdetails: {
@@ -150,11 +157,13 @@ companycin: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companycindetails: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 companyciniamge: {
@@ -163,17 +172,20 @@ companyciniamge: {
 companycinremark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 companyissuedplace: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companyissuedplacedetails: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 companyissuedplaceimage: {
@@ -182,12 +194,14 @@ companyissuedplaceimage: {
 companyissuedplaceremark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 companyauthority: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companyauthoritydetails: {
@@ -209,11 +223,13 @@ companypan: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companypandetails: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 companypanimage: {
@@ -222,17 +238,20 @@ companypanimage: {
 companypanremark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },            
 companytan: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companytandetails: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 companytanimage: {
@@ -241,17 +260,20 @@ companytanimage: {
 companytanremark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },            
 companytin: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companytindetails: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 companytinimage: {
@@ -260,17 +282,20 @@ companytinimage: {
 companytinremark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },            
 companygst: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companygstdetails: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 companygstimage: {
@@ -279,16 +304,20 @@ companygstimage: {
 companygstremark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },                     
 RegistrationB1:{
     type:Array,
+    default:null,
 },
 RegistrationB2:{
     type:Array,
+    default:null,
 },
 RegistrationB3:{
     type:Array,
+    default:null,
 },
 /***B ends */
 /***C starts */
@@ -297,18 +326,22 @@ ClientcontactC1:{
 },
 ClientcontactC2:{
     type:Array,
+    default:null,
 },
 ClientcontactC3:{
     type:Array,
+    default:null,
 },
 ClientcontactC4:{
     type:Array,
+    default:null,
 },
 /***C ends */
 /***D starts */
 pfnumber: {
     type: String,
     required: true,
+    default:null,
     trim: true,
     index: true
 },
@@ -331,24 +364,28 @@ doc: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 pfstate: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 pfdistrict: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 setpfpin: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 pfaddressdetails: {
@@ -374,6 +411,7 @@ esinumber: {
     type: String,
     required:true,
     trim: true,
+    default:null,
     index: true
 },
 esidetails: {
@@ -395,36 +433,42 @@ esidoc: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 esiaddress: {
     type: String,
     trim: true,
     required: true,
+    default:null,
     index: true
 },
 esistate: {
     type: String,
     trim: true,
     required: true,
+    default:null,
     index: true
 },
 esidistrict: {
     type: String,
     trim: true,
     required: true,
+    default:null,
     index: true
 },
 esipin: {
     type: String,
     trim: true,
     required: true,
+    default:null,
     index: true
 },
 esiaddressdetails: {
     type: String,
     trim: true,
     required: true,
+    default:null,
     index: true
 }, 
 esiaddressimage: {
@@ -443,6 +487,7 @@ registrationD3: {
     type: String,
     trim: true,
     required: true,
+    default:null,
     index: true
 },
 registrationD3details: {
@@ -465,37 +510,44 @@ doregistrationD3: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true
 },            
 doeregistrationD3: {
     type: Date,
     required: true,
+    default:null,
     index: true
 },
 doddrregistrationD3: {
     type: Date,
     required: true,
+    default:null,
     index: true
 },
 noeD3: {
     type: Number,
     trim: true,
+    default:null,
     index: true
 },
 noemD3: {
     type: Number,
     trim: true,
+    default:null,
     index: true
 },
 noefD3: {
     type: Number,
     trim: true,
+    default:null,
     index: true
 },
 issueauthfD3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 issueauthfD3details: {
@@ -517,6 +569,7 @@ fpD3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 fpD3details: {
@@ -531,17 +584,20 @@ fpD3image: {
 fpD3remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 doapp: {
     type: Date,
     trim: true,
+    default:null,
     index: true
 },
 powerfpD3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 powerfpD3details: {
@@ -556,12 +612,14 @@ powerfpD3image: {
 powerfpD3remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 powerhpfpD3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 powerhpfpD3details: {
@@ -576,12 +634,14 @@ powerhpfpD3image: {
 powerhpfpD3remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 issueauthfpD3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 issueauthfpD3details: {
@@ -596,12 +656,14 @@ issueauthfpD3image: {
 issueauthfpD3remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 registrationlwfD3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 registrationlwfD3details: {
@@ -616,17 +678,20 @@ registrationlwfD3image: {
 registrationlwfD3remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 doregistrationlwfD3: {
     type: Date,
     trim: true,
+    default:null,
     index: true
 },        
 registrationptrD3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 registrationptrD3details: {
@@ -641,36 +706,46 @@ registrationptrD3image: {
 registrationptrD3remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 doregistrationptrD3: {
     type: Date,
     trim: true,
+    default:null,
     index: true
 },   
 OtherRegsitrationD3NSP:{
     type:Array,
+    default:null,
 },
 OtherRegsitrationD3OTP:{
     type:Array,
+    default:null,
 },
 OtherRegsitrationD3WOE:{
     type:Array,
+    default:null,
 },
 OtherRegsitrationD3TD:{
     type:Array,
+    default:null,
 },
 OtherRegsitrationD3MSME:{
     type:Array,
+    default:null,
 },
 OtherRegsitrationD3BOCW:{
     type:Array,
+    default:null,
 },    
 OtherRegsitrationD3IMW:{
     type:Array,
+    default:null,
 }, 
 OtherRegsitrationD3FL:{
     type:Array,
+    default:null,
 },
 /***D ends */
 /***E starts */
@@ -678,11 +753,13 @@ isEngaged: {
     type: Boolean,
     default: false,
     trim: true,
+    default:null,
     index: true
 },
 isEngagedDet: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 isEngagedFile: {
@@ -692,17 +769,20 @@ isEngagedFile: {
 isEngagedRemark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 contLabRegNoE: {
     type: String,
-    // required: true,
+    required: true,
     trim: true,
+    default:null,
     index: true
 },
 contLabRegNoEDet: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 contLabRegNoEFile: {
@@ -712,17 +792,20 @@ contLabRegNoEFile: {
 contLabRegNoERemark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 dateOfRegistrationE: {
     type: Date,
-    // required: true,
+    required: true,
     trim: true,
+    default:null,
     index: true
 },
 dateOfRegEDet: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 dateOfRegEFile: {
@@ -732,17 +815,20 @@ dateOfRegEFile: {
 dateOfRegERemark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 noOfContractEmployeesE: {
     type: String,
-    // required: true,
+    required: true,
     trim: true,
+    default:null,
     index: true
 },
 noOfContractEmpEDet: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 noOfContractEmpEFile: {
@@ -752,17 +838,20 @@ noOfContractEmpEFile: {
 noOfContractEmpERemark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 noOfContractorsE: {
     type: String,
-    // required: true,
+    required: true,
     trim: true,
+    default:null,
     index: true
 },
 noOfContractorsEDet: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 noOfContractorsEFile: {
@@ -772,6 +861,7 @@ noOfContractorsEFile: {
 noOfContractorsERemark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 // -------------- E.1. Details of the Labor Contractotrs---------------------
@@ -779,11 +869,13 @@ nameOfContractorE1: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 nameOfContractorsE1Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 nameOfContractorsE1File: {
@@ -793,17 +885,20 @@ nameOfContractorsE1File: {
 nameOfContractorsE1Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 nameOfEstablishmentE1: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 nameOfEstablishmentE1Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 nameOfEstablishmentE1File: {
@@ -813,6 +908,7 @@ nameOfEstablishmentE1File: {
 nameOfEstablishmentE1Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 regAddContractorE1: {
@@ -820,30 +916,35 @@ regAddContractorE1: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     state: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     district: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     pincode: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     }
 },
 regAddContractorE1Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 regAddContractorE1File: {
@@ -853,17 +954,20 @@ regAddContractorE1File: {
 regAddContractorE1Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 // ----------------- E.2. Agreement Date -----------------------
 agreementExpiryDateE2: {
     type: Date,
     required: true,
+    default:null,
     index: true
 },
 agreementExpiryDateE2Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 agreementExpiryDateE2File: {
@@ -873,16 +977,19 @@ agreementExpiryDateE2File: {
 agreementExpiryDateE2Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 agreementRenewalDateE2: {
     type: Date,
     required: true,
-    index: true
+    index: true,
+    default:null,
 },
 agreementRenewalDateE2Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 agreementRenewalDateE2DetFile: {
@@ -892,17 +999,20 @@ agreementRenewalDateE2DetFile: {
 agreementRenewalDateE2Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 natureOfWorkAgreementE2: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 natureOfWorkAgreementE2Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 natureOfWorkAgreementE2File: {
@@ -912,17 +1022,20 @@ natureOfWorkAgreementE2File: {
 natureOfWorkAgreementE2Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 noOfEmpDeployedAgreementE2: {
     type: String,
     required: true,
+    default:null,
     trim: true,
     index: true
 },
 noOfEmpDeployedAgreementE2Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 noOfEmpDeployedAgreementE2File: {
@@ -932,6 +1045,7 @@ noOfEmpDeployedAgreementE2File: {
 noOfEmpDeployedAgreementE2Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 // -------------------------- E.3. Contractors Registration Details -------------------------
@@ -939,11 +1053,13 @@ companyTypeLabourE3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 companyTypeLabourE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 companyTypeLabourE3File: {
@@ -953,17 +1069,20 @@ companyTypeLabourE3File: {
 companyTypeLabourE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 contractLabourLicNoE3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 contractLabourLicNoE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 contractLabourLicNoE3File: {
@@ -973,16 +1092,19 @@ contractLabourLicNoE3File: {
 contractLabourLicNoE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 contractLicDateE3: {
     type: Date,
     required: true,
+    default:null,
     index: true
 },
 contractLicDateE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 contractLicDateE3File: {
@@ -992,16 +1114,19 @@ contractLicDateE3File: {
 contractLicDateE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 contractExpiryDateE3: {
     type: Date,
     required: true,
+    default:null,
     index: true
 },
 contractExpiryDateE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 contractExpiryDateE3File: {
@@ -1011,16 +1136,19 @@ contractExpiryDateE3File: {
 contractExpiryDateE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 contractRenewalDueDateE3: {
     type: Date,
     required: true,
+    default:null,
     index: true
 },
 contractRenewalDueDateE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 contractRenewalDueDateE3File: {
@@ -1030,17 +1158,20 @@ contractRenewalDueDateE3File: {
 contractRenewalDueDateE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 noOfWorkersContractE3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 noOfWorkersContractE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 noOfWorkersContractE3File: {
@@ -1050,17 +1181,20 @@ noOfWorkersContractE3File: {
 noOfWorkersContractE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 panContractorsE3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 panContractorsE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 panContractorsE3File: {
@@ -1070,17 +1204,20 @@ panContractorsE3File: {
 panContractorsE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 gstContractorsE3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 gstContractorsE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 gstContractorsE3File: {
@@ -1090,17 +1227,20 @@ gstContractorsE3File: {
 gstContractorsE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 pfRegContractorsE3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 pfRegContractorsE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 pfRegContractorsE3File: {
@@ -1110,17 +1250,20 @@ pfRegContractorsE3File: {
 pfRegContractorsE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 esicRegContractorsE3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 esicRegContractorsE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 esicRegContractorsE3File: {
@@ -1130,17 +1273,20 @@ esicRegContractorsE3File: {
 esicRegContractorsE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 shopsandEstContractorsE3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 shopsandEstContractorsE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 shopsandEstContractorsE3File: {
@@ -1150,17 +1296,20 @@ shopsandEstContractorsE3File: {
 shopsandEstContractorsE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 lwfRegContractorsE3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 lwfRegContractorsE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 lwfRegContractorsE3File: {
@@ -1170,17 +1319,20 @@ lwfRegContractorsE3File: {
 lwfRegContractorsE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 profTaxContractorsE3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true
 },
 profTaxContractorsE3Det: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 profTaxContractorsE3File: {
@@ -1190,6 +1342,7 @@ profTaxContractorsE3File: {
 profTaxContractorsE3Remark: {
     type: String,
     trim: true,
+    default:null,
     index: true
 },
 /***E ends */
@@ -1198,6 +1351,7 @@ noOfBranchesF: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 branchFDet: {
@@ -1220,6 +1374,7 @@ branchNameF: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 branchNameFDet: {
@@ -1264,24 +1419,28 @@ contractorAddBranchF: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     state: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     district: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     pincode: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     }
 },
@@ -1304,6 +1463,7 @@ contractorAddBranchFRemark: {
 branchOpeningDateF: {
     type: Date,
     required: true,
+    default:null,
     index: true
 },
 branchOpeningDateFDet: {
@@ -1326,6 +1486,7 @@ noOfEmpBranchF: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 noOfEmpBranchFDet: {
@@ -1350,6 +1511,7 @@ managerNameF1: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 managerNameF1Det: {
@@ -1372,6 +1534,7 @@ managerMobNoF1: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 managerMobNoF1Det: {
@@ -1394,6 +1557,7 @@ managerEmailF1: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 managerEmailF1Det: {
@@ -1416,6 +1580,7 @@ managerAadharNoF1: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 managerAadharNoF1Det: {
@@ -1438,6 +1603,7 @@ managerPanF1: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 managerPanF1Det: {
@@ -1461,6 +1627,7 @@ shopsEstLicenseF2: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 shopsEstLicenseF2Det: {
@@ -1483,6 +1650,7 @@ numberF2: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 numberF2Det: {
@@ -1505,6 +1673,7 @@ regDateF2: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 regDateF2Det: {
@@ -1526,7 +1695,7 @@ regDateF2Remark: {
 expiryDateF2: {
     type: Date,
     required: true,
-    trim: true,
+    default:null,
     index: true,
 },
 expiryDateF2Det: {
@@ -1549,6 +1718,7 @@ renewalDateF2: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 renewalDateF2Det: {
@@ -1571,6 +1741,7 @@ managerNameF2: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 managerNameF2Det: {
@@ -1593,6 +1764,7 @@ noOfEmployeesF2: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 noOfEmployeesF2Det: {
@@ -1615,6 +1787,7 @@ maleF2: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 maleF2Det: {
@@ -1637,6 +1810,7 @@ femaleF2: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 femaleF2Det: {
@@ -1658,6 +1832,7 @@ femaleF2Remark: {
 issuingAuthorityF2: {
     type: String,
     required: true,
+    default:null,
     trim: true,
     index: true,
 },
@@ -1682,6 +1857,7 @@ numberF3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 numberF3Det: {
@@ -1704,6 +1880,7 @@ regDateF3: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 regDateF3Det: {
@@ -1726,6 +1903,7 @@ expiryDateF3: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 expiryDateF3Det: {
@@ -1748,6 +1926,7 @@ renewalDateF3: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 renewalDateF3Det: {
@@ -1770,6 +1949,7 @@ managerNameF3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 managerNameF3Det: {
@@ -1792,6 +1972,7 @@ noOfEmployeesF3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 noOfEmployeesF3Det: {
@@ -1814,6 +1995,7 @@ maleF3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 maleF3Det: {
@@ -1836,6 +2018,7 @@ femaleF3: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 femaleF3Det: {
@@ -1857,6 +2040,7 @@ femaleF3Remark: {
 issuingAuthorityF3: {
     type: String,
     required: true,
+    default:null,
     trim: true,
     index: true,
 },
@@ -1881,6 +2065,7 @@ numberF4: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 numberF4Det: {
@@ -1903,6 +2088,7 @@ regDateF4: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 regDateF4Det: {
@@ -1925,6 +2111,7 @@ issuingAuthorityF4: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 issuingAuthorityF4Det: {
@@ -1948,6 +2135,7 @@ numberF5: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 numberF5Det: {
@@ -1970,6 +2158,7 @@ regDateF5: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 regDateF5Det: {
@@ -1992,6 +2181,7 @@ issuingAuthorityF5: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 issuingAuthorityF5Det: {
@@ -2015,28 +2205,14 @@ isContractLabourEngagedF5: {
     type: Boolean,
     default : false,
     trim: true,
+    default:null,
     index: true,
 },
-// isContractLabourEngagedF5Det: {
-//     type: String,
-//     trim: true,
-//     default: null,
-//     index: true
-// },
-// isContractLabourEngagedF5File: {
-//     type: Object,
-//     default: null
-// },
-// isContractLabourEngagedF5Remark: {
-//     type: String,
-//     trim: true,
-//     default: null,
-//     index: true
-// },
 contractLabRegNoF5: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 contractLabRegNoF5Det: {
@@ -2059,6 +2235,7 @@ regDateContractorF5: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 regDateContractorF5Det: {
@@ -2081,6 +2258,7 @@ noOfContractEmpF5: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 noOfContractEmpF5Det: {
@@ -2103,6 +2281,7 @@ noOfContractorsF5: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 noOfContractorsF5Det: {
@@ -2126,6 +2305,7 @@ contractorNameF51: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 contractorNameF51Det: {
@@ -2148,6 +2328,7 @@ establishmentNameF51: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 establishmentNameF51Det: {
@@ -2171,24 +2352,28 @@ regAddContractorF51: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     state: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     district: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     pincode: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     }
 },
@@ -2208,11 +2393,12 @@ regAddContractorF51Remark: {
     default: null,
     index: true
 },
-// ------------- D.5.2. Agreement Date -----------------------
+// ------------- F.5.2. Agreement Date -----------------------
 expiryDateF52: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 expiryDateF52Det: {
@@ -2235,6 +2421,7 @@ renewalDateF52: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 renewalDateF52Det: {
@@ -2257,6 +2444,7 @@ natureOfWorkF52: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 natureOfWorkF52Det: {
@@ -2279,6 +2467,7 @@ noOfEmpDeployedF52: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 noOfEmpDeployedF52Det: {
@@ -2302,6 +2491,7 @@ companyTypeF53: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 companyTypeF53Det: {
@@ -2324,6 +2514,7 @@ contractLabLicNoF53: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 contractLabLicNoF53Det: {
@@ -2346,6 +2537,7 @@ licenseDateF53: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 licenseDateF53Det: {
@@ -2368,6 +2560,7 @@ expiryDateF53: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 expiryDateF53Det: {
@@ -2390,6 +2583,7 @@ renewalDateF53: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 renewalDateF53Det: {
@@ -2412,6 +2606,7 @@ noOfWorkerF53: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 noOfWorkerF53Det: {
@@ -2434,6 +2629,7 @@ panF53: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 panF53Det: {
@@ -2456,6 +2652,7 @@ gstF53: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 gstF53Det: {
@@ -2478,6 +2675,7 @@ pfRegF53: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 pfRegF53Det: {
@@ -2500,6 +2698,7 @@ esicRegF53: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 esicRegF53Det: {
@@ -2522,6 +2721,7 @@ shopsEstF53: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 shopsEstF53Det: {
@@ -2544,6 +2744,7 @@ lwfRegF53: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 lwfRegF53Det: {
@@ -2566,6 +2767,7 @@ profTaxF53: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 profTaxF53Det: {
@@ -2589,6 +2791,7 @@ number54: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 number54Det: {
@@ -2611,6 +2814,7 @@ regDate54: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 regDate54Det: {
@@ -2633,6 +2837,7 @@ expiryDate54: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 expiryDate54Det: {
@@ -2655,6 +2860,7 @@ renewalDate54: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 renewalDate54Det: {
@@ -2677,6 +2883,7 @@ issuingAuthority54: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 issuingAuthority54Det: {
@@ -2700,6 +2907,7 @@ number55: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 number55Det: {
@@ -2722,6 +2930,7 @@ regDate55: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 regDate55Det: {
@@ -2744,6 +2953,7 @@ expiryDate55: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 expiryDate55Det: {
@@ -2766,6 +2976,7 @@ renewalDate55: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 renewalDate55Det: {
@@ -2788,6 +2999,7 @@ issuingAuthoritye55: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 issuingAuthoritye55Det: {
@@ -2812,6 +3024,7 @@ number56: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 number56Det: {
@@ -2856,6 +3069,7 @@ expiryDate56: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 expiryDate56Det: {
@@ -2878,6 +3092,7 @@ renewalDate56: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 renewalDate56Det: {
@@ -2900,6 +3115,7 @@ issuingAuthority56: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 issuingAuthority56Det: {
@@ -2923,6 +3139,7 @@ number57: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 number57Det: {
@@ -2945,6 +3162,7 @@ regDate57: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 regDate57Det: {
@@ -2967,6 +3185,7 @@ expiryDate57: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 expiryDate57Det: {
@@ -2989,6 +3208,7 @@ renewalDate57: {
     type: Date,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 renewalDate57Det: {
@@ -3011,6 +3231,7 @@ issuingAuthority57: {
     type: String,
     required: true,
     trim: true,
+    default:null,
     index: true,
 },
 issuingAuthority57Det: {
@@ -3035,6 +3256,7 @@ isLabourEngagedG: {
     type: Boolean,
     default : false,
     index: true,
+    default:null,
 },
 isLabourEngagedGDet: {
     type: String,
@@ -3056,6 +3278,7 @@ noOfClientG: {
     type: String,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 noOfClientGDet: {
@@ -3078,6 +3301,7 @@ clientG: {
     type: Date,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 clientGDet: {
@@ -3100,6 +3324,7 @@ regOfficeAddClientG: {
     address: {
         type: String,
         required: true,
+        default:null,
         trim: true,
         index: true
     },
@@ -3107,18 +3332,21 @@ regOfficeAddClientG: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     district: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     pincode: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     }
 },
@@ -3208,6 +3436,7 @@ noOfLocContractWorkG11: {
     type: String,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 noOfLocContractWorkG11Det: {
@@ -3231,24 +3460,28 @@ regAddOfClientG11: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     state: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     district: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     },
     pincode: {
         type: String,
         required: true,
         trim: true,
+        default:null,
         index: true
     }
 },
@@ -3268,118 +3501,12 @@ regAddOfClientG11Remark: {
     default: null,
     index: true
 },
-// secondRegAddOfClient: {
-//     address: {
-//         type: String,
-//         required: true,
-//         trim: true,
-//         index: true
-//     },
-//     state: {
-//         type: String,
-//         required: true,
-//         trim: true,
-//         index: true
-//     },
-//     district: {
-//         type: String,
-//         required: true,
-//         trim: true,
-//         index: true
-//     },
-//     pincode: {
-//         type: String,
-//         required: true,
-//         trim: true,
-//         index: true
-//     }
-// },
-// secondRegAddOfClientDet: {
-//     type: String,
-//     trim: true,
-//     default: null,
-//     index: true
-// },
-// secondRegAddOfClientFile: {
-//     type: Object,
-//     default: null
-// },
-// secondRegAddOfClientRemark: {
-//     type: String,
-//     trim: true,
-//     default: null,
-//     index: true
-// },
-// client2G11: {
-//     type: Date,
-//     required : true,
-//     trim : true,
-//     index: true,
-// },
-// client2G11Det: {
-//     type: String,
-//     trim: true,
-//     default: null,
-//     index: true
-// },
-// client2G11File: {
-//     type: Object,
-//     default: null
-// },
-// client2G11Remark: {
-//     type: String,
-//     trim: true,
-//     default: null,
-//     index: true
-// },
-// regAddOfClient2G11: {
-//     address: {
-//         type: String,
-//         required: true,
-//         trim: true,
-//         index: true
-//     },
-//     state: {
-//         type: String,
-//         required: true,
-//         trim: true,
-//         index: true
-//     },
-//     district: {
-//         type: String,
-//         required: true,
-//         trim: true,
-//         index: true
-//     },
-//     pincode: {
-//         type: String,
-//         required: true,
-//         trim: true,
-//         index: true
-//     }
-// },
-// regAddOfClient2G11Det: {
-//     type: String,
-//     trim: true,
-//     default: null,
-//     index: true
-// },
-// regAddOfClient2G11File: {
-//     type: Object,
-//     default: null
-// },
-// regAddOfClient2G11Remark: {
-//     type: String,
-//     trim: true,
-//     default: null,
-//     index: true
-// },
-
 // ---------------- G.1.2. Nature of the Contract Work ----------------
 agreementRefNoG12: {
     type: String,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 agreementRefNoG12Det: {
@@ -3402,6 +3529,7 @@ agreementDateG12: {
     type: Date,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 agreementDateG12Det: {
@@ -3424,6 +3552,7 @@ agreementValidityG12: {
     type: Date,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 agreementValidityG12Det: {
@@ -3446,6 +3575,7 @@ noOfWorkersEngagedG12: {
     type: String,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 noOfWorkersEngagedG12Det: {
@@ -3468,6 +3598,7 @@ estCategoryG12: {
     type: String,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 estCategoryG12Det: {
@@ -3491,27 +3622,12 @@ isClraApplicableG12: {
     default : false,
     index: true,
 },
-// isClraApplicableG12Det: {
-//     type: String,
-//     trim: true,
-//     default: null,
-//     index: true
-// },
-// isClraApplicableG12File: {
-//     type: Object,
-//     default: null
-// },
-// isClraApplicableG12Remark: {
-//     type: String,
-//     trim: true,
-//     default: null,
-//     index: true
-// },
 // ----------------- G.1.3. Details of CLRA License -------------------
 noOfForm5G13: {
     type: String,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 noOfForm5G13Det: {
@@ -3534,6 +3650,7 @@ form5DateG13: {
     type: Date,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 form5DateG13Det: {
@@ -3556,6 +3673,7 @@ workCommencedDateG13: {
     type: Date,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 workCommencedDateG13Det: {
@@ -3579,6 +3697,7 @@ clraLicenseNoG13: {
     required : true,
     trim : true,
     index: true,
+    default:null,
 },
 clraLicenseNoG13Det: {
     type: String,
@@ -3600,6 +3719,7 @@ clraLicenseDateG13: {
     type: Date,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 clraLicenseDateG13Det: {
@@ -3622,6 +3742,7 @@ clraValidityG13: {
     type: Date,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 clraValidityG13Det: {
@@ -3644,6 +3765,7 @@ clraRenewalDueG13: {
     type: Date,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 clraRenewalDueG13Det: {
@@ -3666,6 +3788,7 @@ clraNoOfContWorkersG13: {
     type: String,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 clraNoOfContWorkersG13Det: {
@@ -3688,6 +3811,7 @@ clraNoOfManagerRespG13: {
     type: String,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 clraNoOfManagerRespG13Det: {
@@ -3710,6 +3834,7 @@ clraLicenseFeeG13: {
     type: String,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 clraLicenseFeeG13Det: {
@@ -3732,6 +3857,7 @@ securityDepositG13: {
     type: String,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 securityDepositG13Det: {
@@ -3755,6 +3881,7 @@ contWorkCompletedDate: {
     type: Date,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 contWorkCompletedDateDet: {
@@ -3777,6 +3904,7 @@ contWorkComplitionNotice: {
     type: Date,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 contWorkComplitionNoticeDet: {
@@ -3799,6 +3927,7 @@ refundSecDepNotice: {
     type: Date,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 refundSecDepNoticeDet: {
@@ -3821,6 +3950,7 @@ licSurrenderedDate: {
     type: Date,
     required : true,
     trim : true,
+    default:null,
     index: true,
 },
 licSurrenderedDateDet: {
@@ -3847,12 +3977,12 @@ status  : {
 },    
 created_at : { 
     type: Date, 
-    default: Date.now, 
+    default:null,
     index: true 
 },
 updated_at : { 
     type: Date, 
-    default: Date.now 
+    default:null,
 }
 })
 const Company = mongoose.model("Company", companySchema)
