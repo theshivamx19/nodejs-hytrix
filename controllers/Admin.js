@@ -5515,9 +5515,9 @@ export const createOtherRegistration = async (request, response, next) => {
             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
             return imageUrl;
         };
-        let dataESIsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
+        let dataPFsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
         if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
-            dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(item => {
+            dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(async (item, index) => {
                 return {
                     ...item,
                     regimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][regimage]`)),
@@ -5527,7 +5527,7 @@ export const createOtherRegistration = async (request, response, next) => {
             }))
         }
         if (OtherRegsitrationD1ESIsubcodes !== undefined && OtherRegsitrationD1ESIsubcodes.length > 0) {
-            dataESIsubcodes = await Promise.all(OtherRegsitrationD1ESIsubcodes.map(item => {
+            dataESIsubcodes = await Promise.all(OtherRegsitrationD1ESIsubcodes.map(async (item, index) => {
                 return {
                     ...item,
                     esiimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esiimage]`)),
@@ -5537,7 +5537,7 @@ export const createOtherRegistration = async (request, response, next) => {
             }))
         }
         if (OtherRegsitrationD3FL !== undefined && OtherRegsitrationD3FL.length > 0) {
-            dataFL = await Promise.all(OtherRegsitrationD3FL.map(item => {
+            dataFL = await Promise.all(OtherRegsitrationD3FL.map(async (item, index) => {
                 return {
                     ...item,
                     managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][managerlicenseimage]`)),
@@ -5546,7 +5546,7 @@ export const createOtherRegistration = async (request, response, next) => {
             }))
         }
         if (OtherRegsitrationD3NSP !== undefined && OtherRegsitrationD3NSP.length > 0) {
-            dataNSP = await Promise.all(OtherRegsitrationD3NSP.map(item => {
+            dataNSP = await Promise.all(OtherRegsitrationD3NSP.map(async (item, index) => {
                 return {
                     ...item,
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3NSP[${index}][issuingauthimage]`)),
@@ -5554,7 +5554,7 @@ export const createOtherRegistration = async (request, response, next) => {
             }))
         }
         if (OtherRegsitrationD3OTP !== undefined && OtherRegsitrationD3OTP.length > 0) {
-            dataOTP = await Promise.all(OtherRegsitrationD3OTP.map(item => {
+            dataOTP = await Promise.all(OtherRegsitrationD3OTP.map(async (item, index) => {
                 return {
                     ...item,
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3OTP[${index}][issuingauthimage]`)),
@@ -5562,7 +5562,7 @@ export const createOtherRegistration = async (request, response, next) => {
             }))
         }
         if (OtherRegsitrationD3WOE !== undefined && OtherRegsitrationD3WOE.length > 0) {
-            dataWOE = await Promise.all(OtherRegsitrationD3WOE.map(item => {
+            dataWOE = await Promise.all(OtherRegsitrationD3WOE.map(async (item, index) => {
                 return {
                     ...item,
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3WOE[${index}][issuingauthimage]`)),
@@ -5570,7 +5570,7 @@ export const createOtherRegistration = async (request, response, next) => {
             }))
         }
         if (OtherRegsitrationD3TD !== undefined && OtherRegsitrationD3TD.length > 0) {
-            dataTD = await Promise.all(OtherRegsitrationD3TD.map(item => {
+            dataTD = await Promise.all(OtherRegsitrationD3TD.map(async (item, index) => {
                 return {
                     ...item,
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3TD[${index}][issuingauthimage]`)),
@@ -5578,7 +5578,7 @@ export const createOtherRegistration = async (request, response, next) => {
             }))
         }
         if (OtherRegsitrationD3MSME !== undefined && OtherRegsitrationD3MSME.length > 0) {
-            dataMSME = await Promise.all(OtherRegsitrationD3MSME.map(item => {
+            dataMSME = await Promise.all(OtherRegsitrationD3MSME.map(async (item, index) => {
                 return {
                     ...item,
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3MSME[${index}][issuingauthimage]`)),
@@ -5586,7 +5586,7 @@ export const createOtherRegistration = async (request, response, next) => {
             }))
         }
         if (OtherRegsitrationD3BOCW !== undefined && OtherRegsitrationD3BOCW.length > 0) {
-            dataBOCW = await Promise.all(OtherRegsitrationD3BOCW.map(item => {
+            dataBOCW = await Promise.all(OtherRegsitrationD3BOCW.map(async (item, index) => {
                 return {
                     ...item,
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3BOCW[${index}][issuingauthimage]`)),
@@ -5594,7 +5594,7 @@ export const createOtherRegistration = async (request, response, next) => {
             }))
         }
         if (OtherRegsitrationD3IMW !== undefined && OtherRegsitrationD3IMW.length > 0) {
-            dataIMW = await Promise.all(OtherRegsitrationD3IMW.map(item => {
+            dataIMW = await Promise.all(OtherRegsitrationD3IMW.map(async (item, index) => {
                 return {
                     ...item,
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3IMW[${index}][issuingauthimage]`)),
@@ -5603,7 +5603,7 @@ export const createOtherRegistration = async (request, response, next) => {
         }
 
         const otherRegistration = {
-            pfnumber, pfdetails, pfimage, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, pfaddressimage, esinumber, esidetails, esiimage, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressimage, esiaddressremark, registrationD3, registrationD3details, registrationD3image, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3image, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3image, issueauthfD3remark,
+            pfnumber, pfdetails, pfimage, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, pfaddressimage, esinumber, esidetails, esiimage, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressimage, esiaddressremark, registrationD3, registrationD3details, registrationD3image, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3image, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3image, issueauthfD3remark, fpD3, fpD3details, fpD3image, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3image, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3image, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3image, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3image, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3image, registrationptrD3remark, doregistrationptrD3,
             OtherRegsitrationD1PFsubcodes,
             OtherRegsitrationD1ESIsubcodes,
             OtherRegsitrationD3NSP,
