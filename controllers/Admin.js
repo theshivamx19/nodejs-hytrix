@@ -12,8 +12,7 @@ import Checkdata from '../models/CheckData.js'
 import Elibrary from '../models/Elibrary.js'
 import Audit from '../models/Audit.js';
 import Lisereg from '../models/LiseReg.js';
-import Registration from '../models/company/company/RegistrationB.js'
-import ClientContact from '../models/company/company/ClientcontactC.js'
+import Company from '../models/Company.js'
 import jwt from 'jsonwebtoken';
 import { createError } from '../utils/error.js';
 import { response } from 'express';
@@ -5363,8 +5362,16 @@ export const createCompanyRegistration = async (request, response, next) => {
     try {
         const data = request.body;
         const {
-            companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at, updated_at
+            // A Starts
+            companyname, companydetails, companyremark, companyaddress, companystate, companydistrict, companypin, comapnyaddressdetails, companyaddressremark, companytype, companytypedetails, companytyperemark, companycategory, companycategorydetails, companycategoryremark, companynatureofbusiness, companynatureofbusinessdetails, companynatureofbusinessremark,
+            // B Starts
+            companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1, RegistrationB2, RegistrationB3,
+            // C Starts
+            ClientcontactC1, ClientcontactC2, ClientcontactC3, ClientcontactC4,
+            // D Starts
+            pfnumber, pfdetails, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, OtherRegsitrationD1PFsubcodes, OtherRegsitrationD1ESIsubcodes, OtherRegsitrationD3NSP, OtherRegsitrationD3FL, OtherRegsitrationD3OTP, OtherRegsitrationD3WOE, OtherRegsitrationD3TD, OtherRegsitrationD3MSME, OtherRegsitrationD3BOCW, OtherRegsitrationD3IMW, esinumber, esidetails, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressremark, registrationD3, registrationD3details, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3remark, fpD3, fpD3details, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3remark, doregistrationptrD3,
         } = data;
+        // pfnumber, pfaddressimage
 
         const uploadImage = async (imageFile) => {
             if (!imageFile) {
@@ -5381,71 +5388,40 @@ export const createCompanyRegistration = async (request, response, next) => {
             return imageUrl;
         };
 
+        // ***********************-------- B Dynamic Image Handling ----------***********************
+
+        let dataB1, dataB2, dataB3
         // Process RegistrationB1
-        const dataB1 = await Promise.all(RegistrationB1.map(async (item, index) => ({
-            ...item,
-            nameimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][nameimage]`)),
-            dinimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][dinimage]`)),
-            panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][panimage]`)),
-            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][aadhaarimage]`)),
-        })));
-        // Process RegistrationB2
-        const dataB2 = await Promise.all(RegistrationB2.map(async (item, index) => ({
-            ...item,
-            image: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][image]`)),
-            // designationimage: await uploadImage(request.files.find(img => img.fieldname === "designationimage")),
-            panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][panimage]`)),
-            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][aadhaarimage]`)),
-        })));
-
-        // Process RegistrationB3
-        const dataB3 = await Promise.all(RegistrationB3.map(async (item, index) => ({
-            ...item,
-            panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][panimage]`)),
-            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][aadhaarimage]`)),
-        })));
-
-        // Upload company images
-        const company = {
-            companyregistration,
-            companyregistrationdetails,
-            companyregistrationimage: await uploadImage(request.files.find(img => img.fieldname === "companyregistrationimage")),
-            companyciniamge: await uploadImage(request.files.find(img => img.fieldname === "companyciniamge")),
-            companyissuedplaceimage: await uploadImage(request.files.find(img => img.fieldname === "companyissuedplaceimage")),
-            companyauthorityimage: await uploadImage(request.files.find(img => img.fieldname === "companyauthorityimage")),
-            companypanimage: await uploadImage(request.files.find(img => img.fieldname === "companypanimage")),
-            companytanimage: await uploadImage(request.files.find(img => img.fieldname === "companytanimage")),
-            companytinimage: await uploadImage(request.files.find(img => img.fieldname === "companytinimage")),
-            companygstimage: await uploadImage(request.files.find(img => img.fieldname === "companygstimage")),
-            companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1: dataB1, RegistrationB2: dataB2, RegistrationB3: dataB3, created_at, updated_at
-        };
-
-        // Save company data to database
-        const newCompany = new Registration(company);
-        await newCompany.save();
-        response.status(201).json(newCompany);
-    } catch (error) {
-        next(error);
-    }
-};
-
-export const createCompanyClientContact = async (request, response, next) => {
-    try {
-        const data = request.body
-        const { ClientcontactC1, ClientcontactC2, ClientcontactC3, ClientcontactC4 } = data
-        const uploadImage = async (imageFile) => {
-            if (!imageFile) {
-                return null;
-            }
-            const url = request.protocol + "://" + request.get('host');
-            const uploadsDirectory = './data/uploads/';
-            const imageDirectory = 'images/';
-            const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
-            const imageUrl = url + '/' + imageDirectory + formattedImageFileName
-            const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
-            await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
-            return imageUrl
+        if (RegistrationB1 !== undefined && RegistrationB1.length > 0) {
+            dataB1 = await Promise.all(RegistrationB1.map(async (item, index) => ({
+                ...item,
+                nameimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][nameimage]`)),
+                dinimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][dinimage]`)),
+                panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][panimage]`)),
+                aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][aadhaarimage]`)),
+            })));
         }
+        // Process RegistrationB2
+        if (RegistrationB2 !== undefined && RegistrationB2.length > 0) {
+            dataB2 = await Promise.all(RegistrationB2.map(async (item, index) => ({
+                ...item,
+                image: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][image]`)),
+                designationimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][designationimage]`)),
+                panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][panimage]`)),
+                aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][aadhaarimage]`)),
+            })));
+        }
+        // Process RegistrationB3
+        if (RegistrationB3 !== undefined && RegistrationB3.length > 0) {
+            dataB3 = await Promise.all(RegistrationB3.map(async (item, index) => ({
+                ...item,
+                panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][panimage]`)),
+                aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][aadhaarimage]`)),
+            })));
+        }
+
+        // ***********************-------- C Dynamic Image Handling ----------***********************
+
         let clientDataC1, clientDataC2, clientDataC3, clientDataC4
         if (ClientcontactC1 !== undefined && ClientcontactC1.length > 0) {
             clientDataC1 = await Promise.all(ClientcontactC1.map(async (item, index) => {
@@ -5484,37 +5460,8 @@ export const createCompanyClientContact = async (request, response, next) => {
             }))
         }
 
-        const clientContact = {
-            ClientcontactC1: clientDataC1, ClientcontactC2: clientDataC2, ClientcontactC3: clientDataC3, ClientcontactC4: clientDataC4, created_at, updated_at
-        }
-        const newClientContact = new ClientContact(clientContact)
-        await newClientContact.save()
-        response.status(201).json(newClientContact)
-    } catch (error) {
-        next(error)
-    }
-}
+        // ***********************-------- D Dynamic Image Handling ----------***********************
 
-export const createOtherRegistration = async (request, response, next) => {
-    try {
-        const data = request.body
-        const { pfnumber, pfdetails, pfimage, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, pfaddressimage, OtherRegsitrationD1PFsubcodes, OtherRegsitrationD1ESIsubcodes, OtherRegsitrationD3NSP, OtherRegsitrationD3FL, OtherRegsitrationD3OTP, OtherRegsitrationD3WOE, OtherRegsitrationD3TD, OtherRegsitrationD3MSME, OtherRegsitrationD3BOCW, OtherRegsitrationD3IMW, esinumber, esidetails, esiimage, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressimage, esiaddressremark, registrationD3, registrationD3details, registrationD3image, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3image, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3image, issueauthfD3remark, fpD3, fpD3details, fpD3image, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3image, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3image, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3image, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3image, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3image, registrationptrD3remark, doregistrationptrD3,
-        } = data
-
-        const uploadImage = async (imageFile) => {
-            if (!imageFile) {
-                return null; // Return null if image is not provided
-            }
-            const url = request.protocol + '://' + request.get('host');
-            const uploadsDirectory = './data/uploads/';
-            const imageDirectory = 'images/';
-            const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
-            const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-            // console.log(imageUrl);
-            const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
-            await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
-            return imageUrl;
-        };
         let dataPFsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
         if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
             dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(async (item, index) => {
@@ -5602,24 +5549,262 @@ export const createOtherRegistration = async (request, response, next) => {
             }))
         }
 
-        const otherRegistration = {
-            pfnumber, pfdetails, pfimage, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, pfaddressimage, esinumber, esidetails, esiimage, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressimage, esiaddressremark, registrationD3, registrationD3details, registrationD3image, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3image, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3image, issueauthfD3remark, fpD3, fpD3details, fpD3image, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3image, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3image, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3image, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3image, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3image, registrationptrD3remark, doregistrationptrD3,
-            OtherRegsitrationD1PFsubcodes,
-            OtherRegsitrationD1ESIsubcodes,
-            OtherRegsitrationD3NSP,
-            OtherRegsitrationD3OTP,
-            OtherRegsitrationD3WOE,
-            OtherRegsitrationD3TD,
-            OtherRegsitrationD3MSME,
-            OtherRegsitrationD3BOCW,
-            OtherRegsitrationD3IMW,
-            OtherRegsitrationD3FL,
-        }
+
+        // Upload company images
+        const company = {
+            // A Starts
+            companyimage: await uploadImage(request.files.find(img => img.fieldname === "companyimage")),
+            companyaddressimage: await uploadImage(request.files.find(img => img.fieldname === "companyaddressimage")),
+            companytypeimage: await uploadImage(request.files.find(img => img.fieldname === "companytypeimage")),
+            companycategoryimage: await uploadImage(request.files.find(img => img.fieldname === "companycategoryimage")),
+            companynatureofbusinessimage: await uploadImage(request.files.find(img => img.fieldname === "companynatureofbusinessimage")),
+            companyname, companydetails, companyremark, companyaddress, companystate, companydistrict, companypin, comapnyaddressdetails, companyaddressremark, companytype, companytypedetails, companytyperemark, companycategory, companycategorydetails, companycategoryremark, companynatureofbusiness, companynatureofbusinessdetails, companynatureofbusinessremark,
+            // B Starts
+            companyregistrationimage: await uploadImage(request.files.find(img => img.fieldname === "companyregistrationimage")),
+            companyciniamge: await uploadImage(request.files.find(img => img.fieldname === "companyciniamge")),
+            companyissuedplaceimage: await uploadImage(request.files.find(img => img.fieldname === "companyissuedplaceimage")),
+            companyauthorityimage: await uploadImage(request.files.find(img => img.fieldname === "companyauthorityimage")),
+            companypanimage: await uploadImage(request.files.find(img => img.fieldname === "companypanimage")),
+            companytanimage: await uploadImage(request.files.find(img => img.fieldname === "companytanimage")),
+            companytinimage: await uploadImage(request.files.find(img => img.fieldname === "companytinimage")),
+            companygstimage: await uploadImage(request.files.find(img => img.fieldname === "companygstimage")),
+            companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark,
+            RegistrationB1: dataB1,
+            RegistrationB2: dataB2,
+            RegistrationB3: dataB3,
+            // C Starts
+            ClientcontactC1: clientDataC1,
+            ClientcontactC2: clientDataC2,
+            ClientcontactC3: clientDataC3,
+            ClientcontactC4: clientDataC4,
+            // D Starts
+            pfimage: await uploadImage(request.files.find(img => img.fieldname === "pfimage")),
+            pfaddressimage: await uploadImage(request.files.find(img => img.fieldname === "pfaddressimage")),
+            esiimage: await uploadImage(request.files.find(img => img.fieldname === "esiimage")),
+            esiaddressimage: await uploadImage(request.files.find(img => img.fieldname === "esiaddressimage")),
+            registrationD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationD3image")),
+            managernameD3image: await uploadImage(request.files.find(img => img.fieldname === "managernameD3image")),
+            issueauthfD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfD3image")),
+            fpD3image: await uploadImage(request.files.find(img => img.fieldname === "fpD3image")),
+            issueauthfpD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfpD3image")),
+            powerfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerfpD3image")),
+            powerhpfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerhpfpD3image")),
+            registrationlwfD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationlwfD3image")),
+            registrationptrD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationptrD3image")),
+            pfnumber, pfdetails, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, esinumber, esidetails, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressremark, registrationD3, registrationD3details, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3remark, fpD3, fpD3details, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3remark, doregistrationptrD3,
+            OtherRegsitrationD1PFsubcodes: dataPFsubcodes,
+            OtherRegsitrationD1ESIsubcodes: dataESIsubcodes,
+            OtherRegsitrationD3NSP: dataNSP,
+            OtherRegsitrationD3OTP: dataOTP,
+            OtherRegsitrationD3WOE: dataWOE,
+            OtherRegsitrationD3TD: dataTD,
+            OtherRegsitrationD3MSME: dataMSME,
+            OtherRegsitrationD3BOCW: dataBOCW,
+            OtherRegsitrationD3IMW: dataIMW,
+            OtherRegsitrationD3FL: dataFL,
+        };
+
+
+        // Save company data to database
+        const newCompany = new Company(company);
+        await newCompany.save();
+        response.status(201).json(newCompany);
+    } catch (error) {
+        next(error);
     }
-    catch (error) {
-        next(error)
-    }
-}
+};
+
+// export const createCompanyClientContact = async (request, response, next) => {
+//     try {
+//         const data = request.body
+//         const { ClientcontactC1, ClientcontactC2, ClientcontactC3, ClientcontactC4 } = data
+//         const uploadImage = async (imageFile) => {
+//             if (!imageFile) {
+//                 return null;
+//             }
+//             const url = request.protocol + "://" + request.get('host');
+//             const uploadsDirectory = './data/uploads/';
+//             const imageDirectory = 'images/';
+//             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
+//             const imageUrl = url + '/' + imageDirectory + formattedImageFileName
+//             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
+//             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
+//             return imageUrl
+//         }
+//         let clientDataC1, clientDataC2, clientDataC3, clientDataC4
+//         if (ClientcontactC1 !== undefined && ClientcontactC1.length > 0) {
+//             clientDataC1 = await Promise.all(ClientcontactC1.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][nameimage]`)),
+//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][designationimage]`))
+//                 }
+//             }))
+//         }
+//         if (ClientcontactC2 !== undefined && ClientcontactC2.length > 0) {
+//             clientDataC2 = await Promise.all(ClientcontactC2.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][nameimage]`)),
+//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][designationimage]`))
+//                 }
+//             }))
+//         }
+//         if (ClientcontactC3 !== undefined && ClientcontactC3.length > 0) {
+//             clientDataC3 = await Promise.all(ClientcontactC3.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][nameimage]`)),
+//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][designationimage]`))
+//                 }
+//             }))
+//         }
+//         if (ClientcontactC4 !== undefined && ClientcontactC4.length > 0) {
+//             clientDataC4 = await Promise.all(ClientcontactC4.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][nameimage]`)),
+//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][designationimage]`))
+//                 }
+//             }))
+//         }
+
+//         const clientContact = {
+//             ClientcontactC1: clientDataC1, ClientcontactC2: clientDataC2, ClientcontactC3: clientDataC3, ClientcontactC4: clientDataC4, created_at, updated_at
+//         }
+//         const newClientContact = new ClientContact(clientContact)
+//         await newClientContact.save()
+//         response.status(201).json(newClientContact)
+//     } catch (error) {
+//         next(error)
+//     }
+// }
+
+// export const createOtherRegistration = async (request, response, next) => {
+//     try {
+//         const data = request.body
+//         const { pfnumber, pfdetails, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, OtherRegsitrationD1PFsubcodes, OtherRegsitrationD1ESIsubcodes, OtherRegsitrationD3NSP, OtherRegsitrationD3FL, OtherRegsitrationD3OTP, OtherRegsitrationD3WOE, OtherRegsitrationD3TD, OtherRegsitrationD3MSME, OtherRegsitrationD3BOCW, OtherRegsitrationD3IMW, esinumber, esidetails, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressremark, registrationD3, registrationD3details, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3remark, fpD3, fpD3details, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3remark, doregistrationptrD3,
+//         } = data
+
+//         const uploadImage = async (imageFile) => {
+//             if (!imageFile) {
+//                 return null; // Return null if image is not provided
+//             }
+//             const url = request.protocol + '://' + request.get('host');
+//             const uploadsDirectory = './data/uploads/';
+//             const imageDirectory = 'images/';
+//             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
+//             const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+//             // console.log(imageUrl);
+//             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
+//             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
+//             return imageUrl;
+//         };
+//         let dataPFsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
+//         if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
+//             dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     regimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][regimage]`)),
+//                     docimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][docimage]`)),
+//                     offaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][offaddressimage]`))
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD1ESIsubcodes !== undefined && OtherRegsitrationD1ESIsubcodes.length > 0) {
+//             dataESIsubcodes = await Promise.all(OtherRegsitrationD1ESIsubcodes.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     esiimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esiimage]`)),
+//                     esidocimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esidocimage]`)),
+//                     esioffaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esioffaddressimage]`))
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3FL !== undefined && OtherRegsitrationD3FL.length > 0) {
+//             dataFL = await Promise.all(OtherRegsitrationD3FL.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][managerlicenseimage]`)),
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3NSP !== undefined && OtherRegsitrationD3NSP.length > 0) {
+//             dataNSP = await Promise.all(OtherRegsitrationD3NSP.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3NSP[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3OTP !== undefined && OtherRegsitrationD3OTP.length > 0) {
+//             dataOTP = await Promise.all(OtherRegsitrationD3OTP.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3OTP[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3WOE !== undefined && OtherRegsitrationD3WOE.length > 0) {
+//             dataWOE = await Promise.all(OtherRegsitrationD3WOE.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3WOE[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3TD !== undefined && OtherRegsitrationD3TD.length > 0) {
+//             dataTD = await Promise.all(OtherRegsitrationD3TD.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3TD[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3MSME !== undefined && OtherRegsitrationD3MSME.length > 0) {
+//             dataMSME = await Promise.all(OtherRegsitrationD3MSME.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3MSME[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3BOCW !== undefined && OtherRegsitrationD3BOCW.length > 0) {
+//             dataBOCW = await Promise.all(OtherRegsitrationD3BOCW.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3BOCW[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3IMW !== undefined && OtherRegsitrationD3IMW.length > 0) {
+//             dataIMW = await Promise.all(OtherRegsitrationD3IMW.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3IMW[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+
+//         const otherRegistration = {
+//             pfnumber, pfdetails, pfimage: await uploadImage(request.files.find(img => img.fieldname === "pfimage")), pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, pfaddressimage: await uploadImage(request.files.find(img => img.fieldname === "pfaddressimage")), esinumber, esidetails, esiimage: await uploadImage(request.files.find(img => img.fieldname === "esiimage")), esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressimage: await uploadImage(request.files.find(img => img.fieldname === "esiaddressimage")), esiaddressremark, registrationD3, registrationD3details, registrationD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationD3image")), registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3image: await uploadImage(request.files.find(img => img.fieldname === "managernameD3image")), managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfD3image")), issueauthfD3remark, fpD3, fpD3details, fpD3image: await uploadImage(request.files.find(img => img.fieldname === "fpD3image")), fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfpD3image")), issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerfpD3image")), powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerhpfpD3image")), powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationlwfD3image")), registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationptrD3image")), registrationptrD3remark, doregistrationptrD3,
+//             OtherRegsitrationD1PFsubcodes: dataPFsubcodes,
+//             OtherRegsitrationD1ESIsubcodes: dataESIsubcodes,
+//             OtherRegsitrationD3NSP: dataNSP,
+//             OtherRegsitrationD3OTP: dataOTP,
+//             OtherRegsitrationD3WOE: dataWOE,
+//             OtherRegsitrationD3TD: dataTD,
+//             OtherRegsitrationD3MSME: dataMSME,
+//             OtherRegsitrationD3BOCW: dataBOCW,
+//             OtherRegsitrationD3IMW: dataIMW,
+//             OtherRegsitrationD3FL: dataFL,
+//         }
+//     }
+//     catch (error) {
+//         next(error)
+//     }
+// }
 
 
 // pfnumber, pfdetails, pfimage, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, pfaddressimage, OtherRegsitrationD1PFsubcodes[0][regnumber]
