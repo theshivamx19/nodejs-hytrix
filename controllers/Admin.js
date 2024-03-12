@@ -13,6 +13,7 @@ import Elibrary from '../models/Elibrary.js'
 import Audit from '../models/Audit.js';
 import Lisereg from '../models/LiseReg.js';
 import Registration from '../models/company/company/RegistrationB.js'
+import ClientContact from '../models/company/company/ClientcontactC.js'
 import jwt from 'jsonwebtoken';
 import { createError } from '../utils/error.js';
 import { response } from 'express';
@@ -5358,7 +5359,7 @@ export const dashboard = async (request, response, next) => {
 
 
 
-export const companyCreate = async (request, response, next) => {
+export const createCompanyRegistration = async (request, response, next) => {
     try {
         const data = request.body;
         const {
@@ -5380,7 +5381,7 @@ export const companyCreate = async (request, response, next) => {
             return imageUrl;
         };
         request.files.find(img => console.log(img.fieldname))
-        
+
         // Process RegistrationB1
         const dataB1 = await Promise.all(RegistrationB1.map(async (item, index) => ({
             ...item,
@@ -5389,8 +5390,8 @@ export const companyCreate = async (request, response, next) => {
             panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][panimage]`)),
             aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][aadhaarimage]`)),
         })));
-        
-        console.log(RegistrationB2);
+
+        console.log(Array.isArray(RegistrationB2));
 
         // Process RegistrationB2
         const dataB2 = await Promise.all(RegistrationB2.map(async (item, index) => ({
@@ -5400,13 +5401,13 @@ export const companyCreate = async (request, response, next) => {
             panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][panimage]`)),
             aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][aadhaarimage]`)),
         })));
-        console.log(dataB2[0].image);
 
+        console.log(Array.isArray(RegistrationB3));
         // Process RegistrationB3
-        const dataB3 = await Promise.all(RegistrationB3.map(async (item) => ({
+        const dataB3 = await Promise.all(RegistrationB3.map(async (item, index) => ({
             ...item,
-            panimage: await uploadImage(request.files.find(img => img.fieldname === "panimage")),
-            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === "aadhaarimage")),
+            panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][panimage]`)),
+            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][aadhaarimage]`)),
         })));
 
         // Upload company images
@@ -5432,3 +5433,180 @@ export const companyCreate = async (request, response, next) => {
         next(error);
     }
 };
+
+export const createCompanyClientContact = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { ClientcontactC1, ClientcontactC2, ClientcontactC3, ClientcontactC4, ClientcontactC5 } = data
+        const uploadImage = async (imageFile) => {
+            if (!imageFile) {
+                return null;
+            }
+            const url = request.protocol + "://" + request.get('host');
+            const uploadsDirectory = './data/uploads/';
+            const imageDirectory = 'images/';
+            const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
+            const imageUrl = url + '/' + imageDirectory + formattedImageFileName
+            const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
+            await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
+            return imageUrl
+        }
+        let clientDataC1, clientDataC2, clientDataC3, clientDataC4, clientDataC5
+        if (ClientcontactC1 !== undefined && ClientcontactC1.length > 0) {
+            clientDataC1 = await Promise.all(ClientcontactC1.map(async (item, index) => {
+                return {
+                    ...item,
+                    nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][nameimage]`)),
+                    designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][designationimage]`))
+                }
+            }))
+        }
+        if (ClientcontactC2 !== undefined && ClientcontactC2.length > 0) {
+            clientDataC2 = await Promise.all(ClientcontactC2.map(async (item, index) => {
+                return {
+                    ...item,
+                    nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][nameimage]`)),
+                    designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][designationimage]`))
+                }
+            }))
+        }
+        if (ClientcontactC3 !== undefined && ClientcontactC3.length > 0) {
+            clientDataC3 = await Promise.all(ClientcontactC3.map(async (item, index) => {
+                return {
+                    ...item,
+                    nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][nameimage]`)),
+                    designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][designationimage]`))
+                }
+            }))
+        }
+        if (ClientcontactC4 !== undefined && ClientcontactC4.length > 0) {
+            clientDataC4 = await Promise.all(ClientcontactC4.map(async (item, index) => {
+                return {
+                    ...item,
+                    nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][nameimage]`)),
+                    designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][designationimage]`))
+                }
+            }))
+        }
+        if (ClientcontactC5 !== undefined && ClientcontactC5.length > 0) {
+            clientDataC5 = await Promise.all(ClientcontactC5.map(async (item, index) => {
+                return {
+                    ...item,
+                    nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC5[${index}][nameimage]`)),
+                    designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC5[${index}][designationimage]`))
+                }
+            }))
+            
+        }
+        const clientContact = {
+            ClientcontactC1: clientDataC1, ClientcontactC2: clientDataC2, ClientcontactC3: clientDataC3, ClientcontactC4: clientDataC4, ClientcontactC5: clientDataC5
+        }
+        const newClientContact = new ClientContact(clientContact)
+        response.status(201).json(newClientContact)
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+// name,
+//     details,
+//     nameimage,
+//     remarks,
+//     designation,
+//     designationdetails,
+//     designationimage,
+//     designationremark,
+//     mobile,
+//     mobiledetail,
+//     mobileremark,
+//     whatsAppNumber,
+//     whatsAppdetails,
+//     whatsAppremark,
+//     prefferedMComm,
+//     prefferedMCommdetails,
+//     prefferedMCommremark,
+//     email,
+//     emaildetails,
+//     emailremark,
+
+//     name,
+//     details,
+//     nameimage,
+//     remarks,
+//     designation,
+//     designationdetails,
+//     designationimage,
+//     designationremark,
+//     mobile,
+//     mobiledetail,
+//     mobileremark,
+//     whatsAppNumber,
+//     whatsAppdetails,
+//     whatsAppremark,
+//     prefferedMComm,
+//     prefferedMCommdetails,
+//     prefferedMCommremark,
+//     email,
+//     emaildetails,
+//     emailremark,
+
+//     name,
+//     details,
+//     nameimage,
+//     remarks,
+//     designation,
+//     designationdetails,
+//     designationimage,
+//     designationremark,
+//     mobile,
+//     mobiledetail,
+//     mobileremark,
+//     whatsAppNumber,
+//     whatsAppdetails,
+//     whatsAppremark,
+//     prefferedMComm,
+//     prefferedMCommdetails,
+//     prefferedMCommremark,
+
+//     name,
+//     details,
+//     nameimage,
+//     remarks,
+//     designation,
+//     designationdetails,
+//     designationimage,
+//     designationremark,
+//     mobile,
+//     mobiledetail,
+//     mobileremark,
+//     whatsAppNumber,
+//     whatsAppdetails,
+//     whatsAppremark,
+//     prefferedMComm,
+//     prefferedMCommdetails,
+//     prefferedMCommremark,
+//     email,
+//     emaildetails,
+//     emailremark,
+
+//     name,
+//     details,
+//     nameimage,
+//     remarks,
+//     designation,
+//     designationdetails,
+//     designationimage,
+//     designationremark,
+//     mobile,
+//     mobiledetail,
+//     mobileremark,
+//     whatsAppNumber,
+//     whatsAppdetails,
+//     whatsAppremark,
+//     prefferedMComm,
+//     prefferedMCommdetails,
+//     prefferedMCommremark,
+//     email,
+//     emaildetails,
+//     emailremark,

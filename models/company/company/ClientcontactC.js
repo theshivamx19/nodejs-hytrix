@@ -534,6 +534,9 @@ const clientcontactCSchema = new mongoose.Schema({
     ClientcontactC4:{
         type:Array,
     },
+    ClientcontactC5:{
+        type:Array,
+    },
           
     status: {
         type: Number,
