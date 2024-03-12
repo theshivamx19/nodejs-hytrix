@@ -5380,7 +5380,6 @@ export const createCompanyRegistration = async (request, response, next) => {
             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
             return imageUrl;
         };
-        request.files.find(img => console.log(img.fieldname))
 
         // Process RegistrationB1
         const dataB1 = await Promise.all(RegistrationB1.map(async (item, index) => ({
@@ -5433,7 +5432,7 @@ export const createCompanyRegistration = async (request, response, next) => {
 export const createCompanyClientContact = async (request, response, next) => {
     try {
         const data = request.body
-        const { ClientcontactC1, ClientcontactC2, ClientcontactC3, ClientcontactC4, ClientcontactC5 } = data
+        const { ClientcontactC1, ClientcontactC2, ClientcontactC3, ClientcontactC4 } = data
         const uploadImage = async (imageFile) => {
             if (!imageFile) {
                 return null;
@@ -5447,7 +5446,7 @@ export const createCompanyClientContact = async (request, response, next) => {
             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
             return imageUrl
         }
-        let clientDataC1, clientDataC2, clientDataC3, clientDataC4, clientDataC5
+        let clientDataC1, clientDataC2, clientDataC3, clientDataC4
         if (ClientcontactC1 !== undefined && ClientcontactC1.length > 0) {
             clientDataC1 = await Promise.all(ClientcontactC1.map(async (item, index) => {
                 return {
@@ -5484,18 +5483,9 @@ export const createCompanyClientContact = async (request, response, next) => {
                 }
             }))
         }
-        if (ClientcontactC5 !== undefined && ClientcontactC5.length > 0) {
-            clientDataC5 = await Promise.all(ClientcontactC5.map(async (item, index) => {
-                return {
-                    ...item,
-                    nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC5[${index}][nameimage]`)),
-                    designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC5[${index}][designationimage]`))
-                }
-            }))
 
-        }
         const clientContact = {
-            ClientcontactC1: clientDataC1, ClientcontactC2: clientDataC2, ClientcontactC3: clientDataC3, ClientcontactC4: clientDataC4, ClientcontactC5: clientDataC5, created_at, updated_at
+            ClientcontactC1: clientDataC1, ClientcontactC2: clientDataC2, ClientcontactC3: clientDataC3, ClientcontactC4: clientDataC4, created_at, updated_at
         }
         const newClientContact = new ClientContact(clientContact)
         await newClientContact.save()
@@ -5505,105 +5495,243 @@ export const createCompanyClientContact = async (request, response, next) => {
     }
 }
 
+export const createOtherRegistration = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { pfnumber, pfdetails, pfimage, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, pfaddressimage, OtherRegsitrationD1PFsubcodes, OtherRegsitrationD1ESIsubcodes, OtherRegsitrationD3NSP, OtherRegsitrationD3FL, OtherRegsitrationD3OTP, OtherRegsitrationD3WOE, OtherRegsitrationD3TD, OtherRegsitrationD3MSME, OtherRegsitrationD3BOCW, OtherRegsitrationD3IMW, esinumber, esidetails, esiimage, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressimage, esiaddressremark, registrationD3, registrationD3details, registrationD3image, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3image, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3image, issueauthfD3remark, fpD3, fpD3details, fpD3image, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3image, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3image, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3image, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3image, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3image, registrationptrD3remark, doregistrationptrD3,
+        } = data
 
-// name,
-//     details,
-//     nameimage,
-//     remarks,
-//     designation,
-//     designationdetails,
-//     designationimage,
-//     designationremark,
-//     mobile,
-//     mobiledetail,
-//     mobileremark,
-//     whatsAppNumber,
-//     whatsAppdetails,
-//     whatsAppremark,
-//     prefferedMComm,
-//     prefferedMCommdetails,
-//     prefferedMCommremark,
-//     email,
-//     emaildetails,
-//     emailremark,
+        const uploadImage = async (imageFile) => {
+            if (!imageFile) {
+                return null; // Return null if image is not provided
+            }
+            const url = request.protocol + '://' + request.get('host');
+            const uploadsDirectory = './data/uploads/';
+            const imageDirectory = 'images/';
+            const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
+            const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            // console.log(imageUrl);
+            const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
+            await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
+            return imageUrl;
+        };
+        let dataESIsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
+        if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
+            dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(item => {
+                return {
+                    ...item,
+                    regimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][regimage]`)),
+                    docimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][docimage]`)),
+                    offaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][offaddressimage]`))
+                }
+            }))
+        }
+        if (OtherRegsitrationD1ESIsubcodes !== undefined && OtherRegsitrationD1ESIsubcodes.length > 0) {
+            dataESIsubcodes = await Promise.all(OtherRegsitrationD1ESIsubcodes.map(item => {
+                return {
+                    ...item,
+                    esiimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esiimage]`)),
+                    esidocimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esidocimage]`)),
+                    esioffaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esioffaddressimage]`))
+                }
+            }))
+        }
+        if (OtherRegsitrationD3FL !== undefined && OtherRegsitrationD3FL.length > 0) {
+            dataFL = await Promise.all(OtherRegsitrationD3FL.map(item => {
+                return {
+                    ...item,
+                    managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][managerlicenseimage]`)),
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][issuingauthimage]`)),
+                }
+            }))
+        }
+        if (OtherRegsitrationD3NSP !== undefined && OtherRegsitrationD3NSP.length > 0) {
+            dataNSP = await Promise.all(OtherRegsitrationD3NSP.map(item => {
+                return {
+                    ...item,
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3NSP[${index}][issuingauthimage]`)),
+                }
+            }))
+        }
+        if (OtherRegsitrationD3OTP !== undefined && OtherRegsitrationD3OTP.length > 0) {
+            dataOTP = await Promise.all(OtherRegsitrationD3OTP.map(item => {
+                return {
+                    ...item,
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3OTP[${index}][issuingauthimage]`)),
+                }
+            }))
+        }
+        if (OtherRegsitrationD3WOE !== undefined && OtherRegsitrationD3WOE.length > 0) {
+            dataWOE = await Promise.all(OtherRegsitrationD3WOE.map(item => {
+                return {
+                    ...item,
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3WOE[${index}][issuingauthimage]`)),
+                }
+            }))
+        }
+        if (OtherRegsitrationD3TD !== undefined && OtherRegsitrationD3TD.length > 0) {
+            dataTD = await Promise.all(OtherRegsitrationD3TD.map(item => {
+                return {
+                    ...item,
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3TD[${index}][issuingauthimage]`)),
+                }
+            }))
+        }
+        if (OtherRegsitrationD3MSME !== undefined && OtherRegsitrationD3MSME.length > 0) {
+            dataMSME = await Promise.all(OtherRegsitrationD3MSME.map(item => {
+                return {
+                    ...item,
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3MSME[${index}][issuingauthimage]`)),
+                }
+            }))
+        }
+        if (OtherRegsitrationD3BOCW !== undefined && OtherRegsitrationD3BOCW.length > 0) {
+            dataBOCW = await Promise.all(OtherRegsitrationD3BOCW.map(item => {
+                return {
+                    ...item,
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3BOCW[${index}][issuingauthimage]`)),
+                }
+            }))
+        }
+        if (OtherRegsitrationD3IMW !== undefined && OtherRegsitrationD3IMW.length > 0) {
+            dataIMW = await Promise.all(OtherRegsitrationD3IMW.map(item => {
+                return {
+                    ...item,
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3IMW[${index}][issuingauthimage]`)),
+                }
+            }))
+        }
 
-//     name,
-//     details,
-//     nameimage,
-//     remarks,
-//     designation,
-//     designationdetails,
-//     designationimage,
-//     designationremark,
-//     mobile,
-//     mobiledetail,
-//     mobileremark,
-//     whatsAppNumber,
-//     whatsAppdetails,
-//     whatsAppremark,
-//     prefferedMComm,
-//     prefferedMCommdetails,
-//     prefferedMCommremark,
-//     email,
-//     emaildetails,
-//     emailremark,
+        const otherRegistration = {
+            pfnumber, pfdetails, pfimage, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, pfaddressimage, esinumber, esidetails, esiimage, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressimage, esiaddressremark, registrationD3, registrationD3details, registrationD3image, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3image, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3image, issueauthfD3remark,
+            OtherRegsitrationD1PFsubcodes,
+            OtherRegsitrationD1ESIsubcodes,
+            OtherRegsitrationD3NSP,
+            OtherRegsitrationD3OTP,
+            OtherRegsitrationD3WOE,
+            OtherRegsitrationD3TD,
+            OtherRegsitrationD3MSME,
+            OtherRegsitrationD3BOCW,
+            OtherRegsitrationD3IMW,
+            OtherRegsitrationD3FL,
+        }
+    }
+    catch (error) {
+        next(error)
+    }
+}
 
-//     name,
-//     details,
-//     nameimage,
-//     remarks,
-//     designation,
-//     designationdetails,
-//     designationimage,
-//     designationremark,
-//     mobile,
-//     mobiledetail,
-//     mobileremark,
-//     whatsAppNumber,
-//     whatsAppdetails,
-//     whatsAppremark,
-//     prefferedMComm,
-//     prefferedMCommdetails,
-//     prefferedMCommremark,
 
-//     name,
-//     details,
-//     nameimage,
-//     remarks,
-//     designation,
-//     designationdetails,
-//     designationimage,
-//     designationremark,
-//     mobile,
-//     mobiledetail,
-//     mobileremark,
-//     whatsAppNumber,
-//     whatsAppdetails,
-//     whatsAppremark,
-//     prefferedMComm,
-//     prefferedMCommdetails,
-//     prefferedMCommremark,
-//     email,
-//     emaildetails,
-//     emailremark,
+// pfnumber, pfdetails, pfimage, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, pfaddressimage, OtherRegsitrationD1PFsubcodes[0][regnumber]
+// OtherRegsitrationD1PFsubcodes[0][regdetails]
+// OtherRegsitrationD1PFsubcodes[0][regimage]
+// OtherRegsitrationD1PFsubcodes[0][regremarks]
+// OtherRegsitrationD1PFsubcodes[0][doc]
+// OtherRegsitrationD1PFsubcodes[0][docdetails]
+// OtherRegsitrationD1PFsubcodes[0][docimage]
+// OtherRegsitrationD1PFsubcodes[0][docremark]
+// OtherRegsitrationD1PFsubcodes[0][offaddress]
+// OtherRegsitrationD1PFsubcodes[0][offstate]
+// OtherRegsitrationD1PFsubcodes[0][offdistrict]
+// OtherRegsitrationD1PFsubcodes[0][offpin]
+// OtherRegsitrationD1PFsubcodes[0][offaddressdetails]
+// OtherRegsitrationD1PFsubcodes[0][offaddressimage]
+// OtherRegsitrationD1PFsubcodes[0][offaddressremark]
 
-//     name,
-//     details,
-//     nameimage,
-//     remarks,
-//     designation,
-//     designationdetails,
-//     designationimage,
-//     designationremark,
-//     mobile,
-//     mobiledetail,
-//     mobileremark,
-//     whatsAppNumber,
-//     whatsAppdetails,
-//     whatsAppremark,
-//     prefferedMComm,
-//     prefferedMCommdetails,
-//     prefferedMCommremark,
-//     email,
-//     emaildetails,
-//     emailremark,
+// esinumber,esidetails,esiimage,esidremark,esidoc,esiaddress,esistate,esidistrict,esipin,esiaddressdetails,esiaddressimage,esiaddressremark,
+
+// OtherRegsitrationD1ESIsubcodes[0][esinumber]: 232323
+// OtherRegsitrationD1ESIsubcodes[0][esidetails]: wewewee
+// OtherRegsitrationD1ESIsubcodes[0][esiimage]: (binary)
+// OtherRegsitrationD1ESIsubcodes[0][esiremarks]: weeweew
+// OtherRegsitrationD1ESIsubcodes[0][esidoc]: 2024-03 - 12
+// OtherRegsitrationD1ESIsubcodes[0][esidocdetails]:
+// OtherRegsitrationD1ESIsubcodes[0][esidocimage]:
+// OtherRegsitrationD1ESIsubcodes[0][esidocremark]:
+// OtherRegsitrationD1ESIsubcodes[0][esioffaddress]: wewewewe
+// OtherRegsitrationD1ESIsubcodes[0][esioffstate]: 65ad3a1d01dca0d198df261b
+// OtherRegsitrationD1ESIsubcodes[0][esioffdistrict]: wewewe
+// OtherRegsitrationD1ESIsubcodes[0][esioffpin]: 22332323
+// OtherRegsitrationD1ESIsubcodes[0][esioffaddressdetails]: assasa
+// OtherRegsitrationD1ESIsubcodes[0][esioffaddressimage]: (binary)
+// OtherRegsitrationD1ESIsubcodes[0][esioffaddressremark]: wqwqwqw
+
+// registrationD3,registrationD3details,registrationD3image,registrationD3remark,doregistrationD3,doeregistrationD3,doddrregistrationD3,managernameD3,managernameD3details,managernameD3image,managernameD3remark,noeD3,noemD3,noefD3,issueauthfD3,issueauthfD3details,issueauthfD3image,issueauthfD3remark,
+
+
+// OtherRegsitrationD3FL[0][dor]: 2024-03 - 12
+// OtherRegsitrationD3FL[0][doe]: 2024-03 - 12
+// OtherRegsitrationD3FL[0][doddr]: 2024-03 - 12
+// OtherRegsitrationD3FL[0][managernamelicense]: asasa
+// OtherRegsitrationD3FL[0][managerlicensedetails]: asasasa
+// OtherRegsitrationD3FL[0][managerlicenseimage]: (binary)
+// OtherRegsitrationD3FL[0][managerlicenseremark]: aasa
+// OtherRegsitrationD3FL[0][noe]: 2
+// OtherRegsitrationD3FL[0][nom]: 1
+// OtherRegsitrationD3FL[0][nof]: 1
+// OtherRegsitrationD3FL[0][issuingauth]: asasa
+// OtherRegsitrationD3FL[0][issuingauthdetails]: asasa
+// OtherRegsitrationD3FL[0][issuingauthimage]: (binary)
+// OtherRegsitrationD3FL[0][issuingauthremark]: saasa
+//  fpD3, fpD3details, fpD3image, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3image, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3image, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3image, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3image, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3image, registrationptrD3remark, doregistrationptrD3,
+
+// OtherRegsitrationD3NSP[0][dor]: 2024-03 - 12
+// OtherRegsitrationD3NSP[0][doe]: 2024-03 - 12
+// OtherRegsitrationD3NSP[0][doddr]: 2024-03 - 12
+// OtherRegsitrationD3NSP[0][issuingauth]: asasa
+// OtherRegsitrationD3NSP[0][issuingauthdetails]: asasa
+// OtherRegsitrationD3NSP[0][issuingauthimage]: (binary)
+// OtherRegsitrationD3NSP[0][issuingauthremark]: asasa
+
+
+// OtherRegsitrationD3OTP[0][dor]: 2024-03 - 12
+// OtherRegsitrationD3OTP[0][doe]: 2024-03 - 12
+// OtherRegsitrationD3OTP[0][doddr]: 2024-03 - 12
+// OtherRegsitrationD3OTP[0][issuingauth]: sasas
+// OtherRegsitrationD3OTP[0][issuingauthdetails]: asa
+// OtherRegsitrationD3OTP[0][issuingauthimage]: (binary)
+// OtherRegsitrationD3OTP[0][issuingauthremark]: asasas
+
+// OtherRegsitrationD3WOE[0][dor]: 2024-03 - 12
+// OtherRegsitrationD3WOE[0][doe]: 2024-03 - 12
+// OtherRegsitrationD3WOE[0][doddr]: 2024-03 - 12
+// OtherRegsitrationD3WOE[0][issuingauth]: sasa
+// OtherRegsitrationD3WOE[0][issuingauthdetails]: asasa
+// OtherRegsitrationD3WOE[0][issuingauthimage]: (binary)
+// OtherRegsitrationD3WOE[0][issuingauthremark]: sasasa
+
+// OtherRegsitrationD3TD[0][dor]: 2024-03 - 12
+// OtherRegsitrationD3TD[0][doe]: 2024-03 - 12
+// OtherRegsitrationD3TD[0][doddr]: 2024-03 - 12
+// OtherRegsitrationD3TD[0][issuingauth]: aasa
+// OtherRegsitrationD3TD[0][issuingauthdetails]: asas
+// OtherRegsitrationD3TD[0][issuingauthimage]: (binary)
+// OtherRegsitrationD3TD[0][issuingauthremark]: asassa
+
+// OtherRegsitrationD3MSME[0][dor]: 2024-03 - 12
+// OtherRegsitrationD3MSME[0][issuingauth]: asa
+// OtherRegsitrationD3MSME[0][issuingauthdetails]: asas
+// OtherRegsitrationD3MSME[0][issuingauthimage]: (binary)
+// OtherRegsitrationD3MSME[0][issuingauthremark]: asaasa
+
+// OtherRegsitrationD3BOCW[0][dor]: 2024-03 - 12
+// OtherRegsitrationD3BOCW[0][doe]: 2024-03 - 12
+// OtherRegsitrationD3BOCW[0][doddr]: 2024-03 - 12
+// OtherRegsitrationD3BOCW[0][noe]: 2
+// OtherRegsitrationD3BOCW[0][nom]: 1
+// OtherRegsitrationD3BOCW[0][nof]: 1
+// OtherRegsitrationD3BOCW[0][issuingauth]: sasa
+// OtherRegsitrationD3BOCW[0][issuingauthdetails]: sas
+// OtherRegsitrationD3BOCW[0][issuingauthimage]: (binary)
+// OtherRegsitrationD3BOCW[0][issuingauthremark]: asasa
+
+// OtherRegsitrationD3IMW[0][dor]: 2024-03 - 12
+// OtherRegsitrationD3IMW[0][doe]: 2024-03 - 12
+// OtherRegsitrationD3IMW[0][doddr]: 2024-03 - 12
+// OtherRegsitrationD3IMW[0][noe]: 1
+// OtherRegsitrationD3IMW[0][nom]: 1
+// OtherRegsitrationD3IMW[0][nof]: 1
+// OtherRegsitrationD3IMW[0][issuingauth]: asas
+// OtherRegsitrationD3IMW[0][issuingauthdetails]: asas
+// OtherRegsitrationD3IMW[0][issuingauthimage]: (binary)
+// OtherRegsitrationD3IMW[0][issuingauthremark]: 

@@ -364,6 +364,10 @@ const otherRegistrationDSchema = new mongoose.Schema({
     OtherRegsitrationD3IMW:{
         type:Array,
     }, 
+    // newly added
+    OtherRegsitrationD3FL:{
+        type:Array,
+    }, 
     status: {
         type: Number,
         default:0,
