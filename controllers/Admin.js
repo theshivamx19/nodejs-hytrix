@@ -5390,9 +5390,6 @@ export const createCompanyRegistration = async (request, response, next) => {
             panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][panimage]`)),
             aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][aadhaarimage]`)),
         })));
-
-        console.log(Array.isArray(RegistrationB2));
-
         // Process RegistrationB2
         const dataB2 = await Promise.all(RegistrationB2.map(async (item, index) => ({
             ...item,
@@ -5402,7 +5399,6 @@ export const createCompanyRegistration = async (request, response, next) => {
             aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][aadhaarimage]`)),
         })));
 
-        console.log(Array.isArray(RegistrationB3));
         // Process RegistrationB3
         const dataB3 = await Promise.all(RegistrationB3.map(async (item, index) => ({
             ...item,
@@ -5496,12 +5492,13 @@ export const createCompanyClientContact = async (request, response, next) => {
                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC5[${index}][designationimage]`))
                 }
             }))
-            
+
         }
         const clientContact = {
-            ClientcontactC1: clientDataC1, ClientcontactC2: clientDataC2, ClientcontactC3: clientDataC3, ClientcontactC4: clientDataC4, ClientcontactC5: clientDataC5
+            ClientcontactC1: clientDataC1, ClientcontactC2: clientDataC2, ClientcontactC3: clientDataC3, ClientcontactC4: clientDataC4, ClientcontactC5: clientDataC5, created_at, updated_at
         }
         const newClientContact = new ClientContact(clientContact)
+        await newClientContact.save()
         response.status(201).json(newClientContact)
     } catch (error) {
         next(error)
