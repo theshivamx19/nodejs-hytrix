@@ -5633,8 +5633,7 @@ export const createCompanyRegistration = async (request, response, next) => {
             // F Starts : in this renewalDateF52 was written 2 times as payload, so i removed one
             branchaddress, branchstate, branchdistrict, branchpin, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regisocontractaddress, regisocontractstate, regisocontractdistrict, regisocontractpin, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark,
             // G Starts
-
-            isLabourEngagedGDet, isLabourEngagedGRemark, noOfClientG, noOfClientGDet, noOfClientGRemark, clientG, clientGDet, clientGRemark, regOfficeAddClientG, regOfficeStateClientG, regOfficeDistClientG, regOfficePinClientG, regOfficeAddClientGDet, regOfficeAddClientGRemark, noOfLocContractWorkG11, noOfLocContractWorkG11Det, noOfLocContractWorkG11Remark, regAddOfClientG11, regStateOfClientG11, regDistOfClientG11, regPinOfClientG11, regAddOfClientG11Det, regAddOfClientG11Remark, agreementRefNoG12, agreementRefNoG12Det, agreementRefNoG12Remark, agreementDateG12, agreementDateG12Det, agreementDateG12Remark, agreementValidityG12, agreementValidityG12Det, agreementValidityG12Remark, noOfWorkersEngagedG12, noOfWorkersEngagedG12Det, noOfWorkersEngagedG12Remark, estCategoryG12, estCategoryG12Det, estCategoryG12Remark, isClraApplicableG12, noOfForm5G13, noOfForm5G13Det, noOfForm5G13Remark, form5DateG13, form5DateG13Det, form5DateG13Remark, workCommencedDateG13, workCommencedDateG13Det, workCommencedDateG13Remark, clraLicenseNoG13, clraLicenseNoG13Det, clraLicenseNoG13Remark, clraLicenseDateG13, clraLicenseDateG13Det, clraLicenseDateG13Remark, clraValidityG13, clraValidityG13Det, clraValidityG13Remark, clraRenewalDueG13, clraRenewalDueG13Det, clraRenewalDueG13Remark, clraNoOfContWorkersG13, clraNoOfContWorkersG13Det, clraNoOfContWorkersG13Remark, clraNoOfManagerRespG13, clraNoOfManagerRespG13Det, clraNoOfManagerRespG13Remark, clraLicenseFeeG13, clraLicenseFeeG13Det, clraLicenseFeeG13Remark, securityDepositG13, securityDepositG13Det, securityDepositG13Remark, contWorkCompletedDate, contWorkCompletedDateDet, contWorkCompletedDateRemark, contWorkComplitionNotice, contWorkComplitionNoticeDet, contWorkComplitionNoticeRemark, refundSecDepNotice, refundSecDepNoticeDet, refundSecDepNoticeRemark, licSurrenderedDate, licSurrenderedDateDet, licSurrenderedDateRemark
+            g12ncw, g12ncwdet, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoedet, g12ncwcoeremark, g13form, g13formdet, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5licenecedet, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeedet, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeedet, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls,GCC4TL,
         } = data;
         // pfnumber, pfaddressimage
         let company, newCompany;
@@ -5884,6 +5883,7 @@ export const createCompanyRegistration = async (request, response, next) => {
             }))
         }
         // ***********************-------- G Dynamic Image Handling ----------***********************
+        let dataGCC4TL
         if(GCC4TL !== undefined && GCC4TL.length > 0){
             dataGCC4TL = await Promise.all(GCC4TL.map(async (item, index)=>{
                 return {
@@ -6035,35 +6035,16 @@ export const createCompanyRegistration = async (request, response, next) => {
             }
         } 
         // G Starts
-        if(isLabourEngagedG && noOfClientG && clientG && regOfficeAddClientG && pincode && noOfLocContractWorkG11 && regAddOfClientG11 && pincode && agreementRefNoG12 && agreementDateG12 && agreementValidityG12 && noOfWorkersEngagedG12 && estCategoryG12 && isClraApplicableG12 && noOfForm5G13 && form5DateG13 && workCommencedDateG13 && clraLicenseNoG13 && clraLicenseDateG13 && clraValidityG13 && clraRenewalDueG13 && clraNoOfContWorkersG13 && clraNoOfManagerRespG13 && clraLicenseFeeG13 && securityDepositG13 && contWorkCompletedDate && contWorkComplitionNotice && refundSecDepNotice && licSurrenderedDate&&regOfficeAddClientG&& regOfficeStateClientG&& regOfficeDistClientG&& regOfficePinClientG&& regAddOfClientG11&& regStateOfClientG11&& regDistOfClientG11&& regPinOfClientG11 ){
+        if(g12ncw && g12ncwdate && g12ncwdatevalid && g12ncwnow && g12ncwcoe && g13form && g13form5date && g13form5dateofcommence && g13form5licenece && g13form5licensedol && g13form5licensedolvalid && g13form5licensedoldor && g13form5licenseworkers && g13form5licensemanresp && g13form5licensefee && g13form5securityfee && g14dcwc && g14dncc && g14dars && g14dls){
             company = {
-                isLabourEngagedGFile : await uploadImage(request.files.find(img => img.fieldname === "isLabourEngagedGFile")),
-noOfClientGFile : await uploadImage(request.files.find(img => img.fieldname === "noOfClientGFile")),
-clientGFile : await uploadImage(request.files.find(img => img.fieldname === "clientGFile")),
-regOfficeAddClientGFile : await uploadImage(request.files.find(img => img.fieldname === "regOfficeAddClientGFile")),
-noOfLocContractWorkG11File : await uploadImage(request.files.find(img => img.fieldname === "noOfLocContractWorkG11File")),
-regAddOfClientG11File : await uploadImage(request.files.find(img => img.fieldname === "regAddOfClientG11File")),
-agreementRefNoG12File : await uploadImage(request.files.find(img => img.fieldname === "agreementRefNoG12File")),
-agreementDateG12File : await uploadImage(request.files.find(img => img.fieldname === "agreementDateG12File")),
-agreementValidityG12File : await uploadImage(request.files.find(img => img.fieldname === "agreementValidityG12File")),
-noOfWorkersEngagedG12File : await uploadImage(request.files.find(img => img.fieldname === "noOfWorkersEngagedG12File")),
-estCategoryG12File : await uploadImage(request.files.find(img => img.fieldname === "estCategoryG12File")),
-noOfForm5G13File : await uploadImage(request.files.find(img => img.fieldname === "noOfForm5G13File")),
-form5DateG13File : await uploadImage(request.files.find(img => img.fieldname === "form5DateG13File")),
-workCommencedDateG13File : await uploadImage(request.files.find(img => img.fieldname === "workCommencedDateG13File")),
-clraLicenseNoG13File : await uploadImage(request.files.find(img => img.fieldname === "clraLicenseNoG13File")),
-clraLicenseDateG13File : await uploadImage(request.files.find(img => img.fieldname === "clraLicenseDateG13File")),
-clraValidityG13File : await uploadImage(request.files.find(img => img.fieldname === "clraValidityG13File")),
-clraRenewalDueG13File : await uploadImage(request.files.find(img => img.fieldname === "clraRenewalDueG13File")),
-clraNoOfContWorkersG13File : await uploadImage(request.files.find(img => img.fieldname === "clraNoOfContWorkersG13File")),
-clraNoOfManagerRespG13File : await uploadImage(request.files.find(img => img.fieldname === "clraNoOfManagerRespG13File")),
-clraLicenseFeeG13File : await uploadImage(request.files.find(img => img.fieldname === "clraLicenseFeeG13File")),
-securityDepositG13File : await uploadImage(request.files.find(img => img.fieldname === "securityDepositG13File")),
-contWorkCompletedDateFile : await uploadImage(request.files.find(img => img.fieldname === "contWorkCompletedDateFile")),
-contWorkComplitionNoticeFile : await uploadImage(request.files.find(img => img.fieldname === "contWorkComplitionNoticeFile")),
-refundSecDepNoticeFile : await uploadImage(request.files.find(img => img.fieldname === "refundSecDepNoticeFile")),
-licSurrenderedDateFile : await uploadImage(request.files.find(img => img.fieldname === "licSurrenderedDateFile")),
-                isLabourEngagedG, isLabourEngagedGDet, isLabourEngagedGRemark, noOfClientG, noOfClientGDet, noOfClientGRemark, clientG, clientGDet, clientGRemark, regOfficeAddClientG, regOfficeStateClientG, regOfficeDistClientG, regOfficePinClientG, regOfficeAddClientGDet, regOfficeAddClientGRemark, noOfLocContractWorkG11, noOfLocContractWorkG11Det, noOfLocContractWorkG11Remark, regAddOfClientG11, regStateOfClientG11, regDistOfClientG11, regPinOfClientG11, regAddOfClientG11Det, regAddOfClientG11Remark, agreementRefNoG12, agreementRefNoG12Det, agreementRefNoG12Remark, agreementDateG12, agreementDateG12Det, agreementDateG12Remark, agreementValidityG12, agreementValidityG12Det, agreementValidityG12Remark, noOfWorkersEngagedG12, noOfWorkersEngagedG12Det, noOfWorkersEngagedG12Remark, estCategoryG12, estCategoryG12Det, estCategoryG12Remark, isClraApplicableG12, noOfForm5G13, noOfForm5G13Det, noOfForm5G13Remark, form5DateG13, form5DateG13Det, form5DateG13Remark, workCommencedDateG13, workCommencedDateG13Det, workCommencedDateG13Remark, clraLicenseNoG13, clraLicenseNoG13Det, clraLicenseNoG13Remark, clraLicenseDateG13, clraLicenseDateG13Det, clraLicenseDateG13Remark, clraValidityG13, clraValidityG13Det, clraValidityG13Remark, clraRenewalDueG13, clraRenewalDueG13Det, clraRenewalDueG13Remark, clraNoOfContWorkersG13, clraNoOfContWorkersG13Det, clraNoOfContWorkersG13Remark, clraNoOfManagerRespG13, clraNoOfManagerRespG13Det, clraNoOfManagerRespG13Remark, clraLicenseFeeG13, clraLicenseFeeG13Det, clraLicenseFeeG13Remark, securityDepositG13, securityDepositG13Det, securityDepositG13Remark, contWorkCompletedDate, contWorkCompletedDateDet, contWorkCompletedDateRemark, contWorkComplitionNotice, contWorkComplitionNoticeDet, contWorkComplitionNoticeRemark, refundSecDepNotice, refundSecDepNoticeDet, refundSecDepNoticeRemark, licSurrenderedDate, licSurrenderedDateDet, licSurrenderedDateRemark
+                g12ncwimage : await uploadImage(request.files.find(img => img.fieldname === "g12ncwimage")),
+g12ncwcoeimage : await uploadImage(request.files.find(img => img.fieldname === "g12ncwcoeimage")),
+g13formimage : await uploadImage(request.files.find(img => img.fieldname === "g13formimage")),
+g13form5liceneceimage : await uploadImage(request.files.find(img => img.fieldname === "g13form5liceneceimage")),
+g13form5licensefeeimage : await uploadImage(request.files.find(img => img.fieldname === "g13form5licensefeeimage")),
+g13form5securityfeeimage : await uploadImage(request.files.find(img => img.fieldname === "g13form5securityfeeimage")),
+g12ncw, g12ncwdet, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoedet, g12ncwcoeremark, g13form, g13formdet, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5licenecedet, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeedet, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeedet, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls,
+GCC4TL : dataGCC4TL
             }
         }   
         newCompany = await Companydata.findOneAndUpdate({ _id: lastInsertedIdcompany }, company, { new: true })
@@ -6941,6 +6922,23 @@ licSurrenderedDateFile : await uploadImage(request.files.find(img => img.fieldna
 //     default : null
 // }
 
+
+
+
+//  G new
+
+
+// GCC4TL[0][clientaddressimage]: (binary) 
+// g12ncwimage,
+// g12ncwcoeimage,
+// g13formimage,
+// g13form5liceneceimage,
+// g13form5licensefeeimage,
+// g13form5securityfeeimage,
+// g12ncw, g12ncwdet, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoedet, g12ncwcoeremark, g13form, g13formdet, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5licenecedet, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeedet, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeedet, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls,
+
+
+//  g12ncw && g12ncwdate && g12ncwdatevalid && g12ncwnow && g12ncwcoe && g13form && g13form5date && g13form5dateofcommence && g13form5licenece && g13form5licensedol && g13form5licensedolvalid && g13form5licensedoldor && g13form5licenseworkers && g13form5licensemanresp && g13form5licensefee && g13form5securityfee && g14dcwc && g14dncc && g14dars && g14dls &&
 
 
 
