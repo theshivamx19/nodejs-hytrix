@@ -5613,7 +5613,7 @@ export const createCompanyRegistration = async (request, response, next) => {
         next(error);
     }
     /** pradeep code*/
-    //try {
+    try {
     //     let data = request.body;
     //     let {
     //         // A Starts
@@ -5819,7 +5819,7 @@ export const createCompanyRegistration = async (request, response, next) => {
     //     // console.log(companyregistration,companycin,companyissuedplace,companyauthority,companyregistrationdate,companypan,companytan,companytin,companygst)
     //     const lastInsertedcompany = await Companydata.find({}).sort({ '_id': -1 }).limit(1)
     //     const lastInsertedIdcompany = lastInsertedcompany.length > 0 ? lastInsertedcompany[0]._id : null;
-    //     console.log(lastInsertedIdcompany);return;
+    //     // console.log(companyregistration ,  companycin , companyissuedplace, companyauthority, companyregistrationdate, companypan, companytan, companytin, companygst);return;
     //     if( companyregistration  &&  companycin  && companyissuedplace && companyauthority && companyregistrationdate && companypan && companytan && companytin && companygst ) {
     //         company = {
     //             // B Starts
@@ -5880,7 +5880,7 @@ export const createCompanyRegistration = async (request, response, next) => {
     //     // Save company data to database
     //     // const newCompany = new Companys(company);
     //     // await newCompany.save();
-    //     newCompany = await Companydata.findOneAndUpdate({ _id: lastInsertedIdcompany[0]._id }, company, { new: true })
+    //     newCompany = await Companydata.findOneAndUpdate({ _id: lastInsertedIdcompany }, company, { new: true })
     //     response.status(201).json(newCompany);
     // } catch (error) {
     //     next(error);
