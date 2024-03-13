@@ -5880,7 +5880,7 @@ export const createCompanyRegistration = async (request, response, next) => {
     //     // Save company data to database
     //     // const newCompany = new Companys(company);
     //     // await newCompany.save();
-    //     newCompany = await Lisereg.findOneAndUpdate({ _id: lastInsertedIdcompany[0]._id }, company, { new: true })
+    //     newCompany = await Companydata.findOneAndUpdate({ _id: lastInsertedIdcompany[0]._id }, company, { new: true })
     //     response.status(201).json(newCompany);
     // } catch (error) {
     //     next(error);
