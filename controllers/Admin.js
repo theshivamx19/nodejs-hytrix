@@ -5613,7 +5613,7 @@ export const createCompanyRegistration = async (request, response, next) => {
         next(error);
     }
     /** pradeep code*/
-    try {
+    //try {
     //     let data = request.body;
     //     let {
     //         // A Starts
@@ -5819,7 +5819,7 @@ export const createCompanyRegistration = async (request, response, next) => {
     //     // console.log(companyregistration,companycin,companyissuedplace,companyauthority,companyregistrationdate,companypan,companytan,companytin,companygst)
     //     const lastInsertedcompany = await Companydata.find({}).sort({ '_id': -1 }).limit(1)
     //     const lastInsertedIdcompany = lastInsertedcompany.length > 0 ? lastInsertedcompany[0]._id : null;
-    //     Console.log(lastInsertedIdcompany);return;
+    //     console.log(lastInsertedIdcompany);return;
     //     if( companyregistration  &&  companycin  && companyissuedplace && companyauthority && companyregistrationdate && companypan && companytan && companytin && companygst ) {
     //         company = {
     //             // B Starts
