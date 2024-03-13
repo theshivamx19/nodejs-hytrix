@@ -6279,6 +6279,486 @@ licSurrenderedDateFile : await uploadImage(request.files.find(img => img.fieldna
     // f new
 
 //  branchaddress, branchstate, branchdistrict, branchpin, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regisocontractaddress, regisocontractstate, regisocontractdistrict, regisocontractpin, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark,
+// branchaddress : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// branchstate : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// branchdistrict : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// branchpin : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// contractorAddBranchFDet : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// contractorAddBranchFRemark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// branchOpeningDateF : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// noOfEmpBranchF : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerNameF1 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerNameF1Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerNameF1Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerMobNoF1 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerMobNoF1Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerMobNoF1Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerEmailF1 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerEmailF1Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerEmailF1Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerAadharNoF1 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerAadharNoF1Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerAadharNoF1Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerPanF1 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerPanF1Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// managerPanF1Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// shopsEstLicenseF2 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// shopsEstLicenseF2Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// shopsEstLicenseF2Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// contractLabRegNoF5 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// contractLabRegNoF5Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// contractLabRegNoF5Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// regDateContractorF5 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// coOfContractEmpF5 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// noOfContractorsF5 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// contractorNameF51 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// contractorNameF51Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// contractorNameF51Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// establishmentNameF51 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// establishmentNameF51Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// establishmentNameF51Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// regisocontractaddress : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// regisocontractstate : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// regisocontractdistrict : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// regisocontractpin : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// regAddContractorF51Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// regAddContractorF51Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// expiryDateF52 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// renewalDateF52 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// natureOfWorkF52 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// natureOfWorkF52Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// natureOfWorkF52Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// noOfEmpDeployedF52 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// companyTypeF53Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// companyTypeF53Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// contractLabLicNoF53 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// contractLabLicNoF53Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// contractLabLicNoF53Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// licenseDateF53 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// expiryDateF53 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// renewalDateF53 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// noOfWorkerF53 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// panF53 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// panF53Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// panF53Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// gstF53 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// gstF53Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// gstF53Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// pfRegF53 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// pfRegF53Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// pfRegF53Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// esicRegF53 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// esicRegF53Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// esicRegF53Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// shopsEstF53 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// shopsEstF53Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// shopsEstF53Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// lwfRegF53 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// lwfRegF53Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// lwfRegF53Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// profTaxF53 : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// profTaxF53Det : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
+// profTaxF53Remark : {
+//     type : String,
+//     default : null,
+//     trim : true,
+//     index : true
+// }
 
 // F1branch[0][name]: Prayagraj
 // F1branch[0][details]: sdsds
@@ -6383,25 +6863,82 @@ licSurrenderedDateFile : await uploadImage(request.files.find(img => img.fieldna
 
 // F new file
 
-// contractorAddBranchFFile,
-// managerNameF1File,
-// managerAadharNoF1File,
-// managerPanF1File,
-// shopsEstLicenseF2File,
-// contractLabRegNoF5File,
-// contractorNameF51File,
-// establishmentNameF51File,
-// regAddContractorF51File,
-// natureOfWorkF52File,
-// companyTypeF53File,
-// contractLabLicNoF53File,
-// panF53File,
-// gstF53File,
-// pfRegF53File,
-// esicRegF53File,
-// shopsEstF53File,
-// lwfRegF53File,
-// profTaxF53File,
+// contractorAddBranchFFile : {
+//     type : Object,
+//     default : null
+// }
+// managerNameF1File : {
+//     type : Object,
+//     default : null
+// }
+// managerAadharNoF1File : {
+//     type : Object,
+//     default : null
+// }
+// managerPanF1File : {
+//     type : Object,
+//     default : null
+// }
+// shopsEstLicenseF2File : {
+//     type : Object,
+//     default : null
+// }
+// contractLabRegNoF5File : {
+//     type : Object,
+//     default : null
+// }
+// contractorNameF51File : {
+//     type : Object,
+//     default : null
+// }
+// establishmentNameF51File : {
+//     type : Object,
+//     default : null
+// }
+// regAddContractorF51File : {
+//     type : Object,
+//     default : null
+// }
+// natureOfWorkF52File : {
+//     type : Object,
+//     default : null
+// }
+// companyTypeF53File : {
+//     type : Object,
+//     default : null
+// }
+// contractLabLicNoF53File : {
+//     type : Object,
+//     default : null
+// }
+// panF53File : {
+//     type : Object,
+//     default : null
+// }
+// gstF53File : {
+//     type : Object,
+//     default : null
+// }
+// pfRegF53File : {
+//     type : Object,
+//     default : null
+// }
+// esicRegF53File : {
+//     type : Object,
+//     default : null
+// }
+// shopsEstF53File : {
+//     type : Object,
+//     default : null
+// }
+// lwfRegF53File : {
+//     type : Object,
+//     default : null
+// }
+// profTaxF53File : {
+//     type : Object,
+//     default : null
+// }
 
 
 
