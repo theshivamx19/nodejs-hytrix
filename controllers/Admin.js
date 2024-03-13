@@ -5630,8 +5630,8 @@ export const createCompanyRegistration = async (request, response, next) => {
             pfnumber, pfdetails, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, OtherRegsitrationD1PFsubcodes, OtherRegsitrationD1ESIsubcodes, OtherRegsitrationD3NSP, OtherRegsitrationD3FL, OtherRegsitrationD3OTP, OtherRegsitrationD3WOE, OtherRegsitrationD3TD, OtherRegsitrationD3MSME, OtherRegsitrationD3BOCW, OtherRegsitrationD3IMW, esinumber, esidetails, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressremark, registrationD3, registrationD3details, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3remark, fpD3, fpD3details, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3remark, doregistrationptrD3,
             // E Starts 
             isEngaged, isEngagedDet, isEngagedRemark, contLabRegNoE, contLabRegNoEDet, contLabRegNoERemark, dateOfRegistrationE, dateOfRegEDet, dateOfRegERemark, noOfContractEmployeesE, noOfContractEmpEDet, noOfContractEmpERemark, noOfContractorsE, noOfContractorsEDet, noOfContractorsERemark, nameOfContractorE1, nameOfContractorsE1Det, nameOfContractorsE1Remark, nameOfEstablishmentE1, nameOfEstablishmentE1Det, nameOfEstablishmentE1Remark, regAddContractorE1, regAddContractorE1Det, regAddContractorE1Remark, agreementExpiryDateE2, agreementExpiryDateE2Det, agreementExpiryDateE2Remark, agreementRenewalDateE2, agreementRenewalDateE2Det, agreementRenewalDateE2Remark, natureOfWorkAgreementE2, natureOfWorkAgreementE2Det, natureOfWorkAgreementE2Remark, noOfEmpDeployedAgreementE2, noOfEmpDeployedAgreementE2Det, noOfEmpDeployedAgreementE2Remark, companyTypeLabourE3, companyTypeLabourE3Det, companyTypeLabourE3Remark, contractLabourLicNoE3, contractLabourLicNoE3Det, contractLabourLicNoE3Remark, contractLicDateE3, contractLicDateE3Det, contractLicDateE3Remark, contractExpiryDateE3, contractExpiryDateE3Det, contractExpiryDateE3Remark, contractRenewalDueDateE3, contractRenewalDueDateE3Det, contractRenewalDueDateE3Remark, noOfWorkersContractE3, noOfWorkersContractE3Det, noOfWorkersContractE3Remark, panContractorsE3, panContractorsE3Det, panContractorsE3Remark, gstContractorsE3, gstContractorsE3Det, gstContractorsE3Remark, pfRegContractorsE3, pfRegContractorsE3Det, pfRegContractorsE3Remark, esicRegContractorsE3, esicRegContractorsE3Det, esicRegContractorsE3Remark, shopsandEstContractorsE3, shopsandEstContractorsE3Det, shopsandEstContractorsE3Remark, lwfRegContractorsE3, lwfRegContractorsE3Det, lwfRegContractorsE3Remark, profTaxContractorsE3, profTaxContractorsE3Det, profTaxContractorsE3Remark,
-            // F Starts
-            noOfBranchesF, branchFDet, branchFRemark, branchNameF, branchNameFDet, branchNameFRemark, isFactorySEF, isFactorySEFDet, isFactorySEFRemark, contractorAddBranchF, contractorStateBranchF, contractorDistBranchF, contractorPinBranchF, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, branchOpeningDateFDet, branchOpeningDateFRemark, noOfEmpBranchF, noOfEmpBranchFDet, noOfEmpBranchFRemark, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, numberF2, numberF2Det, numberF2Remark, regDateF2, regDateF2Det, regDateF2Remark, expiryDateF2, expiryDateF2Det, expiryDateF2Remark, renewalDateF2, renewalDateF2Det, renewalDateF2Remark, managerNameF2, managerNameF2Det, managerNameF2Remark, noOfEmployeesF2, noOfEmployeesF2Det, noOfEmployeesF2Remark, maleF2, maleF2Det, maleF2Remark, femaleF2, femaleF2Det, femaleF2Remark, femaleF2FileissuingAuthorityF2, issuingAuthorityF2Det, issuingAuthorityF2Remark, numberF3, numberF3Det, numberF3Remark, regDateF3, regDateF3Det, regDateF3Remark, expiryDateF3, expiryDateF3Det, expiryDateF3Remark, renewalDateF3, renewalDateF3Det, renewalDateF3Remark, managerNameF3, managerNameF3Det, managerNameF3Remark, noOfEmployeesF3, noOfEmployeesF3Det, noOfEmployeesF3Remark, maleF3, maleF3Det, maleF3Remark, femaleF3, femaleF3Det, femaleF3Remark, femaleF3FileissuingAuthorityF3, issuingAuthorityF3Det, issuingAuthorityF3Remark, numberF4, numberF4Det, numberF4Remark, regDateF4, regDateF4Det, regDateF4Remark, issuingAuthorityF4, issuingAuthorityF4Det, issuingAuthorityF4Remark, numberF5, numberF5Det, numberF5Remark, regDateF5, regDateF5Det, regDateF5Remark, issuingAuthorityF5, issuingAuthorityF5Det, issuingAuthorityF5Remark, isContractLabourEngagedF5, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, regDateContractorF5Det, regDateContractorF5Remark, noOfContractEmpF5, noOfContractEmpF5Det, noOfContractEmpF5Remark, noOfContractorsF5, noOfContractorsF5Det, noOfContractorsF5Remark, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regAddContractorF51, regStateContractorF51, regDistContractorF51, regPinContractorF51, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, expiryDateF52Det, expiryDateF52Remark, renewalDateF52, renewalDateF52Det, renewalDateF52Remark, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, noOfEmpDeployedF52Det, noOfEmpDeployedF52Remark, companyTypeF53, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, licenseDateF53Det, licenseDateF53Remark, expiryDateF53, expiryDateF53Det, expiryDateF53Remark, renewalDateF53, renewalDateF53Det, renewalDateF53Remark, noOfWorkerF53, noOfWorkerF53Det, noOfWorkerF53Remark, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark, number54, number54Det, number54Remark, regDate54, regDate54Det, regDate54Remark, expiryDate54, expiryDate54Det, expiryDate54Remark, renewalDate54, renewalDate54Det, renewalDate54Remark, issuingAuthority54, issuingAuthority54Det, issuingAuthority54Remark, number55, number55Det, number55Remark, regDate55, regDate55Det, regDate55Remark, expiryDate55, expiryDate55Det, expiryDate55Remark, renewalDate55, renewalDate55Det, renewalDate55Remark, issuingAuthoritye55, issuingAuthoritye55Det, issuingAuthoritye55Remark, number56, number56Det, number56Remark, regDate56, regDate56Det, regDate56Remark, expiryDate56, expiryDate56Det, expiryDate56Remark, renewalDate56, renewalDate56Det, renewalDate56Remark, issuingAuthority56, issuingAuthority56Det, issuingAuthority56Remark, number57, number57Det, number57Remark, regDate57, regDate57Det, regDate57Remark, expiryDate57, expiryDate57Det, expiryDate57Remark, renewalDate57, renewalDate57Det, renewalDate57Remark, issuingAuthority57, issuingAuthority57Det, issuingAuthority57Remark,
+            // F Starts : in this renewalDateF52 was written 2 times as payload, so i removed one
+            branchaddress, branchstate, branchdistrict, branchpin, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regisocontractaddress, regisocontractstate, regisocontractdistrict, regisocontractpin, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark,
             // G Starts
 
             isLabourEngagedGDet, isLabourEngagedGRemark, noOfClientG, noOfClientGDet, noOfClientGRemark, clientG, clientGDet, clientGRemark, regOfficeAddClientG, regOfficeStateClientG, regOfficeDistClientG, regOfficePinClientG, regOfficeAddClientGDet, regOfficeAddClientGRemark, noOfLocContractWorkG11, noOfLocContractWorkG11Det, noOfLocContractWorkG11Remark, regAddOfClientG11, regStateOfClientG11, regDistOfClientG11, regPinOfClientG11, regAddOfClientG11Det, regAddOfClientG11Remark, agreementRefNoG12, agreementRefNoG12Det, agreementRefNoG12Remark, agreementDateG12, agreementDateG12Det, agreementDateG12Remark, agreementValidityG12, agreementValidityG12Det, agreementValidityG12Remark, noOfWorkersEngagedG12, noOfWorkersEngagedG12Det, noOfWorkersEngagedG12Remark, estCategoryG12, estCategoryG12Det, estCategoryG12Remark, isClraApplicableG12, noOfForm5G13, noOfForm5G13Det, noOfForm5G13Remark, form5DateG13, form5DateG13Det, form5DateG13Remark, workCommencedDateG13, workCommencedDateG13Det, workCommencedDateG13Remark, clraLicenseNoG13, clraLicenseNoG13Det, clraLicenseNoG13Remark, clraLicenseDateG13, clraLicenseDateG13Det, clraLicenseDateG13Remark, clraValidityG13, clraValidityG13Det, clraValidityG13Remark, clraRenewalDueG13, clraRenewalDueG13Det, clraRenewalDueG13Remark, clraNoOfContWorkersG13, clraNoOfContWorkersG13Det, clraNoOfContWorkersG13Remark, clraNoOfManagerRespG13, clraNoOfManagerRespG13Det, clraNoOfManagerRespG13Remark, clraLicenseFeeG13, clraLicenseFeeG13Det, clraLicenseFeeG13Remark, securityDepositG13, securityDepositG13Det, securityDepositG13Remark, contWorkCompletedDate, contWorkCompletedDateDet, contWorkCompletedDateRemark, contWorkComplitionNotice, contWorkComplitionNoticeDet, contWorkComplitionNoticeRemark, refundSecDepNotice, refundSecDepNoticeDet, refundSecDepNoticeRemark, licSurrenderedDate, licSurrenderedDateDet, licSurrenderedDateRemark
@@ -5999,82 +5999,30 @@ export const createCompanyRegistration = async (request, response, next) => {
                 isEngaged, isEngagedDet, isEngagedRemark, contLabRegNoE, contLabRegNoEDet, contLabRegNoERemark, dateOfRegistrationE, dateOfRegEDet, dateOfRegERemark, noOfContractEmployeesE, noOfContractEmpEDet, noOfContractEmpERemark, noOfContractorsE, noOfContractorsEDet, noOfContractorsERemark, nameOfContractorE1, nameOfContractorsE1Det, nameOfContractorsE1Remark, nameOfEstablishmentE1, nameOfEstablishmentE1Det, nameOfEstablishmentE1Remark, regAddContractorE1, regAddContractorE1Det, regAddContractorE1Remark, agreementExpiryDateE2, agreementExpiryDateE2Det, agreementExpiryDateE2Remark, agreementRenewalDateE2, agreementRenewalDateE2Det, agreementRenewalDateE2Remark, natureOfWorkAgreementE2, natureOfWorkAgreementE2Det, natureOfWorkAgreementE2Remark, noOfEmpDeployedAgreementE2, noOfEmpDeployedAgreementE2Det, noOfEmpDeployedAgreementE2Remark, companyTypeLabourE3, companyTypeLabourE3Det, companyTypeLabourE3Remark, contractLabourLicNoE3, contractLabourLicNoE3Det, contractLabourLicNoE3Remark, contractLicDateE3, contractLicDateE3Det, contractLicDateE3Remark, contractExpiryDateE3, contractExpiryDateE3Det, contractExpiryDateE3Remark, contractRenewalDueDateE3, contractRenewalDueDateE3Det, contractRenewalDueDateE3Remark, noOfWorkersContractE3, noOfWorkersContractE3Det, noOfWorkersContractE3Remark, panContractorsE3, panContractorsE3Det, panContractorsE3Remark, gstContractorsE3, gstContractorsE3Det, gstContractorsE3Remark, pfRegContractorsE3, pfRegContractorsE3Det, pfRegContractorsE3Remark, esicRegContractorsE3, esicRegContractorsE3Det, esicRegContractorsE3Remark, shopsandEstContractorsE3, shopsandEstContractorsE3Det, shopsandEstContractorsE3Remark, lwfRegContractorsE3, lwfRegContractorsE3Det, lwfRegContractorsE3Remark, profTaxContractorsE3, profTaxContractorsE3Det, profTaxContractorsE3Remark
             }
         }
-        // /* F Starts */
-        if (noOfBranchesF && branchNameF && isFactorySEF && contractorAddBranchF && contractorStateBranchF && contractorDistBranchF && contractorPinBranchF && contractorAddBranchFDet && branchOpeningDateF && noOfEmpBranchF && managerNameF1 && managerMobNoF1 && managerEmailF1 && managerAadharNoF1 && managerPanF1 && shopsEstLicenseF2 && numberF2 && regDateF2 && expiryDateF2 && renewalDateF2 && managerNameF2 && noOfEmployeesF2 && maleF2 && femaleF2 && femaleF2FileissuingAuthorityF2 && numberF3 && regDateF3 && expiryDateF3 && renewalDateF3 && managerNameF3 && noOfEmployeesF3 && maleF3 && femaleF3 && femaleF3FileissuingAuthorityF3 && numberF4 && regDateF4 && issuingAuthorityF4 && numberF5 && regDateF5 && issuingAuthorityF5 && isContractLabourEngagedF5 && contractLabRegNoF5 && contractLabRegNoF5Det && contractLabRegNoF5Remark && regDateContractorF5 && regDateContractorF5Det && regDateContractorF5Remark && noOfContractEmpF5 && noOfContractorsF5 && contractorNameF51 && establishmentNameF51 && regAddContractorF51 && regStateContractorF51 && regDistContractorF51 && regPinContractorF51 && expiryDateF52 && renewalDateF52 && natureOfWorkF52 && noOfEmpDeployedF52 && noOfEmpDeployedF52Det && noOfEmpDeployedF52Remark && companyTypeF53 && companyTypeF53Det && companyTypeF53Remark && contractLabLicNoF53 && licenseDateF53 && expiryDateF53 && renewalDateF53 && noOfWorkerF53 && panF53 && gstF53 && pfRegF53 && esicRegF53 && shopsEstF53 && lwfRegF53 && profTaxF53 && number54 && regDate54 && expiryDate54 && renewalDate54 && issuingAuthority54 && number55 && regDate55 && expiryDate55 && renewalDate55 &&  issuingAuthoritye55 && number56 && regDate56 && expiryDate56 && renewalDate56 && issuingAuthority56 && number57 && regDate57 && expiryDate57 &&  renewalDate57 && issuingAuthority57) {
+        // /* F Starts * 
+        if (branchaddress && branchstate && branchdistrict && branchpin && branchOpeningDateF && noOfEmpBranchF && managerNameF1 && managerMobNoF1 && managerEmailF1 && managerAadharNoF1 && managerPanF1 && shopsEstLicenseF2 && contractLabRegNoF5 && regDateContractorF5 && coOfContractEmpF5 && noOfContractorsF5 && contractorNameF51 && establishmentNameF51 && regisocontractaddress && regisocontractstate && regisocontractdistrict && regisocontractpin && expiryDateF52 && renewalDateF52 && natureOfWorkF52 && noOfEmpDeployedF52 && contractLabLicNoF53 && licenseDateF53 && expiryDateF53 && renewalDateF53 && noOfWorkerF53 && panF53 && gstF53 && pfRegF53 && esicRegF53 && shopsEstF53 && lwfRegF53 && profTaxF53) {
+            
             company = {
-                managerNameF1File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF1File")),
-                managerMobNoF1File: await uploadImage(request.files.find(img => img.fieldname === "managerMobNoF1File")),
-                managerEmailF1File: await uploadImage(request.files.find(img => img.fieldname === "managerEmailF1File")),
-                managerAadharNoF1File: await uploadImage(request.files.find(img => img.fieldname === "managerAadharNoF1File")),
-                managerPanF1File: await uploadImage(request.files.find(img => img.fieldname === "managerPanF1File")),
-                shopsEstLicenseF2File: await uploadImage(request.files.find(img => img.fieldname === "shopsEstLicenseF2File")),
-                numberF2File: await uploadImage(request.files.find(img => img.fieldname === "numberF2File")),
-                regDateF2File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF2File")),
-                expiryDateF2File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF2File")),
-                renewalDateF2File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF2File")),
-                managerNameF2File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF2File")),
-                noOfEmployeesF2File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmployeesF2File")),
-                maleF2File: await uploadImage(request.files.find(img => img.fieldname === "maleF2File")),
-                issuingAuthorityF2File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF2File")),
-                numberF3File: await uploadImage(request.files.find(img => img.fieldname === "numberF3File")),
-                regDateF3File: await uploadImage(request.files.find(img => img.fieldname === "regDateF3File")),
-                expiryDateF3File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF3File")),
-                renewalDateF3File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF3File")),
-                managerNameF3File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF3File")),
-                noOfEmployeesF3File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmployeesF3File")),
-                maleF3File: await uploadImage(request.files.find(img => img.fieldname === "maleF3File")),
-                issuingAuthorityF3File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF3File")),
-                numberF4File: await uploadImage(request.files.find(img => img.fieldname === "numberF4File")),
-                regDateF4File: await uploadImage(request.files.find(img => img.fieldname === "regDateF4File")),
-                issuingAuthorityF4File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF4File")),
-                numberF5File: await uploadImage(request.files.find(img => img.fieldname === "numberF5File")),
-                regDateF5File: await uploadImage(request.files.find(img => img.fieldname === "regDateF5File")),
-                issuingAuthorityF5File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF5File")),
-                contractLabRegNoF5File: await uploadImage(request.files.find(img => img.fieldname === "contractLabRegNoF5File")),
-                regDateContractorF5File: await uploadImage(request.files.find(img => img.fieldname === "regDateContractorF5File")),
-                noOfContractEmpF5File: await uploadImage(request.files.find(img => img.fieldname === "noOfContractEmpF5File")),
-                noOfContractorsF5File: await uploadImage(request.files.find(img => img.fieldname === "noOfContractorsF5File")),
-                contractorNameF51File: await uploadImage(request.files.find(img => img.fieldname === "contractorNameF51File")),
-                establishmentNameF51File: await uploadImage(request.files.find(img => img.fieldname === "establishmentNameF51File")),
-                regAddContractorF51File: await uploadImage(request.files.find(img => img.fieldname === "regAddContractorF51File")),
-                expiryDateF52File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF52File")),
-                renewalDateF52File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF52File")),
-                natureOfWorkF52File: await uploadImage(request.files.find(img => img.fieldname === "natureOfWorkF52File")),
-                noOfEmpDeployedF52File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmpDeployedF52File")),
-                companyTypeF53File: await uploadImage(request.files.find(img => img.fieldname === "companyTypeF53File")),
-                contractLabLicNoF53File: await uploadImage(request.files.find(img => img.fieldname === "contractLabLicNoF53File")),
-                licenseDateF53File: await uploadImage(request.files.find(img => img.fieldname === "licenseDateF53File")),
-                expiryDateF53File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF53File")),
-                renewalDateF53File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF53File")),
-                noOfWorkerF53File: await uploadImage(request.files.find(img => img.fieldname === "noOfWorkerF53File")),
-                panF53File: await uploadImage(request.files.find(img => img.fieldname === "gstF53File")),
-                gstF53File: await uploadImage(request.files.find(img => img.fieldname === "gstF53File")),
-                pfRegF53File: await uploadImage(request.files.find(img => img.fieldname === "pfRegF53File")),
-                esicRegF53File: await uploadImage(request.files.find(img => img.fieldname === "esicRegF53File")),
-                shopsEstF53File: await uploadImage(request.files.find(img => img.fieldname === "shopsEstF53File")),
-                lwfRegF53File: await uploadImage(request.files.find(img => img.fieldname === "lwfRegF53File")),
-                profTaxF53File: await uploadImage(request.files.find(img => img.fieldname === "profTaxF53File")),
-                number54File: await uploadImage(request.files.find(img => img.fieldname === "number54File")),
-                regDate54File: await uploadImage(request.files.find(img => img.fieldname === "regDate54File")),
-                expiryDate54File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate54File")),
-                renewalDate54File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate54File")),
-                issuingAuthority54File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthority54File")),
-                number55File: await uploadImage(request.files.find(img => img.fieldname === "number55File")),
-                regDate55File: await uploadImage(request.files.find(img => img.fieldname === "regDate55File")),
-                expiryDate55File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate55File")),
-                renewalDate55File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate55File")),
-                issuingAuthoritye55File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthoritye55File")),
-                number56File: await uploadImage(request.files.find(img => img.fieldname === "number56File")),
-                regDate56File: await uploadImage(request.files.find(img => img.fieldname === "regDate56File")),
-                expiryDate56File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate56File")),
-                renewalDate56File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate56File")),
-                issuingAuthority56File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthority56File")),
-                number57File: await uploadImage(request.files.find(img => img.fieldname === "number57File")),
-                regDate57File: await uploadImage(request.files.find(img => img.fieldname === "regDate57File")),
-                expiryDate57File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate57File")),
-                renewalDate57File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate57File")),
-                issuingAuthority57File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthority57File")),
-                noOfBranchesF, branchFDet, branchFRemark, branchNameF, branchNameFDet, branchNameFRemark, isFactorySEF, isFactorySEFDet, isFactorySEFRemark, contractorAddBranchF, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, branchOpeningDateFDet, branchOpeningDateFRemark, noOfEmpBranchF, noOfEmpBranchFDet, noOfEmpBranchFRemark, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, numberF2, numberF2Det, numberF2Remark, regDateF2, regDateF2Det, regDateF2Remark, expiryDateF2, expiryDateF2Det, expiryDateF2Remark, renewalDateF2, renewalDateF2Det, renewalDateF2Remark, managerNameF2, managerNameF2Det, managerNameF2Remark, noOfEmployeesF2, noOfEmployeesF2Det, noOfEmployeesF2Remark, maleF2, maleF2Det, maleF2Remark, femaleF2, femaleF2Det, femaleF2Remark, femaleF2FileissuingAuthorityF2, issuingAuthorityF2Det, issuingAuthorityF2Remark, numberF3, numberF3Det, numberF3Remark, regDateF3, regDateF3Det, regDateF3Remark, expiryDateF3, expiryDateF3Det, expiryDateF3Remark, renewalDateF3, renewalDateF3Det, renewalDateF3Remark, managerNameF3, managerNameF3Det, managerNameF3Remark, noOfEmployeesF3, noOfEmployeesF3Det, noOfEmployeesF3Remark, maleF3, maleF3Det, maleF3Remark, femaleF3, femaleF3Det, femaleF3Remark, femaleF3FileissuingAuthorityF3, issuingAuthorityF3Det, issuingAuthorityF3Remark, numberF4, numberF4Det, numberF4Remark, regDateF4, regDateF4Det, regDateF4Remark, issuingAuthorityF4, issuingAuthorityF4Det, issuingAuthorityF4Remark, numberF5, numberF5Det, numberF5Remark, regDateF5, regDateF5Det, regDateF5Remark, issuingAuthorityF5, issuingAuthorityF5Det, issuingAuthorityF5Remark, isContractLabourEngagedF5, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, regDateContractorF5Det, regDateContractorF5Remark, noOfContractEmpF5, noOfContractEmpF5Det, noOfContractEmpF5Remark, noOfContractorsF5, noOfContractorsF5Det, noOfContractorsF5Remark, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regAddContractorF51, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, expiryDateF52Det, expiryDateF52Remark, renewalDateF52, renewalDateF52Det, renewalDateF52Remark, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, noOfEmpDeployedF52Det, noOfEmpDeployedF52Remark, companyTypeF53, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, licenseDateF53Det, licenseDateF53Remark, expiryDateF53, expiryDateF53Det, expiryDateF53Remark, renewalDateF53, renewalDateF53Det, renewalDateF53Remark, noOfWorkerF53, noOfWorkerF53Det, noOfWorkerF53Remark, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark, number54, number54Det, number54Remark, regDate54, regDate54Det, regDate54Remark, expiryDate54, expiryDate54Det, expiryDate54Remark, renewalDate54, renewalDate54Det, renewalDate54Remark, issuingAuthority54, issuingAuthority54Det, issuingAuthority54Remark, number55, number55Det, number55Remark, regDate55, regDate55Det, regDate55Remark, expiryDate55, expiryDate55Det, expiryDate55Remark, renewalDate55, renewalDate55Det, renewalDate55Remark, issuingAuthoritye55, issuingAuthoritye55Det, issuingAuthoritye55Remark, number56, number56Det, number56Remark, regDate56, regDate56Det, regDate56Remark, expiryDate56, expiryDate56Det, expiryDate56Remark, renewalDate56, renewalDate56Det, renewalDate56Remark, issuingAuthority56, issuingAuthority56Det, issuingAuthority56Remark, number57, number57Det, number57Remark, regDate57, regDate57Det, regDate57Remark, expiryDate57, expiryDate57Det, expiryDate57Remark, renewalDate57, renewalDate57Det, renewalDate57Remark, issuingAuthority57, issuingAuthority57Det, issuingAuthority57Remark,
+                contractorAddBranchFFile : await uploadImage(request.files.find(img => img.fieldname === "contractorAddBranchFFile")),
+                managerNameF1File : await uploadImage(request.files.find(img => img.fieldname === "managerNameF1File")),
+                managerAadharNoF1File : await uploadImage(request.files.find(img => img.fieldname === "managerAadharNoF1File")),
+                managerPanF1File : await uploadImage(request.files.find(img => img.fieldname === "shopsEstLicenseF2File")),
+                shopsEstLicenseF2File : await uploadImage(request.files.find(img => img.fieldname === "shopsEstLicenseF2File")),
+                contractLabRegNoF5File : await uploadImage(request.files.find(img => img.fieldname === "contractLabRegNoF5File")),
+                contractorNameF51File : await uploadImage(request.files.find(img => img.fieldname === "contractorNameF51File")),
+                establishmentNameF51File : await uploadImage(request.files.find(img => img.fieldname === "establishmentNameF51File")),
+                regAddContractorF51File : await uploadImage(request.files.find(img => img.fieldname === "regAddContractorF51File")),
+                natureOfWorkF52File : await uploadImage(request.files.find(img => img.fieldname === "natureOfWorkF52File")),
+                companyTypeF53File : await uploadImage(request.files.find(img => img.fieldname === "companyTypeF53File")),
+                contractLabLicNoF53File : await uploadImage(request.files.find(img => img.fieldname === "contractLabLicNoF53File")),
+                panF53File : await uploadImage(request.files.find(img => img.fieldname === "panF53File")),
+                gstF53File : await uploadImage(request.files.find(img => img.fieldname === "gstF53File")),
+                pfRegF53File : await uploadImage(request.files.find(img => img.fieldname === "pfRegF53File")),
+                esicRegF53File : await uploadImage(request.files.find(img => img.fieldname === "esicRegF53File")),
+                shopsEstF53File : await uploadImage(request.files.find(img => img.fieldname === "shopsEstF53File")),
+                lwfRegF53File : await uploadImage(request.files.find(img => img.fieldname === "lwfRegF53File")),
+                profTaxF53File : await uploadImage(request.files.find(img => img.fieldname === "profTaxF53File")),
+                branchaddress, branchstate, branchdistrict, branchpin, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regisocontractaddress, regisocontractstate, regisocontractdistrict, regisocontractpin, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark,
                 F1branch : dataF1branch, 
                 F1RLicense : dataF1RLicense, 
                 F1FL : dataF1FL, 
@@ -6327,6 +6275,140 @@ licSurrenderedDateFile : await uploadImage(request.files.find(img => img.fieldna
     //         next(error)
     //     }
     // }
+
+    // f new
+
+//  branchaddress, branchstate, branchdistrict, branchpin, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regisocontractaddress, regisocontractstate, regisocontractdistrict, regisocontractpin, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark,
+
+// F1branch[0][name]: Prayagraj
+// F1branch[0][details]: sdsds
+// F1branch[0][remarks]: sdsddsd
+// F1branch[1][name]: NOIDA
+// F1branch[1][details]: dsd
+// F1branch[1][remarks]: sdsds
+// F1RLicense[0][dor]: 2024-03-12
+// F1RLicense[0][doe]: 2024-03-12
+// F1RLicense[0][doddr]: 2024-03-12
+// F1RLicense[0][managernamelicense]: asasa
+// F1RLicense[0][managerlicensedetails]: asasa
+// F1RLicense[0][managerlicenseremark]: dsdssds
+// F1RLicense[0][noe]: 1
+// F1RLicense[0][nom]: 1
+// F1RLicense[0][nof]: 0
+// F1RLicense[0][issuingauth]: asasasa
+// F1RLicense[0][issuingauthdetails]: sasas
+// F1RLicense[0][issuingauthremark]: asas
+// F1FL[0][dor]: 2024-03-12
+// F1FL[0][doe]: 2024-03-12
+// F1FL[0][doddr]: 2024-03-12
+// F1FL[0][managernamelicense]: asas
+// F1FL[0][managerlicensedetails]: asasa
+// F1FL[0][managerlicenseremark]: dsdsd
+// F1FL[0][noe]: 1
+// F1FL[0][nom]: 1
+// F1FL[0][nof]: 0
+// F1FL[0][issuingauth]: asasa
+// F1FL[0][issuingauthdetails]: asasa
+// F1FL[0][issuingauthremark]: asasa
+// F1FP[0][dor]: 2024-03-12
+// F1FP[0][issuingauth]: asasas
+// F1FP[0][issuingauthdetails]: asasas
+// F1FP[0][issuingauthremark]: asasas
+// F54NSP[0][dor]: 2024-03-12
+// F54NSP[0][doe]: 2024-03-12
+// F54NSP[0][doddr]: 2024-03-12
+// F54NSP[0][issuingauth]: asasa
+// F54NSP[0][issuingauthdetails]: asas
+// F54NSP[0][issuingauthremark]: saasa
+// F54OTP[0][dor]: 2024-03-12
+// F54OTP[0][doe]: 2024-03-12
+// F54OTP[0][doddr]: 2024-03-12
+// F54OTP[0][issuingauth]: asa
+// F54OTP[0][issuingauthdetails]: ass
+// F54OTP[0][issuingauthremark]: asas
+// F54WOE[0][dor]: 2024-03-12
+// F54WOE[0][doe]: 2024-03-12
+// F54WOE[0][doddr]: 2024-03-12
+// F54WOE[0][issuingauth]: sasa
+// F54WOE[0][issuingauthdetails]: asasas
+// F54WOE[0][issuingauthremark]: 
+// F54TL[0][dor]: 2024-03-12
+// F54TL[0][doe]: 2024-03-12
+// F54TL[0][doddr]: 2024-03-13
+// F54TL[0][issuingauth]: sdsds
+// F54TL[0][issuingauthdetails]: sdsd
+// F54TL[0][issuingauthremark]: sdsds
+
+
+
+// branchaddress,
+// branchstate,
+// branchdistrict,
+// branchpin,
+// branchOpeningDateF,
+// noOfEmpBranchF,
+// managerNameF1,
+// managerMobNoF1,
+// managerEmailF1,
+// managerAadharNoF1,
+// managerPanF1,
+// shopsEstLicenseF2,
+// contractLabRegNoF5,
+// regDateContractorF5,
+// coOfContractEmpF5,
+// noOfContractorsF5,
+// contractorNameF51,
+// establishmentNameF51,
+// regisocontractaddress,
+// regisocontractstate,
+// regisocontractdistrict,
+// regisocontractpin,
+// expiryDateF52,
+// renewalDateF52,
+// natureOfWorkF52,
+// noOfEmpDeployedF52,
+// renewalDateF52,
+// contractLabLicNoF53,
+// licenseDateF53,
+// expiryDateF53,
+// renewalDateF53,
+// noOfWorkerF53,
+// panF53,
+// gstF53,
+// pfRegF53,
+// esicRegF53,
+// shopsEstF53,
+// lwfRegF53,
+// profTaxF53,
+
+// F new file
+
+// contractorAddBranchFFile,
+// managerNameF1File,
+// managerAadharNoF1File,
+// managerPanF1File,
+// shopsEstLicenseF2File,
+// contractLabRegNoF5File,
+// contractorNameF51File,
+// establishmentNameF51File,
+// regAddContractorF51File,
+// natureOfWorkF52File,
+// companyTypeF53File,
+// contractLabLicNoF53File,
+// panF53File,
+// gstF53File,
+// pfRegF53File,
+// esicRegF53File,
+// shopsEstF53File,
+// lwfRegF53File,
+// profTaxF53File,
+
+
+
+
+
+
+
 
 
     // E File
