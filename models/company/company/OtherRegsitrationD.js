@@ -218,7 +218,7 @@ const otherRegistrationDSchema = new mongoose.Schema({
         type: String,
         defualt:null,
         trim: true,
-        index: true
+        index: true,
     },
     fpD3image: {
         type: Object
