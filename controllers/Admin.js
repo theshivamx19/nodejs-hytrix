@@ -5632,7 +5632,9 @@ export const createCompanyRegistration = async (request, response, next) => {
             isEngaged, isEngagedDet, isEngagedRemark, contLabRegNoE, contLabRegNoEDet, contLabRegNoERemark, dateOfRegistrationE, dateOfRegEDet, dateOfRegERemark, noOfContractEmployeesE, noOfContractEmpEDet, noOfContractEmpERemark, noOfContractorsE, noOfContractorsEDet, noOfContractorsERemark, nameOfContractorE1, nameOfContractorsE1Det, nameOfContractorsE1Remark, nameOfEstablishmentE1, nameOfEstablishmentE1Det, nameOfEstablishmentE1Remark, regAddContractorE1, regAddContractorE1Det, regAddContractorE1Remark, agreementExpiryDateE2, agreementExpiryDateE2Det, agreementExpiryDateE2Remark, agreementRenewalDateE2, agreementRenewalDateE2Det, agreementRenewalDateE2Remark, natureOfWorkAgreementE2, natureOfWorkAgreementE2Det, natureOfWorkAgreementE2Remark, noOfEmpDeployedAgreementE2, noOfEmpDeployedAgreementE2Det, noOfEmpDeployedAgreementE2Remark, companyTypeLabourE3, companyTypeLabourE3Det, companyTypeLabourE3Remark, contractLabourLicNoE3, contractLabourLicNoE3Det, contractLabourLicNoE3Remark, contractLicDateE3, contractLicDateE3Det, contractLicDateE3Remark, contractExpiryDateE3, contractExpiryDateE3Det, contractExpiryDateE3Remark, contractRenewalDueDateE3, contractRenewalDueDateE3Det, contractRenewalDueDateE3Remark, noOfWorkersContractE3, noOfWorkersContractE3Det, noOfWorkersContractE3Remark, panContractorsE3, panContractorsE3Det, panContractorsE3Remark, gstContractorsE3, gstContractorsE3Det, gstContractorsE3Remark, pfRegContractorsE3, pfRegContractorsE3Det, pfRegContractorsE3Remark, esicRegContractorsE3, esicRegContractorsE3Det, esicRegContractorsE3Remark, shopsandEstContractorsE3, shopsandEstContractorsE3Det, shopsandEstContractorsE3Remark, lwfRegContractorsE3, lwfRegContractorsE3Det, lwfRegContractorsE3Remark, profTaxContractorsE3, profTaxContractorsE3Det, profTaxContractorsE3Remark,
             // F Starts
             noOfBranchesF, branchFDet, branchFRemark, branchNameF, branchNameFDet, branchNameFRemark, isFactorySEF, isFactorySEFDet, isFactorySEFRemark, contractorAddBranchF, contractorStateBranchF, contractorDistBranchF, contractorPinBranchF, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, branchOpeningDateFDet, branchOpeningDateFRemark, noOfEmpBranchF, noOfEmpBranchFDet, noOfEmpBranchFRemark, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, numberF2, numberF2Det, numberF2Remark, regDateF2, regDateF2Det, regDateF2Remark, expiryDateF2, expiryDateF2Det, expiryDateF2Remark, renewalDateF2, renewalDateF2Det, renewalDateF2Remark, managerNameF2, managerNameF2Det, managerNameF2Remark, noOfEmployeesF2, noOfEmployeesF2Det, noOfEmployeesF2Remark, maleF2, maleF2Det, maleF2Remark, femaleF2, femaleF2Det, femaleF2Remark, femaleF2FileissuingAuthorityF2, issuingAuthorityF2Det, issuingAuthorityF2Remark, numberF3, numberF3Det, numberF3Remark, regDateF3, regDateF3Det, regDateF3Remark, expiryDateF3, expiryDateF3Det, expiryDateF3Remark, renewalDateF3, renewalDateF3Det, renewalDateF3Remark, managerNameF3, managerNameF3Det, managerNameF3Remark, noOfEmployeesF3, noOfEmployeesF3Det, noOfEmployeesF3Remark, maleF3, maleF3Det, maleF3Remark, femaleF3, femaleF3Det, femaleF3Remark, femaleF3FileissuingAuthorityF3, issuingAuthorityF3Det, issuingAuthorityF3Remark, numberF4, numberF4Det, numberF4Remark, regDateF4, regDateF4Det, regDateF4Remark, issuingAuthorityF4, issuingAuthorityF4Det, issuingAuthorityF4Remark, numberF5, numberF5Det, numberF5Remark, regDateF5, regDateF5Det, regDateF5Remark, issuingAuthorityF5, issuingAuthorityF5Det, issuingAuthorityF5Remark, isContractLabourEngagedF5, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, regDateContractorF5Det, regDateContractorF5Remark, noOfContractEmpF5, noOfContractEmpF5Det, noOfContractEmpF5Remark, noOfContractorsF5, noOfContractorsF5Det, noOfContractorsF5Remark, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regAddContractorF51, regStateContractorF51, regDistContractorF51, regPinContractorF51, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, expiryDateF52Det, expiryDateF52Remark, renewalDateF52, renewalDateF52Det, renewalDateF52Remark, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, noOfEmpDeployedF52Det, noOfEmpDeployedF52Remark, companyTypeF53, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, licenseDateF53Det, licenseDateF53Remark, expiryDateF53, expiryDateF53Det, expiryDateF53Remark, renewalDateF53, renewalDateF53Det, renewalDateF53Remark, noOfWorkerF53, noOfWorkerF53Det, noOfWorkerF53Remark, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark, number54, number54Det, number54Remark, regDate54, regDate54Det, regDate54Remark, expiryDate54, expiryDate54Det, expiryDate54Remark, renewalDate54, renewalDate54Det, renewalDate54Remark, issuingAuthority54, issuingAuthority54Det, issuingAuthority54Remark, number55, number55Det, number55Remark, regDate55, regDate55Det, regDate55Remark, expiryDate55, expiryDate55Det, expiryDate55Remark, renewalDate55, renewalDate55Det, renewalDate55Remark, issuingAuthoritye55, issuingAuthoritye55Det, issuingAuthoritye55Remark, number56, number56Det, number56Remark, regDate56, regDate56Det, regDate56Remark, expiryDate56, expiryDate56Det, expiryDate56Remark, renewalDate56, renewalDate56Det, renewalDate56Remark, issuingAuthority56, issuingAuthority56Det, issuingAuthority56Remark, number57, number57Det, number57Remark, regDate57, regDate57Det, regDate57Remark, expiryDate57, expiryDate57Det, expiryDate57Remark, renewalDate57, renewalDate57Det, renewalDate57Remark, issuingAuthority57, issuingAuthority57Det, issuingAuthority57Remark,
+            // G Starts
 
+            isLabourEngagedGDet, isLabourEngagedGRemark, noOfClientG, noOfClientGDet, noOfClientGRemark, clientG, clientGDet, clientGRemark, regOfficeAddClientG, regOfficeStateClientG, regOfficeDistClientG, regOfficePinClientG, regOfficeAddClientGDet, regOfficeAddClientGRemark, noOfLocContractWorkG11, noOfLocContractWorkG11Det, noOfLocContractWorkG11Remark, regAddOfClientG11, regStateOfClientG11, regDistOfClientG11, regPinOfClientG11, regAddOfClientG11Det, regAddOfClientG11Remark, agreementRefNoG12, agreementRefNoG12Det, agreementRefNoG12Remark, agreementDateG12, agreementDateG12Det, agreementDateG12Remark, agreementValidityG12, agreementValidityG12Det, agreementValidityG12Remark, noOfWorkersEngagedG12, noOfWorkersEngagedG12Det, noOfWorkersEngagedG12Remark, estCategoryG12, estCategoryG12Det, estCategoryG12Remark, isClraApplicableG12, noOfForm5G13, noOfForm5G13Det, noOfForm5G13Remark, form5DateG13, form5DateG13Det, form5DateG13Remark, workCommencedDateG13, workCommencedDateG13Det, workCommencedDateG13Remark, clraLicenseNoG13, clraLicenseNoG13Det, clraLicenseNoG13Remark, clraLicenseDateG13, clraLicenseDateG13Det, clraLicenseDateG13Remark, clraValidityG13, clraValidityG13Det, clraValidityG13Remark, clraRenewalDueG13, clraRenewalDueG13Det, clraRenewalDueG13Remark, clraNoOfContWorkersG13, clraNoOfContWorkersG13Det, clraNoOfContWorkersG13Remark, clraNoOfManagerRespG13, clraNoOfManagerRespG13Det, clraNoOfManagerRespG13Remark, clraLicenseFeeG13, clraLicenseFeeG13Det, clraLicenseFeeG13Remark, securityDepositG13, securityDepositG13Det, securityDepositG13Remark, contWorkCompletedDate, contWorkCompletedDateDet, contWorkCompletedDateRemark, contWorkComplitionNotice, contWorkComplitionNoticeDet, contWorkComplitionNoticeRemark, refundSecDepNotice, refundSecDepNoticeDet, refundSecDepNoticeRemark, licSurrenderedDate, licSurrenderedDateDet, licSurrenderedDateRemark
         } = data;
         // pfnumber, pfaddressimage
         let company, newCompany;
@@ -5881,6 +5883,16 @@ export const createCompanyRegistration = async (request, response, next) => {
                 }
             }))
         }
+        // ***********************-------- G Dynamic Image Handling ----------***********************
+        if(GCC4TL !== undefined && GCC4TL.length > 0){
+            dataGCC4TL = await Promise.all(GCC4TL.map(async (item, index)=>{
+                return {
+                    ...item,
+                    clientimage : await uploadImage(request.files.find(img => img.fieldname === `GCC4TL[${index}][clientimage]`)),
+                    clientaddressimage : await uploadImage(request.files.find(img => img.fieldname === `GCC4TL[${index}][clientaddressimage]`))
+                }
+            }))
+        }
 
         if (companyname && companyaddress && companystate && companydistrict && companypin && companytype && companycategory && companynatureofbusiness) {
             // A Starts
@@ -5958,7 +5970,6 @@ export const createCompanyRegistration = async (request, response, next) => {
         // E Starts 
 
         if (isEngaged && isEngagedDet && isEngagedRemark && contLabRegNoE && contLabRegNoEDet && contLabRegNoERemark && dateOfRegistrationE && dateOfRegEDet && dateOfRegERemark && noOfContractEmployeesE && noOfContractEmpEDet && noOfContractEmpERemark && noOfContractorsE && noOfContractorsEDet && noOfContractorsERemark && nameOfContractorE1 && nameOfContractorsE1Det && nameOfContractorsE1Remark && nameOfEstablishmentE1 && nameOfEstablishmentE1Det && nameOfEstablishmentE1Remark && regAddContractorE1 && regAddContractorE1Det && regAddContractorE1Remark && agreementExpiryDateE2 && agreementExpiryDateE2Det && agreementExpiryDateE2Remark && agreementRenewalDateE2 && agreementRenewalDateE2Det && agreementRenewalDateE2Remark && natureOfWorkAgreementE2 && natureOfWorkAgreementE2Det && natureOfWorkAgreementE2Remark && noOfEmpDeployedAgreementE2 && noOfEmpDeployedAgreementE2Det && noOfEmpDeployedAgreementE2Remark && companyTypeLabourE3 && companyTypeLabourE3Det && companyTypeLabourE3Remark && contractLabourLicNoE3 && contractLabourLicNoE3Det && contractLabourLicNoE3Remark && contractLicDateE3 && contractLicDateE3Det && contractLicDateE3Remark && contractExpiryDateE3 && contractExpiryDateE3Det && contractExpiryDateE3Remark && contractRenewalDueDateE3 && contractRenewalDueDateE3Det && contractRenewalDueDateE3Remark && noOfWorkersContractE3 && noOfWorkersContractE3Det && noOfWorkersContractE3Remark && panContractorsE3 && panContractorsE3Det && panContractorsE3Remark && gstContractorsE3 && gstContractorsE3Det && gstContractorsE3Remark && pfRegContractorsE3 && pfRegContractorsE3Det && pfRegContractorsE3Remark && esicRegContractorsE3 && esicRegContractorsE3Det && esicRegContractorsE3Remark && shopsandEstContractorsE3 && shopsandEstContractorsE3Det && shopsandEstContractorsE3Remark && lwfRegContractorsE3 && lwfRegContractorsE3Det && lwfRegContractorsE3Remark && profTaxContractorsE3 && profTaxContractorsE3Det && profTaxContractorsE3Remark) {
-        
             company = {
                 isEngagedFile: await uploadImage(request.files.find(img => img.fieldname === "isEngagedFile")),
                 contLabRegNoEFile: await uploadImage(request.files.find(img => img.fieldname === "contLabRegNoEFile")),
@@ -5990,7 +6001,6 @@ export const createCompanyRegistration = async (request, response, next) => {
         }
         // /* F Starts */
         if (noOfBranchesF && branchNameF && isFactorySEF && contractorAddBranchF && contractorStateBranchF && contractorDistBranchF && contractorPinBranchF && contractorAddBranchFDet && branchOpeningDateF && noOfEmpBranchF && managerNameF1 && managerMobNoF1 && managerEmailF1 && managerAadharNoF1 && managerPanF1 && shopsEstLicenseF2 && numberF2 && regDateF2 && expiryDateF2 && renewalDateF2 && managerNameF2 && noOfEmployeesF2 && maleF2 && femaleF2 && femaleF2FileissuingAuthorityF2 && numberF3 && regDateF3 && expiryDateF3 && renewalDateF3 && managerNameF3 && noOfEmployeesF3 && maleF3 && femaleF3 && femaleF3FileissuingAuthorityF3 && numberF4 && regDateF4 && issuingAuthorityF4 && numberF5 && regDateF5 && issuingAuthorityF5 && isContractLabourEngagedF5 && contractLabRegNoF5 && contractLabRegNoF5Det && contractLabRegNoF5Remark && regDateContractorF5 && regDateContractorF5Det && regDateContractorF5Remark && noOfContractEmpF5 && noOfContractorsF5 && contractorNameF51 && establishmentNameF51 && regAddContractorF51 && regStateContractorF51 && regDistContractorF51 && regPinContractorF51 && expiryDateF52 && renewalDateF52 && natureOfWorkF52 && noOfEmpDeployedF52 && noOfEmpDeployedF52Det && noOfEmpDeployedF52Remark && companyTypeF53 && companyTypeF53Det && companyTypeF53Remark && contractLabLicNoF53 && licenseDateF53 && expiryDateF53 && renewalDateF53 && noOfWorkerF53 && panF53 && gstF53 && pfRegF53 && esicRegF53 && shopsEstF53 && lwfRegF53 && profTaxF53 && number54 && regDate54 && expiryDate54 && renewalDate54 && issuingAuthority54 && number55 && regDate55 && expiryDate55 && renewalDate55 &&  issuingAuthoritye55 && number56 && regDate56 && expiryDate56 && renewalDate56 && issuingAuthority56 && number57 && regDate57 && expiryDate57 &&  renewalDate57 && issuingAuthority57) {
-           
             company = {
                 managerNameF1File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF1File")),
                 managerMobNoF1File: await uploadImage(request.files.find(img => img.fieldname === "managerMobNoF1File")),
@@ -6075,15 +6085,47 @@ export const createCompanyRegistration = async (request, response, next) => {
                 F54TL : dataF54TL
 
             }
-        }
-    
+        } 
+        // G Starts
+        if(isLabourEngagedG && noOfClientG && clientG && regOfficeAddClientG && pincode && noOfLocContractWorkG11 && regAddOfClientG11 && pincode && agreementRefNoG12 && agreementDateG12 && agreementValidityG12 && noOfWorkersEngagedG12 && estCategoryG12 && isClraApplicableG12 && noOfForm5G13 && form5DateG13 && workCommencedDateG13 && clraLicenseNoG13 && clraLicenseDateG13 && clraValidityG13 && clraRenewalDueG13 && clraNoOfContWorkersG13 && clraNoOfManagerRespG13 && clraLicenseFeeG13 && securityDepositG13 && contWorkCompletedDate && contWorkComplitionNotice && refundSecDepNotice && licSurrenderedDate&&regOfficeAddClientG&& regOfficeStateClientG&& regOfficeDistClientG&& regOfficePinClientG&& regAddOfClientG11&& regStateOfClientG11&& regDistOfClientG11&& regPinOfClientG11 ){
+            company = {
+                isLabourEngagedGFile : await uploadImage(request.files.find(img => img.fieldname === "isLabourEngagedGFile")),
+noOfClientGFile : await uploadImage(request.files.find(img => img.fieldname === "noOfClientGFile")),
+clientGFile : await uploadImage(request.files.find(img => img.fieldname === "clientGFile")),
+regOfficeAddClientGFile : await uploadImage(request.files.find(img => img.fieldname === "regOfficeAddClientGFile")),
+noOfLocContractWorkG11File : await uploadImage(request.files.find(img => img.fieldname === "noOfLocContractWorkG11File")),
+regAddOfClientG11File : await uploadImage(request.files.find(img => img.fieldname === "regAddOfClientG11File")),
+agreementRefNoG12File : await uploadImage(request.files.find(img => img.fieldname === "agreementRefNoG12File")),
+agreementDateG12File : await uploadImage(request.files.find(img => img.fieldname === "agreementDateG12File")),
+agreementValidityG12File : await uploadImage(request.files.find(img => img.fieldname === "agreementValidityG12File")),
+noOfWorkersEngagedG12File : await uploadImage(request.files.find(img => img.fieldname === "noOfWorkersEngagedG12File")),
+estCategoryG12File : await uploadImage(request.files.find(img => img.fieldname === "estCategoryG12File")),
+noOfForm5G13File : await uploadImage(request.files.find(img => img.fieldname === "noOfForm5G13File")),
+form5DateG13File : await uploadImage(request.files.find(img => img.fieldname === "form5DateG13File")),
+workCommencedDateG13File : await uploadImage(request.files.find(img => img.fieldname === "workCommencedDateG13File")),
+clraLicenseNoG13File : await uploadImage(request.files.find(img => img.fieldname === "clraLicenseNoG13File")),
+clraLicenseDateG13File : await uploadImage(request.files.find(img => img.fieldname === "clraLicenseDateG13File")),
+clraValidityG13File : await uploadImage(request.files.find(img => img.fieldname === "clraValidityG13File")),
+clraRenewalDueG13File : await uploadImage(request.files.find(img => img.fieldname === "clraRenewalDueG13File")),
+clraNoOfContWorkersG13File : await uploadImage(request.files.find(img => img.fieldname === "clraNoOfContWorkersG13File")),
+clraNoOfManagerRespG13File : await uploadImage(request.files.find(img => img.fieldname === "clraNoOfManagerRespG13File")),
+clraLicenseFeeG13File : await uploadImage(request.files.find(img => img.fieldname === "clraLicenseFeeG13File")),
+securityDepositG13File : await uploadImage(request.files.find(img => img.fieldname === "securityDepositG13File")),
+contWorkCompletedDateFile : await uploadImage(request.files.find(img => img.fieldname === "contWorkCompletedDateFile")),
+contWorkComplitionNoticeFile : await uploadImage(request.files.find(img => img.fieldname === "contWorkComplitionNoticeFile")),
+refundSecDepNoticeFile : await uploadImage(request.files.find(img => img.fieldname === "refundSecDepNoticeFile")),
+licSurrenderedDateFile : await uploadImage(request.files.find(img => img.fieldname === "licSurrenderedDateFile")),
+                isLabourEngagedG, isLabourEngagedGDet, isLabourEngagedGRemark, noOfClientG, noOfClientGDet, noOfClientGRemark, clientG, clientGDet, clientGRemark, regOfficeAddClientG, regOfficeStateClientG, regOfficeDistClientG, regOfficePinClientG, regOfficeAddClientGDet, regOfficeAddClientGRemark, noOfLocContractWorkG11, noOfLocContractWorkG11Det, noOfLocContractWorkG11Remark, regAddOfClientG11, regStateOfClientG11, regDistOfClientG11, regPinOfClientG11, regAddOfClientG11Det, regAddOfClientG11Remark, agreementRefNoG12, agreementRefNoG12Det, agreementRefNoG12Remark, agreementDateG12, agreementDateG12Det, agreementDateG12Remark, agreementValidityG12, agreementValidityG12Det, agreementValidityG12Remark, noOfWorkersEngagedG12, noOfWorkersEngagedG12Det, noOfWorkersEngagedG12Remark, estCategoryG12, estCategoryG12Det, estCategoryG12Remark, isClraApplicableG12, noOfForm5G13, noOfForm5G13Det, noOfForm5G13Remark, form5DateG13, form5DateG13Det, form5DateG13Remark, workCommencedDateG13, workCommencedDateG13Det, workCommencedDateG13Remark, clraLicenseNoG13, clraLicenseNoG13Det, clraLicenseNoG13Remark, clraLicenseDateG13, clraLicenseDateG13Det, clraLicenseDateG13Remark, clraValidityG13, clraValidityG13Det, clraValidityG13Remark, clraRenewalDueG13, clraRenewalDueG13Det, clraRenewalDueG13Remark, clraNoOfContWorkersG13, clraNoOfContWorkersG13Det, clraNoOfContWorkersG13Remark, clraNoOfManagerRespG13, clraNoOfManagerRespG13Det, clraNoOfManagerRespG13Remark, clraLicenseFeeG13, clraLicenseFeeG13Det, clraLicenseFeeG13Remark, securityDepositG13, securityDepositG13Det, securityDepositG13Remark, contWorkCompletedDate, contWorkCompletedDateDet, contWorkCompletedDateRemark, contWorkComplitionNotice, contWorkComplitionNoticeDet, contWorkComplitionNoticeRemark, refundSecDepNotice, refundSecDepNoticeDet, refundSecDepNoticeRemark, licSurrenderedDate, licSurrenderedDateDet, licSurrenderedDateRemark
+            }
+        }   
         newCompany = await Companydata.findOneAndUpdate({ _id: lastInsertedIdcompany }, company, { new: true })
         response.status(201).json(newCompany);
+    
 }
     catch (error) {
         next(error);
     }
-
+}
 
     
     /** pradeep code ends*/
@@ -6297,118 +6339,44 @@ export const createCompanyRegistration = async (request, response, next) => {
         // //  F file
         // managerNameF1File && managerMobNoF1File && managerEmailF1File && managerAadharNoF1File && managerPanF1File && shopsEstLicenseF2File && numberF2File && regDateF2File && expiryDateF2File && renewalDateF2File && managerNameF2File && noOfEmployeesF2File && maleF2File && femaleF2Remark, issuingAuthorityF2File && numberF3File && regDateF3File && expiryDateF3File && renewalDateF3File && managerNameF3File && noOfEmployeesF3File && maleF3File && femaleF3Remark, issuingAuthorityF3File && numberF4File && regDateF4File && issuingAuthorityF4File && numberF5File && regDateF5File && issuingAuthorityF5File && contractLabRegNoF5File && regDateContractorF5File && noOfContractEmpF5File && noOfContractorsF5File && contractorNameF51File && establishmentNameF51File && regAddContractorF51File && expiryDateF52File && renewalDateF52File && natureOfWorkF52File && noOfEmpDeployedF52File && companyTypeF53File && contractLabLicNoF53File && licenseDateF53File && expiryDateF53File && renewalDateF53File && noOfWorkerF53File && panF53File && gstF53File && pfRegF53File && esicRegF53File && shopsEstF53File && lwfRegF53File && profTaxF53File && number54File && regDate54File && expiryDate54File && renewalDate54File && issuingAuthority54File && number55File && regDate55File && expiryDate55File && renewalDate55File && issuingAuthoritye55File && number56File && regDate56File && expiryDate56File && renewalDate56File && issuingAuthority56File && number57File && regDate57File && expiryDate57File && renewalDate57File && issuingAuthority57File,
 
-        // G Data
-        // isLabourEngagedG,
-        // isLabourEngagedGDet,
-        // isLabourEngagedGRemark,
-        // noOfClientG,
-        // noOfClientGDet,
-        // noOfClientGRemark,
-        // clientG,
-        // clientGDet,
-        // clientGRemark,
-        // regOfficeAddClientG,
-        // pincode,
-        // regOfficeAddClientGDet,
-        // regOfficeAddClientGRemark,
-        // noOfLocContractWorkG11,
-        // noOfLocContractWorkG11Det,
-        // noOfLocContractWorkG11Remark,
-        // regAddOfClientG11,
-        // pincode,
-        // regAddOfClientG11Det,
-        // regAddOfClientG11Remark,
-        // agreementRefNoG12,
-        // agreementRefNoG12Det,
-        // agreementRefNoG12Remark,
-        // agreementDateG12,
-        // agreementDateG12Det,
-        // agreementDateG12Remark,
-        // agreementValidityG12,
-        // agreementValidityG12Det,
-        // agreementValidityG12Remark,
-        // noOfWorkersEngagedG12,
-        // noOfWorkersEngagedG12Det,
-        // noOfWorkersEngagedG12Remark,
-        // estCategoryG12,
-        // estCategoryG12Det,
-        // estCategoryG12Remark,
-        // isClraApplicableG12,
-        // noOfForm5G13,
-        // noOfForm5G13Det,
-        // noOfForm5G13Remark,
-        // form5DateG13,
-        // form5DateG13Det,
-        // form5DateG13Remark,
-        // workCommencedDateG13,
-        // workCommencedDateG13Det,
-        // workCommencedDateG13Remark,
-        // clraLicenseNoG13,
-        // clraLicenseNoG13Det,
-        // clraLicenseNoG13Remark,
-        // clraLicenseDateG13,
-        // clraLicenseDateG13Det,
-        // clraLicenseDateG13Remark,
-        // clraValidityG13,
-        // clraValidityG13Det,
-        // clraValidityG13Remark,
-        // clraRenewalDueG13,
-        // clraRenewalDueG13Det,
-        // clraRenewalDueG13Remark,
-        // clraNoOfContWorkersG13,
-        // clraNoOfContWorkersG13Det,
-        // clraNoOfContWorkersG13Remark,
-        // clraNoOfManagerRespG13,
-        // clraNoOfManagerRespG13Det,
-        // clraNoOfManagerRespG13Remark,
-        // clraLicenseFeeG13,
-        // clraLicenseFeeG13Det,
-        // clraLicenseFeeG13Remark,
-        // securityDepositG13,
-        // securityDepositG13Det,
-        // securityDepositG13Remark,
-        // contWorkCompletedDate,
-        // contWorkCompletedDateDet,
-        // contWorkCompletedDateRemark,
-        // contWorkComplitionNotice,
-        // contWorkComplitionNoticeDet,
-        // contWorkComplitionNoticeRemark,
-        // refundSecDepNotice,
-        // refundSecDepNoticeDet,
-        // refundSecDepNoticeRemark,
-        // licSurrenderedDate,
-        // licSurrenderedDateDet,
-        // licSurrenderedDateRemark,
+        // G Data 
+        // isLabourEngagedG, noOfClientG, clientG, regOfficeAddClientG, pincode, noOfLocContractWorkG11, regAddOfClientG11, pincode, agreementRefNoG12, agreementDateG12, agreementValidityG12, noOfWorkersEngagedG12, estCategoryG12, isClraApplicableG12, noOfForm5G13, form5DateG13, workCommencedDateG13, clraLicenseNoG13, clraLicenseDateG13, clraValidityG13, clraRenewalDueG13, clraNoOfContWorkersG13, clraNoOfManagerRespG13, clraLicenseFeeG13, securityDepositG13, contWorkCompletedDate, contWorkComplitionNotice, refundSecDepNotice, licSurrenderedDate,
+
+
+// 988888888888888 
+// isLabourEngagedG, isLabourEngagedGDet, isLabourEngagedGRemark, noOfClientG, noOfClientGDet, noOfClientGRemark, clientG, clientGDet, clientGRemark, regOfficeAddClientG, pincode, regOfficeAddClientGDet, regOfficeAddClientGRemark, noOfLocContractWorkG11, noOfLocContractWorkG11Det, noOfLocContractWorkG11Remark, regAddOfClientG11, pincode, regAddOfClientG11Det, regAddOfClientG11Remark, agreementRefNoG12, agreementRefNoG12Det, agreementRefNoG12Remark, agreementDateG12, agreementDateG12Det, agreementDateG12Remark, agreementValidityG12, agreementValidityG12Det, agreementValidityG12Remark, noOfWorkersEngagedG12, noOfWorkersEngagedG12Det, noOfWorkersEngagedG12Remark, estCategoryG12, estCategoryG12Det, estCategoryG12Remark, isClraApplicableG12, noOfForm5G13, noOfForm5G13Det, noOfForm5G13Remark, form5DateG13, form5DateG13Det, form5DateG13Remark, workCommencedDateG13, workCommencedDateG13Det, workCommencedDateG13Remark, clraLicenseNoG13, clraLicenseNoG13Det, clraLicenseNoG13Remark, clraLicenseDateG13, clraLicenseDateG13Det, clraLicenseDateG13Remark, clraValidityG13, clraValidityG13Det, clraValidityG13Remark, clraRenewalDueG13, clraRenewalDueG13Det, clraRenewalDueG13Remark, clraNoOfContWorkersG13, clraNoOfContWorkersG13Det, clraNoOfContWorkersG13Remark, clraNoOfManagerRespG13, clraNoOfManagerRespG13Det, clraNoOfManagerRespG13Remark, clraLicenseFeeG13, clraLicenseFeeG13Det, clraLicenseFeeG13Remark, securityDepositG13, securityDepositG13Det, securityDepositG13Remark, contWorkCompletedDate, contWorkCompletedDateDet, contWorkCompletedDateRemark, contWorkComplitionNotice, contWorkComplitionNoticeDet, contWorkComplitionNoticeRemark, refundSecDepNotice, refundSecDepNoticeDet, refundSecDepNoticeRemark, licSurrenderedDate, licSurrenderedDateDet, licSurrenderedDateRemark,
+
 
 
         // // G File
 
-        // isLabourEngagedGFile,
-        // noOfClientGFile,
-        // clientGFile,
-        // regOfficeAddClientGFile,
-        // noOfLocContractWorkG11File,
-        // regAddOfClientG11File,
-        // agreementRefNoG12File,
-        // agreementDateG12File,
-        // agreementValidityG12File,
-        // noOfWorkersEngagedG12File,
-        // estCategoryG12File,
-        // noOfForm5G13File,
-        // form5DateG13File,
-        // workCommencedDateG13File,
-        // clraLicenseNoG13File,
-        // clraLicenseDateG13File,
-        // clraValidityG13File,
-        // clraRenewalDueG13File,
-        // clraNoOfContWorkersG13File,
-        // clraNoOfManagerRespG13File,
-        // clraLicenseFeeG13File,
-        // securityDepositG13File,
-        // contWorkCompletedDateFile,
-        // contWorkComplitionNoticeFile,
-        // refundSecDepNoticeFile,
-        // licSurrenderedDateFile,
+// isLabourEngagedGFile,
+// noOfClientGFile,
+// clientGFile,
+// regOfficeAddClientGFile,
+// noOfLocContractWorkG11File,
+// regAddOfClientG11File,
+// agreementRefNoG12File,
+// agreementDateG12File,
+// agreementValidityG12File,
+// noOfWorkersEngagedG12File,
+// estCategoryG12File,
+// noOfForm5G13File,
+// form5DateG13File,
+// workCommencedDateG13File,
+// clraLicenseNoG13File,
+// clraLicenseDateG13File,
+// clraValidityG13File,
+// clraRenewalDueG13File,
+// clraNoOfContWorkersG13File,
+// clraNoOfManagerRespG13File,
+// clraLicenseFeeG13File,
+// securityDepositG13File,
+// contWorkCompletedDateFile,
+// contWorkComplitionNoticeFile,
+// refundSecDepNoticeFile,
+// licSurrenderedDateFile,
+
 
 
 
