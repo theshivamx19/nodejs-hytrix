@@ -32,11 +32,8 @@ const companySchema = new mongoose.Schema({
         index: true
     },
     companystate: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State"
     },
     companydistrict: {
         type: String,
@@ -368,11 +365,8 @@ const companySchema = new mongoose.Schema({
         index: true
     },
     pfstate: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State"
     },
     pfdistrict: {
         type: String,
@@ -444,11 +438,8 @@ const companySchema = new mongoose.Schema({
         index: true
     },
     esistate: {
-        type: String,
-        trim: true,
-        // required: true,
-        default: null,
-        index: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State"
     },
     esidistrict: {
         type: String,
@@ -919,11 +910,8 @@ const companySchema = new mongoose.Schema({
         index: true
     },
     regStateContractorE1: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State"
     },
     regDistContractorE1: {
         type: String,
@@ -1420,11 +1408,8 @@ const companySchema = new mongoose.Schema({
         index: true
     },
     contractorStateBranchF: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State"
     },
     contractorDistBranchF: {
         type: String,
@@ -2351,11 +2336,8 @@ const companySchema = new mongoose.Schema({
         index: true
     },
     regStateContractorF51: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State"
     },
     regDistContractorF51: {
         type: String,
@@ -3322,11 +3304,8 @@ const companySchema = new mongoose.Schema({
         index: true
     },
     regOfficeStateClientG: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State"
     },
     regOfficeDistClientG: {
         type: String,
@@ -3455,11 +3434,8 @@ const companySchema = new mongoose.Schema({
         index: true
     },
     regStateOfClientG11: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State"
     },
     regDistOfClientG11: {
         type: String,
