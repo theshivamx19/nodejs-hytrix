@@ -3824,6 +3824,299 @@ const companySchema = new mongoose.Schema({
     /***F ends */
     /***G starts */
 
+    g12ncw : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g12ncwdet : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g12ncwremark : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g12ncwdate : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g12ncwdatevalid : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g12ncwnow : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g12ncwcoe : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g12ncwcoedet : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g12ncwcoeremark : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13formdet : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13formremark : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5date : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5dateofcommence : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5licenece : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5licenecedet : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5liceneceremark : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5licensedol : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5licensedolvalid : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5licensedoldor : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5licenseworkers : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5licensemanresp : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5licensefee : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5licensefeedet : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5licensefeeremark : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5securityfee : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5securityfeedet : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g13form5securityfeeremark : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g14dcwc : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g14dncc : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g14dars : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g14dls : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true,
+    },
+    g12ncwimage : {
+        type : Object,
+        default : null
+    },
+    g12ncwcoeimage : {
+        type : Object,
+        default : null
+    },
+    g13formimage : {
+        type : Object,
+        default : null
+    },
+    g13form5liceneceimage : {
+        type : Object,
+        default : null
+    },
+    g13form5licensefeeimage : {
+        type : Object,
+        default : null
+    },
+    g13form5securityfeeimage : {
+        type : Object,
+        default : null
+    },
+    GCC4TL : {
+        type : Array,
+        default : null
+    }
+    
+g12ncwimage : {
+    type : String,
+    default : null,
+    trim : true,
+    index : true
+},
+g12ncwcoeimage : {
+    type : String,
+    default : null,
+    trim : true,
+    index : true
+},
+g13formimage : {
+    type : String,
+    default : null,
+    trim : true,
+    index : true
+},
+g13form5liceneceimage : {
+    type : String,
+    default : null,
+    trim : true,
+    index : true
+},
+g13form5licensefeeimage : {
+    type : String,
+    default : null,
+    trim : true,
+    index : true
+},
+g13form5securityfeeimage : {
+    type : String,
+    default : null,
+    trim : true,
+    index : true
+},
+g12ncwdet : {
+    type : String,
+    default : null,
+    trim : true,
+    index : true
+},
+g12ncwcoedet : {
+    type : String,
+    default : null,
+    trim : true,
+    index : true
+},
+g13formdet : {
+    type : String,
+    default : null,
+    trim : true,
+    index : true
+},
+g13form5licenecedet : {
+    type : String,
+    default : null,
+    trim : true,
+    index : true
+},
+g13form5licensefeedet : {
+    type : String,
+    default : null,
+    trim : true,
+    index : true
+},
+g13form5securityfeedet : {
+    type : String,
+    default : null,
+    trim : true,
+    index : true
+},
 
 
 
