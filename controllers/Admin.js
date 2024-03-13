@@ -124,7 +124,6 @@ export const createCompliances = async (request, response, next) => {
             return response.send("409");
         }
         const data = request.body
-        // console.log('documentUrl',documentUrl)
         const documentFile = request.files.document ? request.files.document[0] : null;
         const imageFile = request.files.image ? request.files.image[0] : null;
         const url = request.protocol + '://' + request.get('host');
@@ -5633,24 +5632,56 @@ export const createCompanyRegistration = async (request, response, next) => {
             // F Starts : in this renewalDateF52 was written 2 times as payload, so i removed one
             branchaddress, branchstate, branchdistrict, branchpin, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regisocontractaddress, regisocontractstate, regisocontractdistrict, regisocontractpin, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark,
             // G Starts
-            g12ncw, g12ncwdet, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoedet, g12ncwcoeremark, g13form, g13formdet, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5licenecedet, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeedet, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeedet, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls,GCC4TL,
+            g12ncw, g12ncwdet, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoedet, g12ncwcoeremark, g13form, g13formdet, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5licenecedet, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeedet, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeedet, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls, GCC4TL,
         } = data;
-        // pfnumber, pfaddressimage
         let company, newCompany;
         const uploadImage = async (imageFile) => {
+            let imageUrl
             if (!imageFile) {
                 return null; // Return null if image is not provided
             }
             const url = request.protocol + '://' + request.get('host');
             const uploadsDirectory = './data/uploads/';
             const imageDirectory = 'images/';
-            const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
-            const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-            // console.log(imageUrl);
-            const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
-            await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
+            const documentDirectory = 'documents/';
+            fs.access(uploadsDirectory, (err) => {
+                if (err) {
+                    fs.mkdirSync(uploadsDirectory, { recursive: true });
+                }
+            });
+            // Ensure that the images directory exists
+            fs.access(uploadsDirectory + imageDirectory, (err) => {
+                if (err) {
+                    fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+                }
+            });
+            // Ensure that the documents directory exists
+            fs.access(uploadsDirectory + documentDirectory, (err) => {
+                if (err) {
+                    fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
+                }
+            });
+            if (imageFile.mimetype === 'image/jpeg' || imageFile.mimetype === 'image/jpg' || imageFile.mimetype === 'image/png') {
+                const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+                const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
+                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
+            }
+
+            if (imageFile.mimetype === 'file/pdf') {
+                const formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+                imageUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, imageUrl.buffer);
+            }
             return imageUrl;
         };
+
+        // await sharp(request.file.buffer).resize({ width: 600 }).toFile('./data/uploads/' + formattedFileName);
+        // const profileImage = url + '/' + formattedFileName;
+
+        await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+        const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+
 
         // ***********************-------- B Dynamic Image Handling ----------***********************
 
@@ -5816,80 +5847,80 @@ export const createCompanyRegistration = async (request, response, next) => {
         // ***********************-------- F Dynamic Image Handling ----------***********************
         let dataF1branch, dataF1RLicense, dataF1FL, dataF1FP, dataF54NSP, dataF54OTP, dataF54WOE, dataF54TL
 
-        if(F1branch!== undefined && F1branch.length > 0){
-            dataF1branch = await Promise.all(F1branch.map(async (item, index)=>{
+        if (F1branch !== undefined && F1branch.length > 0) {
+            dataF1branch = await Promise.all(F1branch.map(async (item, index) => {
                 return {
                     ...item,
-                    image : await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][image]`))
+                    image: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][image]`))
                 }
             }))
         }
-        if(F1RLicense !== undefined && F1RLicense.length > 0){
-            dataF1RLicense = await Promise.all(F1RLicense.map(async (item, index)=>{
+        if (F1RLicense !== undefined && F1RLicense.length > 0) {
+            dataF1RLicense = await Promise.all(F1RLicense.map(async (item, index) => {
                 return {
                     ...item,
-                    managerlicenseimage : await uploadImage(request.files.find(img => img.fieldname === `F1RLicense[${index}][managerlicenseimage]`)),
-                    issuingauthimage : await uploadImage(request.files.find(img => img.fieldname === `F1RLicense[${index}][issuingauthimage]`))
+                    managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1RLicense[${index}][managerlicenseimage]`)),
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1RLicense[${index}][issuingauthimage]`))
                 }
             }))
         }
-        if(F1FL  !== undefined && F1FL.length > 0){
-            dataF1FL = await Promise.all(F1FL.map(async (item, index)=>{
+        if (F1FL !== undefined && F1FL.length > 0) {
+            dataF1FL = await Promise.all(F1FL.map(async (item, index) => {
                 return {
                     ...item,
-                    managerlicenseimage : await uploadImage(request.files.find(img => img.fieldname === `F1FL[${index}][managerlicenseimage]`)),
-                    issuingauthimage : await uploadImage(request.files.find(img => img.fieldname === `F1FL[${index}][issuingauthimage]`))
+                    managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1FL[${index}][managerlicenseimage]`)),
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1FL[${index}][issuingauthimage]`))
                 }
             }))
         }
-        if(F1FP !== undefined && F1FP.length > 0){
-            dataF1FP = await Promise.all(F1FP.map(async (item, index)=>{
+        if (F1FP !== undefined && F1FP.length > 0) {
+            dataF1FP = await Promise.all(F1FP.map(async (item, index) => {
                 return {
                     ...item,
-                    issuingauthimage : await uploadImage(request.files.find(img => img.fieldname === `F1FP[${index}][issuingauthimage]`))
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1FP[${index}][issuingauthimage]`))
                 }
             }))
         }
-        if(F54NSP !== undefined && F54NSP.length > 0){
-            dataF54NSP = await Promise.all(F54NSP.map(async (item, index)=>{
+        if (F54NSP !== undefined && F54NSP.length > 0) {
+            dataF54NSP = await Promise.all(F54NSP.map(async (item, index) => {
                 return {
                     ...item,
-                    issuingauthimage : await uploadImage(request.files.find(img => img.fieldname === `F54NSP[${index}][issuingauthimage]`))
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54NSP[${index}][issuingauthimage]`))
                 }
             }))
         }
-        if(F54OTP !== undefined && F54OTP.length > 0){
-            dataF54OTP = await Promise.all(F54OTP.map(async (item, index)=>{
+        if (F54OTP !== undefined && F54OTP.length > 0) {
+            dataF54OTP = await Promise.all(F54OTP.map(async (item, index) => {
                 return {
                     ...item,
-                    issuingauthimage : await uploadImage(request.files.find(img => img.fieldname === `F54OTP[${index}][issuingauthimage]`))
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54OTP[${index}][issuingauthimage]`))
                 }
             }))
         }
-        if(F54WOE !== undefined && F54WOE.length > 0){
-            dataF54WOE = await Promise.all(F54WOE.map(async (item, index)=>{
+        if (F54WOE !== undefined && F54WOE.length > 0) {
+            dataF54WOE = await Promise.all(F54WOE.map(async (item, index) => {
                 return {
                     ...item,
-                    issuingauthimage : await uploadImage(request.files.find(img => img.fieldname === `F54WOE[${index}][issuingauthimage]`))
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54WOE[${index}][issuingauthimage]`))
                 }
             }))
         }
-        if(F54TL !== undefined && F54TL.length > 0){
-            dataF54TL = await Promise.all(F54TL.map(async (item, index)=>{
+        if (F54TL !== undefined && F54TL.length > 0) {
+            dataF54TL = await Promise.all(F54TL.map(async (item, index) => {
                 return {
                     ...item,
-                    issuingauthimage : await uploadImage(request.files.find(img => img.fieldname === `F54TL[${index}][issuingauthimage]`))
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54TL[${index}][issuingauthimage]`))
                 }
             }))
         }
         // ***********************-------- G Dynamic Image Handling ----------***********************
         let dataGCC4TL
-        if(GCC4TL !== undefined && GCC4TL.length > 0){
-            dataGCC4TL = await Promise.all(GCC4TL.map(async (item, index)=>{
+        if (GCC4TL !== undefined && GCC4TL.length > 0) {
+            dataGCC4TL = await Promise.all(GCC4TL.map(async (item, index) => {
                 return {
                     ...item,
-                    clientimage : await uploadImage(request.files.find(img => img.fieldname === `GCC4TL[${index}][clientimage]`)),
-                    clientaddressimage : await uploadImage(request.files.find(img => img.fieldname === `GCC4TL[${index}][clientaddressimage]`))
+                    clientimage: await uploadImage(request.files.find(img => img.fieldname === `GCC4TL[${index}][clientimage]`)),
+                    clientaddressimage: await uploadImage(request.files.find(img => img.fieldname === `GCC4TL[${index}][clientaddressimage]`))
                 }
             }))
         }
@@ -6001,308 +6032,259 @@ export const createCompanyRegistration = async (request, response, next) => {
         }
         // /* F Starts * 
         if (branchaddress && branchstate && branchdistrict && branchpin && branchOpeningDateF && noOfEmpBranchF && managerNameF1 && managerMobNoF1 && managerEmailF1 && managerAadharNoF1 && managerPanF1 && shopsEstLicenseF2 && contractLabRegNoF5 && regDateContractorF5 && coOfContractEmpF5 && noOfContractorsF5 && contractorNameF51 && establishmentNameF51 && regisocontractaddress && regisocontractstate && regisocontractdistrict && regisocontractpin && expiryDateF52 && renewalDateF52 && natureOfWorkF52 && noOfEmpDeployedF52 && contractLabLicNoF53 && licenseDateF53 && expiryDateF53 && renewalDateF53 && noOfWorkerF53 && panF53 && gstF53 && pfRegF53 && esicRegF53 && shopsEstF53 && lwfRegF53 && profTaxF53) {
-            
+
             company = {
-                contractorAddBranchFFile : await uploadImage(request.files.find(img => img.fieldname === "contractorAddBranchFFile")),
-                managerNameF1File : await uploadImage(request.files.find(img => img.fieldname === "managerNameF1File")),
-                managerAadharNoF1File : await uploadImage(request.files.find(img => img.fieldname === "managerAadharNoF1File")),
-                managerPanF1File : await uploadImage(request.files.find(img => img.fieldname === "shopsEstLicenseF2File")),
-                shopsEstLicenseF2File : await uploadImage(request.files.find(img => img.fieldname === "shopsEstLicenseF2File")),
-                contractLabRegNoF5File : await uploadImage(request.files.find(img => img.fieldname === "contractLabRegNoF5File")),
-                contractorNameF51File : await uploadImage(request.files.find(img => img.fieldname === "contractorNameF51File")),
-                establishmentNameF51File : await uploadImage(request.files.find(img => img.fieldname === "establishmentNameF51File")),
-                regAddContractorF51File : await uploadImage(request.files.find(img => img.fieldname === "regAddContractorF51File")),
-                natureOfWorkF52File : await uploadImage(request.files.find(img => img.fieldname === "natureOfWorkF52File")),
-                companyTypeF53File : await uploadImage(request.files.find(img => img.fieldname === "companyTypeF53File")),
-                contractLabLicNoF53File : await uploadImage(request.files.find(img => img.fieldname === "contractLabLicNoF53File")),
-                panF53File : await uploadImage(request.files.find(img => img.fieldname === "panF53File")),
-                gstF53File : await uploadImage(request.files.find(img => img.fieldname === "gstF53File")),
-                pfRegF53File : await uploadImage(request.files.find(img => img.fieldname === "pfRegF53File")),
-                esicRegF53File : await uploadImage(request.files.find(img => img.fieldname === "esicRegF53File")),
-                shopsEstF53File : await uploadImage(request.files.find(img => img.fieldname === "shopsEstF53File")),
-                lwfRegF53File : await uploadImage(request.files.find(img => img.fieldname === "lwfRegF53File")),
-                profTaxF53File : await uploadImage(request.files.find(img => img.fieldname === "profTaxF53File")),
+                contractorAddBranchFFile: await uploadImage(request.files.find(img => img.fieldname === "contractorAddBranchFFile")),
+                managerNameF1File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF1File")),
+                managerAadharNoF1File: await uploadImage(request.files.find(img => img.fieldname === "managerAadharNoF1File")),
+                managerPanF1File: await uploadImage(request.files.find(img => img.fieldname === "shopsEstLicenseF2File")),
+                shopsEstLicenseF2File: await uploadImage(request.files.find(img => img.fieldname === "shopsEstLicenseF2File")),
+                contractLabRegNoF5File: await uploadImage(request.files.find(img => img.fieldname === "contractLabRegNoF5File")),
+                contractorNameF51File: await uploadImage(request.files.find(img => img.fieldname === "contractorNameF51File")),
+                establishmentNameF51File: await uploadImage(request.files.find(img => img.fieldname === "establishmentNameF51File")),
+                regAddContractorF51File: await uploadImage(request.files.find(img => img.fieldname === "regAddContractorF51File")),
+                natureOfWorkF52File: await uploadImage(request.files.find(img => img.fieldname === "natureOfWorkF52File")),
+                companyTypeF53File: await uploadImage(request.files.find(img => img.fieldname === "companyTypeF53File")),
+                contractLabLicNoF53File: await uploadImage(request.files.find(img => img.fieldname === "contractLabLicNoF53File")),
+                panF53File: await uploadImage(request.files.find(img => img.fieldname === "panF53File")),
+                gstF53File: await uploadImage(request.files.find(img => img.fieldname === "gstF53File")),
+                pfRegF53File: await uploadImage(request.files.find(img => img.fieldname === "pfRegF53File")),
+                esicRegF53File: await uploadImage(request.files.find(img => img.fieldname === "esicRegF53File")),
+                shopsEstF53File: await uploadImage(request.files.find(img => img.fieldname === "shopsEstF53File")),
+                lwfRegF53File: await uploadImage(request.files.find(img => img.fieldname === "lwfRegF53File")),
+                profTaxF53File: await uploadImage(request.files.find(img => img.fieldname === "profTaxF53File")),
                 branchaddress, branchstate, branchdistrict, branchpin, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regisocontractaddress, regisocontractstate, regisocontractdistrict, regisocontractpin, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark,
-                F1branch : dataF1branch, 
-                F1RLicense : dataF1RLicense, 
-                F1FL : dataF1FL, 
-                F1FP : dataF1FP, 
-                F54NSP : dataF54NSP, 
-                F54OTP : dataF54OTP, 
-                F54WOE : dataF54WOE, 
-                F54TL : dataF54TL
+                F1branch: dataF1branch,
+                F1RLicense: dataF1RLicense,
+                F1FL: dataF1FL,
+                F1FP: dataF1FP,
+                F54NSP: dataF54NSP,
+                F54OTP: dataF54OTP,
+                F54WOE: dataF54WOE,
+                F54TL: dataF54TL
 
             }
-        } 
+        }
         // G Starts
-        if(g12ncw && g12ncwdate && g12ncwdatevalid && g12ncwnow && g12ncwcoe && g13form && g13form5date && g13form5dateofcommence && g13form5licenece && g13form5licensedol && g13form5licensedolvalid && g13form5licensedoldor && g13form5licenseworkers && g13form5licensemanresp && g13form5licensefee && g13form5securityfee && g14dcwc && g14dncc && g14dars && g14dls){
+        if (g12ncw && g12ncwdate && g12ncwdatevalid && g12ncwnow && g12ncwcoe && g13form && g13form5date && g13form5dateofcommence && g13form5licenece && g13form5licensedol && g13form5licensedolvalid && g13form5licensedoldor && g13form5licenseworkers && g13form5licensemanresp && g13form5licensefee && g13form5securityfee && g14dcwc && g14dncc && g14dars && g14dls) {
             company = {
-                g12ncwimage : await uploadImage(request.files.find(img => img.fieldname === "g12ncwimage")),
-g12ncwcoeimage : await uploadImage(request.files.find(img => img.fieldname === "g12ncwcoeimage")),
-g13formimage : await uploadImage(request.files.find(img => img.fieldname === "g13formimage")),
-g13form5liceneceimage : await uploadImage(request.files.find(img => img.fieldname === "g13form5liceneceimage")),
-g13form5licensefeeimage : await uploadImage(request.files.find(img => img.fieldname === "g13form5licensefeeimage")),
-g13form5securityfeeimage : await uploadImage(request.files.find(img => img.fieldname === "g13form5securityfeeimage")),
-g12ncw, g12ncwdet, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoedet, g12ncwcoeremark, g13form, g13formdet, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5licenecedet, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeedet, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeedet, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls,
-GCC4TL : dataGCC4TL
+                g12ncwimage: await uploadImage(request.files.find(img => img.fieldname === "g12ncwimage")),
+                g12ncwcoeimage: await uploadImage(request.files.find(img => img.fieldname === "g12ncwcoeimage")),
+                g13formimage: await uploadImage(request.files.find(img => img.fieldname === "g13formimage")),
+                g13form5liceneceimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5liceneceimage")),
+                g13form5licensefeeimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5licensefeeimage")),
+                g13form5securityfeeimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5securityfeeimage")),
+                g12ncw, g12ncwdet, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoedet, g12ncwcoeremark, g13form, g13formdet, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5licenecedet, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeedet, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeedet, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls,
+                GCC4TL: dataGCC4TL
             }
-        }   
+        }
         newCompany = await Companydata.findOneAndUpdate({ _id: lastInsertedIdcompany }, company, { new: true })
         response.status(201).json(newCompany);
-    
-}
+
+    }
     catch (error) {
         next(error);
     }
 }
 
-    
-    /** pradeep code ends*/
+
+/** pradeep code ends*/
 
 
 
 
-    // ------------------------------- Rough Space -----------------------------
+// ------------------------------- Rough Space -----------------------------
 
 
 
-    // export const createCompanyClientContact = async (request, response, next) => {
-    //     try {
-    //         const data = request.body
-    //         const { ClientcontactC1, ClientcontactC2, ClientcontactC3, ClientcontactC4 } = data
-    //         const uploadImage = async (imageFile) => {
-    //             if (!imageFile) {
-    //                 return null;
-    //             }
-    //             const url = request.protocol + "://" + request.get('host');
-    //             const uploadsDirectory = './data/uploads/';
-    //             const imageDirectory = 'images/';
-    //             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
-    //             const imageUrl = url + '/' + imageDirectory + formattedImageFileName
-    //             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
-    //             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
-    //             return imageUrl
-    //         }
-    //         let clientDataC1, clientDataC2, clientDataC3, clientDataC4
-    //         if (ClientcontactC1 !== undefined && ClientcontactC1.length > 0) {
-    //             clientDataC1 = await Promise.all(ClientcontactC1.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][nameimage]`)),
-    //                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][designationimage]`))
-    //                 }
-    //             }))
-    //         }
-    //         if (ClientcontactC2 !== undefined && ClientcontactC2.length > 0) {
-    //             clientDataC2 = await Promise.all(ClientcontactC2.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][nameimage]`)),
-    //                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][designationimage]`))
-    //                 }
-    //             }))
-    //         }
-    //         if (ClientcontactC3 !== undefined && ClientcontactC3.length > 0) {
-    //             clientDataC3 = await Promise.all(ClientcontactC3.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][nameimage]`)),
-    //                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][designationimage]`))
-    //                 }
-    //             }))
-    //         }
-    //         if (ClientcontactC4 !== undefined && ClientcontactC4.length > 0) {
-    //             clientDataC4 = await Promise.all(ClientcontactC4.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][nameimage]`)),
-    //                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][designationimage]`))
-    //                 }
-    //             }))
-    //         }
+// export const createCompanyClientContact = async (request, response, next) => {
+//     try {
+//         const data = request.body
+//         const { ClientcontactC1, ClientcontactC2, ClientcontactC3, ClientcontactC4 } = data
+//         const uploadImage = async (imageFile) => {
+//             if (!imageFile) {
+//                 return null;
+//             }
+//             const url = request.protocol + "://" + request.get('host');
+//             const uploadsDirectory = './data/uploads/';
+//             const imageDirectory = 'images/';
+//             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
+//             const imageUrl = url + '/' + imageDirectory + formattedImageFileName
+//             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
+//             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
+//             return imageUrl
+//         }
+//         let clientDataC1, clientDataC2, clientDataC3, clientDataC4
+//         if (ClientcontactC1 !== undefined && ClientcontactC1.length > 0) {
+//             clientDataC1 = await Promise.all(ClientcontactC1.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][nameimage]`)),
+//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][designationimage]`))
+//                 }
+//             }))
+//         }
+//         if (ClientcontactC2 !== undefined && ClientcontactC2.length > 0) {
+//             clientDataC2 = await Promise.all(ClientcontactC2.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][nameimage]`)),
+//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][designationimage]`))
+//                 }
+//             }))
+//         }
+//         if (ClientcontactC3 !== undefined && ClientcontactC3.length > 0) {
+//             clientDataC3 = await Promise.all(ClientcontactC3.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][nameimage]`)),
+//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][designationimage]`))
+//                 }
+//             }))
+//         }
+//         if (ClientcontactC4 !== undefined && ClientcontactC4.length > 0) {
+//             clientDataC4 = await Promise.all(ClientcontactC4.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][nameimage]`)),
+//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][designationimage]`))
+//                 }
+//             }))
+//         }
 
-    //         const clientContact = {
-    //             ClientcontactC1: clientDataC1, ClientcontactC2: clientDataC2, ClientcontactC3: clientDataC3, ClientcontactC4: clientDataC4, created_at, updated_at
-    //         }
-    //         const newClientContact = new ClientContact(clientContact)
-    //         await newClientContact.save()
-    //         response.status(201).json(newClientContact)
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // }
+//         const clientContact = {
+//             ClientcontactC1: clientDataC1, ClientcontactC2: clientDataC2, ClientcontactC3: clientDataC3, ClientcontactC4: clientDataC4, created_at, updated_at
+//         }
+//         const newClientContact = new ClientContact(clientContact)
+//         await newClientContact.save()
+//         response.status(201).json(newClientContact)
+//     } catch (error) {
+//         next(error)
+//     }
+// }
 
-    // export const createOtherRegistration = async (request, response, next) => {
-    //     try {
-    //         const data = request.body
-    //         const { pfnumber, pfdetails, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, OtherRegsitrationD1PFsubcodes, OtherRegsitrationD1ESIsubcodes, OtherRegsitrationD3NSP, OtherRegsitrationD3FL, OtherRegsitrationD3OTP, OtherRegsitrationD3WOE, OtherRegsitrationD3TD, OtherRegsitrationD3MSME, OtherRegsitrationD3BOCW, OtherRegsitrationD3IMW, esinumber, esidetails, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressremark, registrationD3, registrationD3details, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3remark, fpD3, fpD3details, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3remark, doregistrationptrD3,
-    //         } = data
+// export const createOtherRegistration = async (request, response, next) => {
+//     try {
+//         const data = request.body
+//         const { pfnumber, pfdetails, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, OtherRegsitrationD1PFsubcodes, OtherRegsitrationD1ESIsubcodes, OtherRegsitrationD3NSP, OtherRegsitrationD3FL, OtherRegsitrationD3OTP, OtherRegsitrationD3WOE, OtherRegsitrationD3TD, OtherRegsitrationD3MSME, OtherRegsitrationD3BOCW, OtherRegsitrationD3IMW, esinumber, esidetails, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressremark, registrationD3, registrationD3details, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3remark, fpD3, fpD3details, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3remark, doregistrationptrD3,
+//         } = data
 
-    //         const uploadImage = async (imageFile) => {
-    //             if (!imageFile) {
-    //                 return null; // Return null if image is not provided
-    //             }
-    //             const url = request.protocol + '://' + request.get('host');
-    //             const uploadsDirectory = './data/uploads/';
-    //             const imageDirectory = 'images/';
-    //             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
-    //             const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-    //             // console.log(imageUrl);
-    //             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
-    //             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
-    //             return imageUrl;
-    //         };
-    //         let dataPFsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
-    //         if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
-    //             dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     regimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][regimage]`)),
-    //                     docimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][docimage]`)),
-    //                     offaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][offaddressimage]`))
-    //                 }
-    //             }))
-    //         }
-    //         if (OtherRegsitrationD1ESIsubcodes !== undefined && OtherRegsitrationD1ESIsubcodes.length > 0) {
-    //             dataESIsubcodes = await Promise.all(OtherRegsitrationD1ESIsubcodes.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     esiimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esiimage]`)),
-    //                     esidocimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esidocimage]`)),
-    //                     esioffaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esioffaddressimage]`))
-    //                 }
-    //             }))
-    //         }
-    //         if (OtherRegsitrationD3FL !== undefined && OtherRegsitrationD3FL.length > 0) {
-    //             dataFL = await Promise.all(OtherRegsitrationD3FL.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][managerlicenseimage]`)),
-    //                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][issuingauthimage]`)),
-    //                 }
-    //             }))
-    //         }
-    //         if (OtherRegsitrationD3NSP !== undefined && OtherRegsitrationD3NSP.length > 0) {
-    //             dataNSP = await Promise.all(OtherRegsitrationD3NSP.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3NSP[${index}][issuingauthimage]`)),
-    //                 }
-    //             }))
-    //         }
-    //         if (OtherRegsitrationD3OTP !== undefined && OtherRegsitrationD3OTP.length > 0) {
-    //             dataOTP = await Promise.all(OtherRegsitrationD3OTP.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3OTP[${index}][issuingauthimage]`)),
-    //                 }
-    //             }))
-    //         }
-    //         if (OtherRegsitrationD3WOE !== undefined && OtherRegsitrationD3WOE.length > 0) {
-    //             dataWOE = await Promise.all(OtherRegsitrationD3WOE.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3WOE[${index}][issuingauthimage]`)),
-    //                 }
-    //             }))
-    //         }
-    //         if (OtherRegsitrationD3TD !== undefined && OtherRegsitrationD3TD.length > 0) {
-    //             dataTD = await Promise.all(OtherRegsitrationD3TD.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3TD[${index}][issuingauthimage]`)),
-    //                 }
-    //             }))
-    //         }
-    //         if (OtherRegsitrationD3MSME !== undefined && OtherRegsitrationD3MSME.length > 0) {
-    //             dataMSME = await Promise.all(OtherRegsitrationD3MSME.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3MSME[${index}][issuingauthimage]`)),
-    //                 }
-    //             }))
-    //         }
-    //         if (OtherRegsitrationD3BOCW !== undefined && OtherRegsitrationD3BOCW.length > 0) {
-    //             dataBOCW = await Promise.all(OtherRegsitrationD3BOCW.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3BOCW[${index}][issuingauthimage]`)),
-    //                 }
-    //             }))
-    //         }
-    //         if (OtherRegsitrationD3IMW !== undefined && OtherRegsitrationD3IMW.length > 0) {
-    //             dataIMW = await Promise.all(OtherRegsitrationD3IMW.map(async (item, index) => {
-    //                 return {
-    //                     ...item,
-    //                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3IMW[${index}][issuingauthimage]`)),
-    //                 }
-    //             }))
-    //         }
+//         const uploadImage = async (imageFile) => {
+//             if (!imageFile) {
+//                 return null; // Return null if image is not provided
+//             }
+//             const url = request.protocol + '://' + request.get('host');
+//             const uploadsDirectory = './data/uploads/';
+//             const imageDirectory = 'images/';
+//             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
+//             const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+//             // console.log(imageUrl);
+//             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
+//             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
+//             return imageUrl;
+//         };
+//         let dataPFsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
+//         if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
+//             dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     regimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][regimage]`)),
+//                     docimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][docimage]`)),
+//                     offaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][offaddressimage]`))
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD1ESIsubcodes !== undefined && OtherRegsitrationD1ESIsubcodes.length > 0) {
+//             dataESIsubcodes = await Promise.all(OtherRegsitrationD1ESIsubcodes.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     esiimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esiimage]`)),
+//                     esidocimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esidocimage]`)),
+//                     esioffaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esioffaddressimage]`))
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3FL !== undefined && OtherRegsitrationD3FL.length > 0) {
+//             dataFL = await Promise.all(OtherRegsitrationD3FL.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][managerlicenseimage]`)),
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3NSP !== undefined && OtherRegsitrationD3NSP.length > 0) {
+//             dataNSP = await Promise.all(OtherRegsitrationD3NSP.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3NSP[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3OTP !== undefined && OtherRegsitrationD3OTP.length > 0) {
+//             dataOTP = await Promise.all(OtherRegsitrationD3OTP.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3OTP[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3WOE !== undefined && OtherRegsitrationD3WOE.length > 0) {
+//             dataWOE = await Promise.all(OtherRegsitrationD3WOE.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3WOE[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3TD !== undefined && OtherRegsitrationD3TD.length > 0) {
+//             dataTD = await Promise.all(OtherRegsitrationD3TD.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3TD[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3MSME !== undefined && OtherRegsitrationD3MSME.length > 0) {
+//             dataMSME = await Promise.all(OtherRegsitrationD3MSME.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3MSME[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3BOCW !== undefined && OtherRegsitrationD3BOCW.length > 0) {
+//             dataBOCW = await Promise.all(OtherRegsitrationD3BOCW.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3BOCW[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
+//         if (OtherRegsitrationD3IMW !== undefined && OtherRegsitrationD3IMW.length > 0) {
+//             dataIMW = await Promise.all(OtherRegsitrationD3IMW.map(async (item, index) => {
+//                 return {
+//                     ...item,
+//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3IMW[${index}][issuingauthimage]`)),
+//                 }
+//             }))
+//         }
 
-    //         const otherRegistration = {
-    //             pfnumber, pfdetails, pfimage: await uploadImage(request.files.find(img => img.fieldname === "pfimage")), pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, pfaddressimage: await uploadImage(request.files.find(img => img.fieldname === "pfaddressimage")), esinumber, esidetails, esiimage: await uploadImage(request.files.find(img => img.fieldname === "esiimage")), esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressimage: await uploadImage(request.files.find(img => img.fieldname === "esiaddressimage")), esiaddressremark, registrationD3, registrationD3details, registrationD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationD3image")), registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3image: await uploadImage(request.files.find(img => img.fieldname === "managernameD3image")), managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfD3image")), issueauthfD3remark, fpD3, fpD3details, fpD3image: await uploadImage(request.files.find(img => img.fieldname === "fpD3image")), fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfpD3image")), issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerfpD3image")), powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerhpfpD3image")), powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationlwfD3image")), registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationptrD3image")), registrationptrD3remark, doregistrationptrD3,
-    //             OtherRegsitrationD1PFsubcodes: dataPFsubcodes,
-    //             OtherRegsitrationD1ESIsubcodes: dataESIsubcodes,
-    //             OtherRegsitrationD3NSP: dataNSP,
-    //             OtherRegsitrationD3OTP: dataOTP,
-    //             OtherRegsitrationD3WOE: dataWOE,
-    //             OtherRegsitrationD3TD: dataTD,
-    //             OtherRegsitrationD3MSME: dataMSME,
-    //             OtherRegsitrationD3BOCW: dataBOCW,
-    //             OtherRegsitrationD3IMW: dataIMW,
-    //             OtherRegsitrationD3FL: dataFL,
-    //         }
-    //     }
-    //     catch (error) {
-    //         next(error)
-    //     }
-    // }
-
-    // f new
-
-//  branchaddress, branchstate, branchdistrict, branchpin, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regisocontractaddress, regisocontractstate, regisocontractdistrict, regisocontractpin, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark,
-// branchaddress : {
-//     type : String,
-//     default : n
-
-
-g12ncw,
-g12ncwremark,
-g12ncwdate,
-g12ncwdatevalid,
-g12ncwnow,
-g12ncwcoe,
-g12ncwcoeremark,
-g13form,
-g13formremark,
-g13form5date,
-g13form5dateofcommence,
-g13form5licenece,
-g13form5liceneceremark,
-g13form5licensedol,
-g13form5licensedolvalid,
-g13form5licensedoldor,
-g13form5licenseworkers,
-g13form5licensemanresp,
-g13form5licensefee,
-g13form5licensefeeremark,
-g13form5securityfee,
-g13form5securityfeeremark,
-g14dcwc,
-g14dncc,
-g14dars,
-g14dls,
-
-
-
-
-//  g12ncw :  g12ncwdate :  g12ncwdatevalid :  g12ncwnow :  g12ncwcoe :  g13form :  g13form5date :  g13form5dateofcommence :  g13form5licenece :  g13form5licensedol :  g13form5licensedolvalid :  g13form5licensedoldor :  g13form5licenseworkers :  g13form5licensemanresp :  g13form5licensefee :  g13form5securityfee :  g14dcwc :  g14dncc :  g14dars :  g14dls : 
-
-
-
-
-
-
-
-
-
+//         const otherRegistration = {
+//             pfnumber, pfdetails, pfimage: await uploadImage(request.files.find(img => img.fieldname === "pfimage")), pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, pfaddressimage: await uploadImage(request.files.find(img => img.fieldname === "pfaddressimage")), esinumber, esidetails, esiimage: await uploadImage(request.files.find(img => img.fieldname === "esiimage")), esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressimage: await uploadImage(request.files.find(img => img.fieldname === "esiaddressimage")), esiaddressremark, registrationD3, registrationD3details, registrationD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationD3image")), registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3image: await uploadImage(request.files.find(img => img.fieldname === "managernameD3image")), managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfD3image")), issueauthfD3remark, fpD3, fpD3details, fpD3image: await uploadImage(request.files.find(img => img.fieldname === "fpD3image")), fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfpD3image")), issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerfpD3image")), powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerhpfpD3image")), powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationlwfD3image")), registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationptrD3image")), registrationptrD3remark, doregistrationptrD3,
+//             OtherRegsitrationD1PFsubcodes: dataPFsubcodes,
+//             OtherRegsitrationD1ESIsubcodes: dataESIsubcodes,
+//             OtherRegsitrationD3NSP: dataNSP,
+//             OtherRegsitrationD3OTP: dataOTP,
+//             OtherRegsitrationD3WOE: dataWOE,
+//             OtherRegsitrationD3TD: dataTD,
+//             OtherRegsitrationD3MSME: dataMSME,
+//             OtherRegsitrationD3BOCW: dataBOCW,
+//             OtherRegsitrationD3IMW: dataIMW,
+//             OtherRegsitrationD3FL: dataFL,
+//         }
+//     }
+//     catch (error) {
+//         next(error)
+//     }
+// }
