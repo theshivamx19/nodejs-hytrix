@@ -1334,25 +1334,25 @@ const companySchema = new mongoose.Schema({
     /***E ends */
     /***F starts */
 
-    branchaddress: {
+    contractorAddBranchF: {
         type: String,
         default: null,
         trim: true,
         index: true,
     },
-    branchstate: {
+    contractorStateBranchF: {
         type: String,
         default: null,
         trim: true,
         index: true,
     },
-    branchdistrict: {
+    contractorDistBranchF: {
         type: String,
         default: null,
         trim: true,
         index: true,
     },
-    branchpin: {
+    contractorPinBranchF: {
         type: String,
         default: null,
         trim: true,
