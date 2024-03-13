@@ -1334,563 +1334,597 @@ const companySchema = new mongoose.Schema({
     /***E ends */
     /***F starts */
 
-    branchaddress : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    branchstate : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    branchdistrict : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    branchpin : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    contractorAddBranchFDet : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    contractorAddBranchFRemark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    branchOpeningDateF : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    noOfEmpBranchF : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerNameF1 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerNameF1Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerNameF1Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerMobNoF1 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerMobNoF1Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerMobNoF1Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerEmailF1 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerEmailF1Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerEmailF1Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerAadharNoF1 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerAadharNoF1Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerAadharNoF1Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerPanF1 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerPanF1Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    managerPanF1Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    shopsEstLicenseF2 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    shopsEstLicenseF2Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    shopsEstLicenseF2Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    contractLabRegNoF5 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    contractLabRegNoF5Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    contractLabRegNoF5Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    regDateContractorF5 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    coOfContractEmpF5 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    noOfContractorsF5 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    contractorNameF51 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    contractorNameF51Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    contractorNameF51Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    establishmentNameF51 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    establishmentNameF51Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    establishmentNameF51Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    regisocontractaddress : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    regisocontractstate : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    regisocontractdistrict : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    regisocontractpin : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    regAddContractorF51Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    regAddContractorF51Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    expiryDateF52 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    renewalDateF52 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    natureOfWorkF52 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    natureOfWorkF52Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    natureOfWorkF52Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    noOfEmpDeployedF52 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    companyTypeF53Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    companyTypeF53Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    contractLabLicNoF53 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    contractLabLicNoF53Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    contractLabLicNoF53Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    licenseDateF53 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    expiryDateF53 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    renewalDateF53 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    noOfWorkerF53 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    panF53 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    panF53Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    panF53Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    gstF53 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    gstF53Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    gstF53Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    pfRegF53 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    pfRegF53Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    pfRegF53Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    esicRegF53 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    esicRegF53Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    esicRegF53Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    shopsEstF53 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    shopsEstF53Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    shopsEstF53Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    lwfRegF53 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    lwfRegF53Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    lwfRegF53Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    profTaxF53 : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    profTaxF53Det : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
-    },
-    profTaxF53Remark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    branchaddress: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    branchstate: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    branchdistrict: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    branchpin: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    contractorAddBranchFDet: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    contractorAddBranchFRemark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    branchOpeningDateF: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    noOfEmpBranchF: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerNameF1: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerNameF1Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerNameF1Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerMobNoF1: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerMobNoF1Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerMobNoF1Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerEmailF1: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerEmailF1Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerEmailF1Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerAadharNoF1: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerAadharNoF1Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerAadharNoF1Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerPanF1: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerPanF1Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    managerPanF1Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    shopsEstLicenseF2: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    shopsEstLicenseF2Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    shopsEstLicenseF2Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    contractLabRegNoF5: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    contractLabRegNoF5Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    contractLabRegNoF5Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    regDateContractorF5: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    coOfContractEmpF5: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    noOfContractorsF5: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    contractorNameF51: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    contractorNameF51Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    contractorNameF51Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    establishmentNameF51: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    establishmentNameF51Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    establishmentNameF51Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    regisocontractaddress: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    regisocontractstate: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    regisocontractdistrict: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    regisocontractpin: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    regAddContractorF51Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    regAddContractorF51Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    expiryDateF52: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    renewalDateF52: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    natureOfWorkF52: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    natureOfWorkF52Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    natureOfWorkF52Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    noOfEmpDeployedF52: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    companyTypeF53Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    companyTypeF53Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    contractLabLicNoF53: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    contractLabLicNoF53Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    contractLabLicNoF53Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    licenseDateF53: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    expiryDateF53: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    renewalDateF53: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    noOfWorkerF53: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    panF53: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    panF53Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    panF53Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    gstF53: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    gstF53Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    gstF53Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    pfRegF53: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    pfRegF53Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    pfRegF53Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    esicRegF53: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    esicRegF53Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    esicRegF53Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    shopsEstF53: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    shopsEstF53Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    shopsEstF53Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    lwfRegF53: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    lwfRegF53Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    lwfRegF53Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    profTaxF53: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    profTaxF53Det: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
+    },
+    profTaxF53Remark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
     //  F files
-    contractorAddBranchFFile : {
-        type : Object,
-        default : null
+    contractorAddBranchFFile: {
+        type: Object,
+        default: null
     },
-    managerNameF1File : {
-        type : Object,
-        default : null
+    managerNameF1File: {
+        type: Object,
+        default: null
     },
-    managerAadharNoF1File : {
-        type : Object,
-        default : null
+    managerAadharNoF1File: {
+        type: Object,
+        default: null
     },
-    managerPanF1File : {
-        type : Object,
-        default : null
+    managerPanF1File: {
+        type: Object,
+        default: null
     },
-    shopsEstLicenseF2File : {
-        type : Object,
-        default : null
+    shopsEstLicenseF2File: {
+        type: Object,
+        default: null
     },
-    contractLabRegNoF5File : {
-        type : Object,
-        default : null
+    contractLabRegNoF5File: {
+        type: Object,
+        default: null
     },
-    contractorNameF51File : {
-        type : Object,
-        default : null
+    contractorNameF51File: {
+        type: Object,
+        default: null
     },
-    establishmentNameF51File : {
-        type : Object,
-        default : null
+    establishmentNameF51File: {
+        type: Object,
+        default: null
     },
-    regAddContractorF51File : {
-        type : Object,
-        default : null
+    regAddContractorF51File: {
+        type: Object,
+        default: null
     },
-    natureOfWorkF52File : {
-        type : Object,
-        default : null
+    natureOfWorkF52File: {
+        type: Object,
+        default: null
     },
-    companyTypeF53File : {
-        type : Object,
-        default : null
+    companyTypeF53File: {
+        type: Object,
+        default: null
     },
-    contractLabLicNoF53File : {
-        type : Object,
-        default : null
+    contractLabLicNoF53File: {
+        type: Object,
+        default: null
     },
-    panF53File : {
-        type : Object,
-        default : null
+    panF53File: {
+        type: Object,
+        default: null
     },
-    gstF53File : {
-        type : Object,
-        default : null
+    gstF53File: {
+        type: Object,
+        default: null
     },
-    pfRegF53File : {
-        type : Object,
-        default : null
+    pfRegF53File: {
+        type: Object,
+        default: null
     },
-    esicRegF53File : {
-        type : Object,
-        default : null
+    esicRegF53File: {
+        type: Object,
+        default: null
     },
-    shopsEstF53File : {
-        type : Object,
-        default : null
+    shopsEstF53File: {
+        type: Object,
+        default: null
     },
-    lwfRegF53File : {
-        type : Object,
-        default : null
+    lwfRegF53File: {
+        type: Object,
+        default: null
     },
-    profTaxF53File : {
-        type : Object,
-        default : null
+    profTaxF53File: {
+        type: Object,
+        default: null
     },
+    // --------- Dynamic array data
+    F1branch: {
+        type: array,
+        default: null
+    },
+    F1RLicense: {
+        type: array,
+        default: null
+    },
+    F1FL: {
+        type: array,
+        default: null
+    },
+    F1FP: {
+        type: array,
+        default: null
+    },
+    F54NSP: {
+        type: array,
+        default: null
+    },
+    F54OTP: {
+        type: array,
+        default: null
+    },
+    F54WOE: {
+        type: array,
+        default: null
+    },
+    F54TL: {
+        type: array,
+        default: null
+    },
+
 
 
     // noOfBranchesF: {
