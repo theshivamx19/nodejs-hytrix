@@ -5626,7 +5626,7 @@ export const gettingCompanyTable = async (request, response, next) => {
                     _id: 1,
 
                     // A Starts
-                    onBoardDate: 1,
+                    created_at: 1,
                     profile: 1,
                     reason: 1,
                     approveDate: 1,
@@ -5653,8 +5653,7 @@ export const gettingCompanyTable = async (request, response, next) => {
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     // company: { $arrayElemAt: ["$companyData.companyname", 0] },
                     // branch: { $arrayElemAt: ["$branchData.name", 0] },
-                    createdAt: 1,
-                    updatedAt: 1,
+                    updated_at: 1,
                 }
             }
 

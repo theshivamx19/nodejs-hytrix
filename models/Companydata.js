@@ -4843,11 +4843,7 @@ g13form5securityfeedet : {
         default: null,
     },
     // Some Extra field to show data in Get all company data
-    onBoardDate : {
-        type : Date,
-        default : null,
-        index : true
-    },
+
     profile : {
         type : String,
         default : null,
