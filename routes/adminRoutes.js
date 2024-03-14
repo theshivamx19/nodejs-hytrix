@@ -97,7 +97,8 @@ router.post('/liseRegHistoryFilter', liseRegHistoryFilter)
 
 // -------------------- Company Create -------------------
 
-router.post('/createCompanyRegistration', upload.any(), createCompanyRegistration )
-router.post('/createCompanyClientContact', upload.any(), createCompanyClientContact )
+router.post('/createCompany',upload.any(), createCompany);
+router.get('/gettingCompany', gettingCompany);
+router.get('/gettingCompanyTable', gettingCompanyTable);
 
 export default router;
