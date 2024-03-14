@@ -4841,6 +4841,51 @@ g13form5securityfeedet : {
     updated_at: {
         type: Date,
         default: null,
+    },
+    // Some Extra field to show data in Get all company data
+    onBoardDate : {
+        type : Date,
+        default : null,
+        index : true
+    },
+    profile : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    reason : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    approveDate : {
+        type : Date,
+        default : null,
+        index : true
+    },
+    license : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    receivedDate : {
+        type : Date,
+        default : null,
+        index : true
+    },
+    compIntractStatus : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    inactiveDate : {
+        type : Date,
+        default : null,
+        index : true
     }
 })
 const Companydata = mongoose.model("Companydata", companySchema)
