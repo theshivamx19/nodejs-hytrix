@@ -7,7 +7,7 @@ import Notification from '../models/Notification.js';
 import Branch from '../models/Branch.js';
 import Companydata from "../models/Companydata.js";
 import Company from "../models/Company.js";
-import Compliance from "../models/Compliance.js";
+import Compliance from "../models/Compliances.js";
 import Lisereg from "../models/Lisereg.js";
 import Audit from "../models/Audit.js";
 import Elibrary from "../models/Elibrary.js";
@@ -5572,6 +5572,9 @@ export const gettingCompany = async (request, response, next) => {
 export const gettingCompanyTable = async (request, response, next) => {
     try {
         const company = await Companydata.aggregate([
+            {
+                $match : {}
+            },
             {
                 $lookup: {
                     from: "companies",
