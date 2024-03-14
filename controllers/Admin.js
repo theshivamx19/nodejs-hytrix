@@ -1,31 +1,25 @@
 import Admin from '../models/Admin.js';
 import Category from '../models/Category.js';
-import State from '../models/State.js'
-import Branch from '../models/Branch.js';
-import bcryptjs from 'bcryptjs';
-import User from '../models/User.js';
-import Compliance from '../models/Compliances.js';
-import CheckList from '../models/CheckList.js';
+import CheckList from '../models/CheckLists.js';
+import State from '../models/State.js';
+import Users from '../models/Users.js';
 import Notification from '../models/Notification.js';
+import Branch from '../models/Branch.js';
+import Companydata from "../models/Companydata.js";
+import Company from "../models/Company_.js";
+import Compliance from "../models/Compliance.js";
+import Lisereg from "../models/Lisereg.js";
+import Audit from "../models/Audit.js";
+import Elibrary from "../models/Elibrary.js";
+// import RegistrationB from "../models/company/RegistrationB.js";
+import fs from 'fs';
+import bcryptsjs from 'bcryptjs';
+import sendMail from '../utils/sendMails.js';
 import generateToken from '../utils/generateToken.js';
-import Checkdata from '../models/CheckData.js'
-import Elibrary from '../models/Elibrary.js'
-import Audit from '../models/Audit.js';
-import Lisereg from '../models/LiseReg.js';
-import Company from '../models/Company.js'
-import jwt from 'jsonwebtoken';
-import { createError } from '../utils/error.js';
-import { response } from 'express';
-import fs from 'node:fs'
 import sharp from 'sharp';
-import { List } from '../models/List.js';
-import mongoose from 'mongoose';
-import { uuid } from 'uuidv4';
-import { log } from 'node:console';
-const uniqueId = uuid()
-// import Executive from '../models/Executive.js';
-
-
+import mongoose from 'mongoose'
+import { log } from 'console';
+import { request } from 'http';
 export const login = async (req, res, next) => {
     try {
         const user = await Admin.findOne({ email: req.body.email });
@@ -35,12 +29,12 @@ export const login = async (req, res, next) => {
             return res.send("404");
         }
         const passwordDB = user.password;
-        const matchPasswotd = await bcryptjs.compare(req.body.password, passwordDB);
+        const matchPasswotd = await bcryptsjs.compare(req.body.password, passwordDB);
         if (matchPasswotd === false) {
             return res.send("400");
         }
 
-        // now remove Password and isAdmin from User get from query as follows   
+        //now remove Password and isAdmin from User get from query as follows   
         //const { Password, isAdmin, ...otherDetails } = User;   
         //since in output of return response.json({...otherDetails}); I am getting collectable values in _doc variable so
         const { password, ...otherDetails } = user._doc;
@@ -50,7 +44,8 @@ export const login = async (req, res, next) => {
         //now put this token in a cookie by installing npm install cookie-parser. After this initialize this cookie-parser in index.js as app.use() and send back a cookie in response to browser with created token
         //res.cookie('access_token',token,{expire : 36000 + Date.now(), httpOnly:true}).status(200).json({...otherDetails});
         otherDetails.access_token = token;
-        res.cookie('access_token', token, { maxAge: (2 * 24 * 60 * 60 * 1000) /* cookie will expires in 2 days*/, httpOnly: true }).status(201).json({ ...otherDetails });
+        otherDetails.tokenexp = 60 * 24 * 60 * 60 * 1000;
+        res.cookie('access_token', token, { maxAge: (60 * 24 * 60 * 60 * 1000) /* cookie will expires in 20 days*/, httpOnly: true }).status(201).json({ ...otherDetails });
 
     } catch (error) {
         //res.status(400).json({ message: error.message });
@@ -60,7 +55,7 @@ export const login = async (req, res, next) => {
 export const logout = async (request, response, next) => {
     //response.clearCookie("access_token");
     const token = request.cookies.access_token;
-    // console.log(token);//return;
+    //console.log(token);//return;
     try {
         if (token) {
             response.clearCookie('access_token');
@@ -71,6 +66,663 @@ export const logout = async (request, response, next) => {
         }
     } catch (error) {
         // response.status(404).json({ message: error.message })
+        next(error);
+    }
+}
+export const createAudit = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { title, company, branch, state, executive, auditor, scope, briefauditor, checkboxlist, auditstatus, status, risk, start_date, end_date } = data
+        const startDate = new Date(start_date);
+        const endDate = new Date(end_date);
+        const audit = {
+            title, company, branch, state, executive, auditor, scope, briefauditor, checkboxlist, auditstatus, status, risk, start_date: startDate, end_date: endDate
+        }
+        const newAudit = new Audit(audit)
+        await newAudit.save()
+        response.status(201).json(newAudit)
+    } catch (error) {
+        next(error)
+    }
+}
+export const auditoreGet = async (request, response, next) => {
+    try {
+        const auditor = await Users.find({ role: { $eq: "Auditor" } });
+        response.status(201).json(auditor);
+    } catch (error) {
+        // response.status(404).json({ message: 'error.message' })
+        next(error);
+    }
+}
+export const executiveGet = async (request, response, next) => {
+    try {
+        const auditor = await Users.find(
+            {
+                $and: [
+                    { role: { $eq: "Auditor" } },
+                    { $eq: "Executive(Matrix)" }]
+            }
+        );
+
+        response.status(201).json(auditor);
+    } catch (error) {
+        // response.status(404).json({ message: 'error.message' })
+        next(error);
+    }
+}
+export const auditchecklistGetonCreate = async (request, response, next) => {  //checklist on create of audit list
+    // console.log('sasasasssas');return;
+    try {
+        const newArr = await CheckList.aggregate([
+            {
+                $match: { status: { $ne: 2 } }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "compliances",
+                    localField: "compliance",
+                    foreignField: "_id",
+                    as: "complianceData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branchname",
+                    foreignField: "_id",
+                    as: "branchData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    category: 1,
+                    branchname: 1,
+                    compliance: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    image: 1,
+                    documents: 1,
+                    frequency: 1,
+                    risk: 1,
+                    created_at: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
+                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
+                }
+            }
+        ])
+        // console.log(newArr)
+        response.status(201).json(newArr)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+export const auditChecklistFilter = async (request, response, next) => {
+    try {
+        const stateFilter = request.body.state;
+        const branchFilter = request.body.branch;
+        const categoryFilter = request.body.category;
+        const complianceFilter = request.body.compliance;
+
+        const matchStage = {};
+        matchStage['status'] = { $ne: 2 }
+
+        if (stateFilter !== undefined && complianceFilter !== undefined && categoryFilter !== undefined && branchFilter !== undefined && stateFilter !== "" && complianceFilter !== "" && categoryFilter !== "" && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString())
+        }
+
+        // ------------ 3 Filter --------------
+        else if (stateFilter !== undefined && stateFilter !== "" && categoryFilter !== undefined && categoryFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && complianceFilter !== undefined && complianceFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && categoryFilter !== undefined && categoryFilter !== "" && complianceFilter !== undefined && complianceFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString());
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
+
+        }
+        else if (categoryFilter !== undefined && categoryFilter !== "" && complianceFilter !== undefined && complianceFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString())
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+
+        }
+
+        // ------------------ 2 Filter ----------------
+
+        else if (stateFilter !== undefined && stateFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && complianceFilter !== undefined && complianceFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString())
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && categoryFilter !== undefined && categoryFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+        }
+        else if (branchFilter !== undefined && branchFilter !== "" && categoryFilter !== undefined && categoryFilter !== "") {
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+        }
+        else if (branchFilter !== undefined && branchFilter !== "" && complianceFilter !== undefined && complianceFilter !== "") {
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+        }
+        else if (categoryFilter !== undefined && categoryFilter !== "" && complianceFilter !== undefined && complianceFilter !== "") {
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+        }
+
+        // ------------------ 1 Filter ----------------------
+        else if (stateFilter !== undefined && stateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+        }
+        else if (complianceFilter !== undefined && complianceFilter !== "") {
+            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
+        }
+        else if (categoryFilter !== undefined && categoryFilter !== "") {
+            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
+        }
+        else if (branchFilter !== undefined && branchFilter !== "") {
+            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+        }
+
+        // console.log(matchStage);
+        const filter = await CheckList.aggregate([
+            {
+                $match: matchStage,
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "compliances",
+                    localField: "compliance",
+                    foreignField: "_id",
+                    as: "complianceData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branchname",
+                    foreignField: "_id",
+                    as: "branchData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    state: 1,
+                    act: 1,
+                    rule: 1,
+                    // category: 1,
+                    form: 1,
+                    document: 1,
+                    question: 1,
+                    description: 1,
+                    created_at: 1,
+                    risk: 1,
+                    consequences: 1,
+                    frequency: 1,
+                    duedate: 1,
+                    remark: 1,
+                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    branch: { $arrayElemAt: ["$branchData.name", 0] },
+                }
+            }
+        ]);
+        console.log(filter)
+        response.status(201).json(filter);
+    } catch (error) {
+        next(error);
+    }
+}
+export const gettingOnGoingAuditDetail = async (request, response, next) => {
+    try {
+        const auditOnGoing = await Audit.find({ auditstatus: { $eq: "1" } });
+        response.status(201).json(auditOnGoing);
+    } catch (error) {
+        // response.status(404).json({ message: 'error.message' })
+        next(error);
+    }
+}
+export const gettingAuditDetail = async (request, response, next) => {
+    try {
+        const auditData = await Audit.aggregate([
+            {
+                $match: {}
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branch",
+                    foreignField: "_id",
+                    as: "branchData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "auditor",
+                    foreignField: "_id",
+                    as: "auditorData"
+                }
+            },
+            {
+                $project: {
+                    title: 1,
+                    start_date: 1,
+                    end_date: 1,
+                    overdue: {
+                        $cond: {
+                            if: { $lt: ["$end_date", new Date()] },
+                            then: {
+                                $subtract: [
+                                    {
+                                        $ceil: {
+                                            $divide: [
+                                                {
+                                                    $subtract: [new Date(), "$end_date"]
+                                                },
+                                                1000 * 60 * 60 * 24 // Convert milliseconds to days
+                                            ]
+                                        }
+                                    },
+                                    1 // Subtract 1 day from the calculated overdue days
+                                ]
+                            },
+                            else: 0 // Project is not overdue
+                        }
+                    },
+                    auditstatus: 1,
+                    risk: 1,
+                    score: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    auditor: {
+                        $concat: [
+                            { $arrayElemAt: ["$auditorData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$auditorData.lastName", 0] }
+                        ]
+                    },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    branch: { $arrayElemAt: ["$branchData.name", 0] }
+                }
+            }
+        ]);
+
+        response.status(200).json(auditData);
+    } catch (error) {
+        next(error);
+    }
+}
+export const gettingAuditorOverdueDashboard = async (request, response, next) => {
+    try {
+        const auditData = await Audit.aggregate([
+            {
+                $match: {}
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branch",
+                    foreignField: "_id",
+                    as: "branchData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "auditor",
+                    foreignField: "_id",
+                    as: "auditorData"
+                }
+            },
+            {
+                $project: {
+                    title: 1,
+                    start_date: 1,
+                    end_date: 1,
+                    overdue: {
+                        $cond: {
+                            if: { $lt: ["$end_date", new Date()] },
+                            then: {
+                                $subtract: [
+                                    {
+                                        $ceil: {
+                                            $divide: [
+                                                {
+                                                    $subtract: [new Date(), "$end_date"]
+                                                },
+                                                1000 * 60 * 60 * 24 // Convert milliseconds to days
+                                            ]
+                                        }
+                                    },
+                                    1 // Subtract 1 day from the calculated overdue days
+                                ]
+                            },
+                            else: 0 // Project is not overdue
+                        }
+                    },
+                    auditstatus: 1,
+                    risk: 1,
+                    score: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    auditor: {
+                        $concat: [
+                            { $arrayElemAt: ["$auditorData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$auditorData.lastName", 0] }
+                        ]
+                    },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    branch: { $arrayElemAt: ["$branchData.name", 0] }
+                }
+            }
+        ]);
+        let users = await Users.find({})
+        let auditorData = users.filter(user => {
+            return user.role === "Auditor"
+        })
+        let count = 0
+        auditData.filter(doc => {
+            const result = auditorData.map(data => data.firstName + " " + data.lastName).includes(doc.auditor)
+            if (result && doc.overdue > 0) {
+                return count++
+            }
+        })
+        response.status(200).json(count);
+        // response.status(200).json(auditData);
+    } catch (error) {
+        next(error);
+    }
+}
+export const auditFilter = async (request, response, next) => {
+    try {
+        const data = request.body;
+        const matchStage = {};
+        const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data;
+        let auditDataFilter
+
+        // Define filters
+        const filters = { company, state, branch, executive, auditor, start_date, end_date, auditstatus, risk };
+        const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "");
+
+        // Build match stage based on filters
+        if (filterKeys.length > 0) {
+            for (const key of filterKeys) {
+                if (key === "company" || key === "state" || key === "branch" || key === "executive" || key === "auditor") {
+                    matchStage[key] = new mongoose.Types.ObjectId(filters[key]);
+                } else if (key === "auditstatus" || key === "risk") {
+                    matchStage[key] = filters[key];
+                }
+                // else if(key === "overdue"){
+
+                // }
+                else if (key === "start_date" || key === "end_date") {
+                    const dateObject = new Date(filters[key]);
+                    const nextDay = new Date(dateObject);
+                    nextDay.setDate(dateObject.getDate() + 1);
+                    matchStage[key] = {
+                        $gte: dateObject,
+                        $lt: nextDay
+                    };
+                }
+            }
+        }
+
+        // Perform aggregation
+        auditDataFilter = await Audit.aggregate([
+            { $match: matchStage },
+            // Add your lookup and project stages here
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "auditor",
+                    foreignField: "_id",
+                    as: "executiveData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "auditor",
+                    foreignField: "_id",
+                    as: "auditorData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branch",
+                    foreignField: "_id",
+                    as: "branchData",
+                },
+            },
+
+            {
+                $project: {
+                    title: 1,
+                    start_date: 1,
+                    end_date: 1,
+                    overdue: 1,
+                    auditstatus: 1,
+                    overdue: {
+                        $cond: {
+                            if: { $lt: ["$end_date", new Date()] },
+                            then: {
+                                $subtract: [
+                                    {
+                                        $ceil: {
+                                            $divide: [
+                                                {
+                                                    $subtract: [new Date(), "$end_date"]
+                                                },
+                                                1000 * 60 * 60 * 24 // Convert milliseconds to days
+                                            ]
+                                        }
+                                    },
+                                    1 // Subtract 1 day from the calculated overdue days
+                                ]
+                            },
+                            else: 0 // Project is not overdue
+                        }
+                    },
+                    risk: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    auditor: {
+                        $concat: [
+                            { $arrayElemAt: ["$auditorData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$auditorData.lastName", 0] }
+                        ]
+                    },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    branch: { $arrayElemAt: ["$branchData.name", 0] }
+                }
+            }
+
+        ]);
+        // console.log(auditDataFilter);
+        if (overdue !== undefined && overdue !== "") {
+            // const currentDate = new Date();
+            auditDataFilter = auditDataFilter.filter(doc => {
+                return doc.overdue == overdue
+            });
+        }
+        console.log(auditDataFilter);
+
+        response.status(200).json(auditDataFilter);
+    } catch (error) {
         next(error);
     }
 }
@@ -96,7 +748,7 @@ export const catCreate = async (request, response, next) => {
 export const catGettting = async (request, response, next) => {
     try {
         const category = await Category.find({}).sort({ createdAt: -1 });
-        console.log(category);
+        // console.log(category)
         response.status(201).json(category);
     } catch (error) {
         // response.status(404).json({ message: error.message })
@@ -104,18 +756,229 @@ export const catGettting = async (request, response, next) => {
     }
 }
 export const catEditById = async (request, response, next) => {
-    //const{id,name} = request.body;
-    return response.send(request.params.id); return
-    //return response.send(id);
     try {
-        const category = await Category.find();
-        response.status(201).json(category);
+
+        const name = await Category.findOne({ name: request.body.name });
+        if (name) {
+            return response.send("409");
+        }
+        let categoryUpdate = {};
+        categoryUpdate = {
+            name: request.body.name,
+            dates: request.body.dates,
+        };
+        await Category.updateOne({ _id: request.params.id }, categoryUpdate);
+        response.status(201).json(categoryUpdate);
     } catch (error) {
         // response.status(404).json({ message: error.message })
         next(error);
     }
 }
-// ------------------------ Create Compliance --------------------
+export const deleteCat = async (request, response, next) => {
+    try {
+        const res = await Category.deleteOne({ _id: request.params.id });
+        response.status(201).json("Category is deleted Successfully!");
+    } catch (error) {
+        //response.status(409).json({message: error.message});
+        next(error);
+    }
+}
+export const stateGetting = async (request, response, next) => {
+    try {
+        const states = await State.find();
+        response.status(201).json(states);
+    } catch (error) {
+        // response.status(404).json({ message: error.message })
+        next(error);
+    }
+}
+export const notificationCreate = async (request, response, next) => {
+    try {
+        const documentFile = request.file;
+        const url = request.protocol + '://' + request.get('host');
+        const formattedDocumentFileName = Date.now() + request.file.originalname.split(' ').join('-');
+        const uploadsDirectory = './data/uploads/';
+        const documentDirectory = 'documents/';
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the documents directory exists
+        fs.access(uploadsDirectory + documentDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
+            }
+        });
+        // await sharp(request.file.buffer).resize({ width: 600 }).toFile('./data/uploads/' + formattedFileName);
+        // const profileImage = url + '/' + formattedFileName;
+
+        fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
+        const documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+        const notification = {
+            label: request.body.label,
+            role: request.body.role,
+            description: request.body.description,
+            externallink: request.body.externallink,
+            document: documentUrl,
+            dates: request.body.dates,
+        }
+        // console.log(notification);
+        const newnotification = new Notification(notification);
+        await newnotification.save();
+        response.status(201).json(newnotification);
+    } catch (error) {
+        // response.status(404).json({ message: 'error.message' })
+        next(error);
+    }
+}
+export const gettingNotification = async (request, response, next) => {
+    try {
+        const notification = await Notification.find();
+        response.status(201).json(notification);
+    } catch (error) {
+        // response.status(404).json({ message: error.message })
+        next(error);
+    }
+}
+export const createUser = async (request, response, next) => {
+    try {
+
+        const email = await Users.findOne({ email: request.body.email });
+        if (email) {
+            return response.send("409");
+        }
+        const data = request.body;
+        const salt = bcryptsjs.genSaltSync(10);
+        const passhash = bcryptsjs.hashSync(data.password, salt);
+        const user = {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            userName: data.firstName + ' ' + data.lastName,
+            role: data.role,
+            email: data.email,
+            password: passhash,
+            realpassword: data.password
+        }
+
+        const newUser = new Users(user)
+        await newUser.save()
+        //  console.log(newUser._id);
+        //await sendMail(newUser._id, newUser.email, 'email verification',data.password);
+        response.status(201).json(newUser)
+    } catch (error) {
+        // response.status(404).json({ message: 'error.message' })
+        next(error);
+    }
+}
+export const gettingUser = async (request, response, next) => {
+    try {
+        const users = await Users.find().sort({ createdAt: -1 });
+        response.status(201).json(users);
+    } catch (error) {
+        // response.status(404).json({ message: error.message })
+        next(error);
+    }
+}
+export const editUser = async (request, response, next) => {
+    try {
+        // console.log(request.body.email); return;
+        //     const email = await Users.findOne({email:request.body.email});
+        //    // console.log(email); return;
+        //     if(email) {
+        //         return response.send("409");
+        //     }
+        // console.log(email); return;
+        const data = request.body;
+        const salt = bcryptsjs.genSaltSync(10);
+        const passhash = bcryptsjs.hashSync(data.password, salt);
+        let userUpdate = {};
+        userUpdate = {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            userName: data.firstName + ' ' + data.lastName,
+            role: data.role,
+            email: data.email,
+            password: passhash,
+            realpassword: data.password
+        };
+        await Users.updateOne({ _id: request.params.id }, userUpdate);
+        response.status(201).json(userUpdate);
+    } catch (error) {
+        // response.status(404).json({ message: error.message })
+        next(error);
+    }
+}
+export const deleteUser = async (request, response, next) => {
+    try {
+        const res = await Users.deleteOne({ _id: request.params.id });
+        response.status(201).json("User is deleted Successfully!");
+    } catch (error) {
+        //response.status(409).json({message: error.message});
+        next(error);
+    }
+}
+export const createBranch = async (request, response, next) => {
+    try {
+
+        const name = await Branch.findOne({ name: request.body.name });
+        if (name) {
+            return response.send("409");
+        }
+        const data = request.body;
+
+        const branch = {
+            name: data.name
+        }
+
+        const newbranch = new Branch(branch)
+        await newbranch.save()
+        //  console.log(newUser._id);
+        //await sendMail(newUser._id, newUser.email, 'email verification',data.password);
+        response.status(201).json(newbranch)
+    } catch (error) {
+        // response.status(404).json({ message: 'error.message' })
+        next(error);
+    }
+}
+// export const createCompany = async (request, response, next) => {
+//     try {
+
+//         const companyname = await Company.findOne({ companyname: request.body.name });
+//         if (companyname) {
+//             return response.send("409");
+//         }
+//         const data = request.body;
+
+//         const company = {
+//             companyname: data.companyname,
+//             state: '65b2d649ea514009b0989736',
+//             branchname: '65bb474a1d06166d9d85f55c',
+//             executiveId: '65b2d649ea514009b0989736',
+//         }
+
+//         const newCompany = new Company(company)
+//         await newCompany.save()
+//         //  console.log(newUser._id);
+//         //await sendMail(newUser._id, newUser.email, 'email verification',data.password);
+//         response.status(201).json(newCompany)
+//     } catch (error) {
+//         // response.status(404).json({ message: 'error.message' })
+//         next(error);
+//     }
+// }
+
+export const gettingBranch = async (request, response, next) => {
+    try {
+        const branch = await Branch.find();
+        response.status(201).json(branch);
+    } catch (error) {
+        // response.status(404).json({ message: error.message })
+        next(error);
+    }
+}
 export const createCompliances = async (request, response, next) => {
 
     try {
@@ -124,6 +987,7 @@ export const createCompliances = async (request, response, next) => {
             return response.send("409");
         }
         const data = request.body
+        // console.log('documentUrl',documentUrl)
         const documentFile = request.files.document ? request.files.document[0] : null;
         const imageFile = request.files.image ? request.files.image[0] : null;
         const url = request.protocol + '://' + request.get('host');
@@ -222,31 +1086,16 @@ export const createCompliances = async (request, response, next) => {
         next(error);
     }
 }
-
-
-
-
 export const updateCompliancesById = async (request, response, next) => {
     try {
-
-        const data = request.body
-
+        const data = request.body;
         const uploadsDirectory = './data/uploads/';
         const imageDirectory = 'images/';
         const documentDirectory = 'documents/';
-
-        const documentFile = request.files.docattachment ? request.files.docattachment[0] : null;
-        const imageFile = request.files.form ? request.files.form[0] : null;
         const url = request.protocol + '://' + request.get('host');
         let imageUrl, formattedImageFileName
         let documentUrl, formattedDocumentFileName
 
-        if (imageFile) {
-            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
-        }
-        if (documentFile) {
-            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
-        }
         fs.access(uploadsDirectory, (err) => {
             if (err) {
                 fs.mkdirSync(uploadsDirectory, { recursive: true });
@@ -266,9 +1115,18 @@ export const updateCompliancesById = async (request, response, next) => {
                 fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
             }
         });
+        if (request.files?.document !== undefined && request.files?.document[0] !== undefined) {
+            const documentFile = request.files.document ? request.files.document[0] : null;
+            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+            if (documentFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
+                documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+            }
 
-
-        if (imageFile) {
+        }
+        if (request.files?.image !== undefined && request.files?.image[0] !== undefined) {
+            const imageFile = request.files.image ? request.files.image[0] : null;
+            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
             if (imageFile.mimetype.includes('image')) {
                 await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
                 imageUrl = url + '/' + imageDirectory + formattedImageFileName;
@@ -278,124 +1136,81 @@ export const updateCompliancesById = async (request, response, next) => {
                 imageUrl = url + '/' + imageDirectory + formattedImageFileName;
             }
         }
-        if (documentFile) {
+        if (request.files?.document !== undefined && request.files?.document[0] !== undefined && request.files?.image !== undefined && request.files?.image[0] !== undefined) {
+
+            const documentFile = request.files.document ? request.files.document[0] : null;
+            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
             if (documentFile.mimetype === 'application/pdf') {
+                console.log('both')
                 fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
                 documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
             }
+            const imageFile = request.files.image ? request.files.image[0] : null;
+            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
+            if (imageFile.mimetype.includes('image')) {
+                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+            else if (imageFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + imageDirectory + formattedImageFileName, imageFile.buffer);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
         }
-        const newArrDataRules = (data.rule).split("\r\n").map((data, i) => {
+        const newArrDataRules = (data.rule).split("\n").map((data, i) => {
             return {
                 id: i + 1,
                 value: data
             }
         })
-        const newArrDataQuestion = (data.question).split("\r\n").map((data, i) => {
+        const newArrDataQuestion = (data.question).split("\n").map((data, i) => {
             return {
                 id: i + 1,
                 value: data
             }
         })
-        const newArrDataDescription = (data.description).split("\r\n").map((data, i) => {
+        const newArrDataDescription = (data.description).split("\n").map((data, i) => {
             return {
                 id: i + 1,
                 value: data
             }
         })
-        // let comliancelist = {};
-        const comliancelist = {
+        let comliancelist = {};
+        comliancelist = {
+            category: data.category,
             state: data.state,
             act: data.act,
             rule: data.rule,
-            category: data.category,
+            ruletype: newArrDataRules,
             question: data.question,
+            questiontype: newArrDataQuestion,
+            description: data.description,
+            descriptiontype: newArrDataDescription,
+            executive: data.executive,
             form: imageUrl,
             docattachment: documentUrl,
+            docattachmenttype: data.docattachmenttype,
+            compliancetype: data.compliancetype,
             compliancetype: data.compliancetype,
             frequency: data.frequency,
             risk: data.risk,
-            description: data.description,
-            duedate: data.duedate,
-            executiveId: data.executiveId,
-            status: data.status,
+            updated_at: data.dates
         }
-        console.log(comliancelist);
-        // const newComliancelistt = new Compliance(comliancelist)
-        console.log(request.params.id);
+        //}
+        //console.log(comliancelist);return;
         const updatedCompliance = await Compliance.updateOne({ _id: request.params.id }, comliancelist);
-        // await newComliancelistt.save()
         response.status(201).json(updatedCompliance)
     }
     catch (error) {
         next(error)
     }
 }
-
-
-
-export const complianceGetting = async (request, response, next) => {
+export const gettingCompliancesOnCreate = async (request, response, next) => {
     try {
-        const compliance = await Compliance.find({}).populate("category").populate('state')
-        let newArr = compliance.map(data => {
-            return {
-                _id: data._id,
-                state: data.state.name,
-                act: data.act,
-                rule: data.rule,
-                category: data.category.name,
-                question: data.question,
-                form: data.form,
-                docattachment: data.docattachment,
-                compliancetype: data.compliancetype,
-                frequency: data.frequency,
-                description: data.description,
-                risk: data.risk,
-                duedate: data.duedate,
-                status: data.status,
-                created_at: data.created_at,
-                updated_at: data.updated_at
-            }
-        })
-        response.status(201).json(newArr)
-    }
-    catch (error) {
-        next(error)
-    }
-}
-
-// ----------------------------- Compliance Create Filter ------------------------------------
-
-export const complianceFilter = async (request, response, next) => {
-    try {
-        const stateFilter = request.body.state;
-        const dateFilter = request.body.created_at;
-        console.log(request.body);
-        const matchStage = {};
-
-        if (stateFilter !== undefined && dateFilter !== undefined && stateFilter !== "" && dateFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            const dateObject = new Date(dateFilter); // taking user data 2024-05-20 and converting to mongodb iso date
-            const nextDay = new Date(dateObject); // now dateobject have date as iso date and saving again it to nexday
-            nextDay.setDate(dateObject.getDate() + 1); // then extracting date and adding 1 to it bcz $lt used
-            matchStage['created_at'] = {
-                $gte: dateObject,
-                $lt: nextDay
-            };
-        } else if (stateFilter !== undefined && stateFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());;
-        } else if (dateFilter !== undefined && dateFilter !== "") {
-            // Only createdAt is provided
-            const dateObject = new Date(dateFilter);
-            const nextDay = new Date(dateObject);
-            nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['created_at'] = {
-                $gte: dateObject,
-                $lt: nextDay
-            };
-        }
-        const filter = await Compliance.aggregate([
+        const newArr = await Compliance.aggregate([
             {
-                $match: matchStage,
+                $match: {
+                    status: { $eq: 0 }
+                }
             },
             {
                 $lookup: {
@@ -414,45 +1229,265 @@ export const complianceFilter = async (request, response, next) => {
                 },
             },
             {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
                 $project: {
                     _id: 1,
                     act: 1,
                     rule: 1,
+                    question: 1,
+                    description: 1,
                     form: 1,
                     docattachment: 1,
                     compliancetype: 1,
-                    question: 1,
                     description: 1,
                     frequency: 1,
                     risk: 1,
-                    duedate: 1,
                     status: 1,
                     created_at: 1,
+                    updated_at: 1,
+                    duedate: 1,
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
                 }
             }
-        ]);
-
-        response.status(201).json({ message: "Total = " + filter.length, data: filter });
-    } catch (error) {
-        next(error);
+        ])
+        // console.log(newArr)
+        response.status(201).json(newArr)
     }
-};
-
-// ---------------------------Compliance Approve Filter ----------------------------
-
-export const complianceApproveFilter = async (request, response, next) => {
-    try {  // status : 0
+    catch (error) {
+        next(error)
+    }
+}
+export const gettingCompliances = async (request, response, next) => { /////////this is when getting on approve compliance page
+    try {
+        const newArr = await Compliance.aggregate([
+            {
+                $match: {
+                    $and: [
+                        { status: { $eq: 0 } },
+                        { executive: { $ne: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72") } }
+                    ]
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    act: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    form: 1,
+                    docattachment: 1,
+                    compliancetype: 1,
+                    description: 1,
+                    frequency: 1,
+                    risk: 1,
+                    status: 1,
+                    created_at: 1,
+                    updated_at: 1,
+                    duedate: 1,
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                }
+            }
+        ])
+        // console.log(newArr)
+        response.status(201).json(newArr)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+export const gettingCompliancesAll = async (request, response, next) => {
+    try {
+        const newArr = await Compliance.aggregate([
+            {
+                $match: {
+                    status: { $eq: 1 }
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    act: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    form: 1,
+                    docattachment: 1,
+                    compliancetype: 1,
+                    description: 1,
+                    frequency: 1,
+                    risk: 1,
+                    status: 1,
+                    created_at: 1,
+                    updated_at: 1,
+                    duedate: 1,
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                }
+            }
+        ])
+        // console.log(newArr)
+        response.status(201).json(newArr)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+export const gettingCompliancesReject = async (request, response, next) => {
+    try {
+        const newArr = await Compliance.aggregate([
+            {
+                $match: {
+                    status: { $eq: 2 }
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    act: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    form: 1,
+                    docattachment: 1,
+                    compliancetype: 1,
+                    description: 1,
+                    frequency: 1,
+                    risk: 1,
+                    status: 1,
+                    created_at: 1,
+                    updated_at: 1,
+                    reason: 1,
+                    duedate: 1,
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                }
+            }
+        ])
+        // console.log(newArr)
+        response.status(201).json(newArr)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+export const complianceFilter = async (request, response, next) => {
+    try {
         const stateFilter = request.body.state;
-        const executiveFilter = request.body.executive;
         const dateFilter = request.body.created_at;
-        console.log(stateFilter, executiveFilter, dateFilter)
         const matchStage = {};
-
-        if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "") {
-            console.log("you are  in all");
-
+        matchStage['status'] = { $eq: 0 };
+        if (stateFilter !== undefined && dateFilter !== undefined && stateFilter !== "" && dateFilter !== "") {
+            // Both state and createdAt are provided
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
 
             const dateObject = new Date(dateFilter);
@@ -462,10 +1497,14 @@ export const complianceApproveFilter = async (request, response, next) => {
                 $gte: dateObject,
                 $lt: nextDay
             };
-            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            console.log('both')
         } else if (stateFilter !== undefined && stateFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());;
+            // Only state is provided
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            console.log('state')
         } else if (dateFilter !== undefined && dateFilter !== "") {
+            console.log('date')
+            // Only createdAt is provided
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
@@ -474,11 +1513,8 @@ export const complianceApproveFilter = async (request, response, next) => {
                 $lt: nextDay
             };
         }
-        else if (executiveFilter !== undefined && executiveFilter !== "") {
-            console.log("you are  in executive");
-            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
-        }
 
+        // console.log(matchStage);
         const filter = await Compliance.aggregate([
             {
                 $match: matchStage,
@@ -514,13 +1550,372 @@ export const complianceApproveFilter = async (request, response, next) => {
                     rule: 1,
                     form: 1,
                     docattachment: 1,
-                    // compliancetype : 1,
-                    // question : 1,
-                    // description : 1,
-                    // frequency : 1,
-                    // risk : 1,
-                    // duedate : 1,
-                    // status : 1,
+                    compliancetype: 1,
+                    question: 1,
+                    description: 1,
+                    frequency: 1,
+                    risk: 1,
+                    duedate: 1,
+                    status: 1,
+                    created_at: 1,
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+
+                }
+            }
+        ]);
+
+        response.status(201).json(filter);
+    } catch (error) {
+        next(error);
+    }
+}
+export const gettingCompliancesAllFilter = async (request, response, next) => {
+    try {
+        // console.log('gettingCompliancesAllFilter');
+        const stateFilter = request.body.state;
+        const companyFilter = request.body.company;
+        const executiveFilter = request.body.executive;
+        const dateFilter = request.body.created_at;
+
+        const matchStage = {};
+        matchStage['status'] = { $eq: 1 }
+        if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "") {
+            // Both state and createdAt are provided
+            console.log('you are in all');
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            // matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && executiveFilter !== undefined && executiveFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            // matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && executiveFilter !== undefined && executiveFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            // matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (executiveFilter !== undefined && executiveFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            // matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (executiveFilter !== undefined && executiveFilter !== "") {
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            // matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+        }
+        else if (executiveFilter !== undefined && executiveFilter !== "" && stateFilter !== undefined && stateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+
+        }
+        else if (executiveFilter !== undefined && executiveFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (dateFilter !== undefined && dateFilter !== "" && executiveFilter !== undefined && executiveFilter !== "") {
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (dateFilter !== undefined && dateFilter !== "") {
+            // matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (dateFilter !== undefined && dateFilter !== "" && stateFilter !== undefined && stateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && executiveFilter !== undefined && executiveFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+
+        }
+        else if (stateFilter !== undefined && stateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            // matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+
+        }
+        else if (stateFilter !== undefined && stateFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+
+        else if (executiveFilter !== undefined && executiveFilter !== "") {
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+            // matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+        }
+        else if (dateFilter !== undefined && dateFilter !== "") {
+            // matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (stateFilter !== undefined && stateFilter !== "") {
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+            // matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+        }
+        else if (executiveFilter !== undefined && executiveFilter !== "") {
+            // matchStage['admin'] = "659d4f2609c9923c9e7b8f72"
+            matchStage['admin'] = new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72")
+        }
+        else if (stateFilter !== undefined && stateFilter !== "") {
+            console.log('you are in state amitabh');
+            // Only state is provided
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());;
+        }
+        else if (executiveFilter !== undefined && executiveFilter !== "") {
+            console.log('you are in exeec');
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+        }
+        // else if (companyFilter !== undefined && companyFilter !== "") {
+        //     console.log('you are in company');
+        //     matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
+        // }
+        else if (dateFilter !== undefined && dateFilter !== "") {
+            // Only createdAt is provided
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        // console.log(matchStage);
+        const filter = await Compliance.aggregate([
+            {
+                $match: matchStage,
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            // {
+            //     $lookup: {
+            //         from: "companies",
+            //         localField: "company",
+            //         foreignField: "_id",
+            //         as: "companyData",
+            //     },
+            // },
+            {
+                $project: {
+                    _id: 1,
+                    act: 1,
+                    rule: 1,
+                    form: 1,
+                    docattachment: 1,
+                    compliancetype: 1,
+                    question: 1,
+                    description: 1,
+                    frequency: 1,
+                    risk: 1,
+                    duedate: 1,
+                    status: 1,
+                    created_at: 1,
+                    updated_at: 1,
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    // company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                }
+            }
+        ]);
+        // console.log('filter', filter);
+        response.status(201).json(filter);
+    } catch (error) {
+        next(error);
+    }
+}
+export const complianceApproveFilter = async (request, response, next) => {
+    try {
+        const stateFilter = request.body.state;
+        const executiveFilter = request.body.executive;
+        const dateFilter = request.body.created_at;
+        const matchStage = {};
+        matchStage['status'] = { $eq: 0 };
+        if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "") {
+            // Both state and createdAt are provided
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
+
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+        } else if (stateFilter !== undefined && stateFilter !== "") {
+            // Only state is provided
+            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());;
+        } else if (dateFilter !== undefined && dateFilter !== "") {
+            // Only createdAt is provided
+            const dateObject = new Date(dateFilter);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        else if (executiveFilter !== undefined && executiveFilter !== "") {
+            matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
+        }
+
+        // console.log(matchStage);
+        const filter = await Compliance.aggregate([
+            {
+                $match: matchStage,
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    act: 1,
+                    rule: 1,
+                    form: 1,
+                    docattachment: 1,
+                    compliancetype: 1,
+                    question: 1,
+                    description: 1,
+                    frequency: 1,
+                    risk: 1,
+                    duedate: 1,
+                    status: 1,
                     created_at: 1,
                     executive: {
                         $concat: [
@@ -533,26 +1928,32 @@ export const complianceApproveFilter = async (request, response, next) => {
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
                 }
             }
-        ]);
-        console.log(filter);
-        response.status(201).json(filter);
 
+        ]);
+        // console.log(filter)
+        response.status(201).json(filter);
     } catch (error) {
         next(error);
     }
-};
-
+}
 // -------------------------------Compliance Rejected Filter -------------------------------
 
 export const complianceRejectedFilter = async (request, response, next) => {
     try {
+        // const findAllComp = await Compliance.find({}).populate('state')
+        // console.log(findAllComp);
+
         const stateFilter = request.body.state;
         const executiveFilter = request.body.executive;
         const updatedFilter = request.body.updated_at;
         const rejectedFilter = request.body.rejected_at;
 
+        // findAllComp.filter(data=>{
+
+        // })
+        // console.log(request.query);
         const matchStage = {};
-        matchStage['status'] = { $eq: 2 }
+
         if (stateFilter !== undefined && executiveFilter !== undefined && updatedFilter !== undefined && rejectedFilter !== undefined && stateFilter !== "" && executiveFilter !== "" && updatedFilter !== "" && rejectedFilter !== "") {
             // Both state and createdAt are provided
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
@@ -732,6 +2133,7 @@ export const complianceRejectedFilter = async (request, response, next) => {
         else if (executiveFilter !== undefined && executiveFilter !== "") {
             matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
         }
+        matchStage['status'] = { $eq: 2 }
 
         // console.log(matchStage);
         const filter = await Compliance.aggregate([
@@ -779,6 +2181,7 @@ export const complianceRejectedFilter = async (request, response, next) => {
                     duedate: 1,
                     status: 1,
                     created_at: 1,
+                    reason: 1,
                     executive: {
                         $concat: [
                             { $arrayElemAt: ["$executiveData.firstName", 0] },
@@ -797,69 +2200,52 @@ export const complianceRejectedFilter = async (request, response, next) => {
         next(error);
     }
 };
-
-// -------------------------------User Creation ----------------------------->
-
-export const userCreate = async (request, response, next) => {
+export const gettingCompliancesById = async (request, response, next) => {
     try {
-        const data = request.body
-        const user = {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            role: data.role,
-            password: data.password,
-        }
-        const hashedPass = await bcrypt.hash(data.password, 10)
-        user.password = hashedPass;
-        const newUser = new User(user)
-        await newUser.save()
-        response.status(201).json(newUser)
-    }
-    catch (error) {
-        next(error)
+        const compliances = await Compliance.findOne({ _id: request.params.id });
+        response.status(201).json(compliances);
+    } catch (error) {
+        next(error);
     }
 }
-
-export const userGetting = async (request, response, next) => {
+export const complianceApporve = async (request, response, next) => {
     try {
-        const user = await User.find({})
-        response.status(201).json(user)
-    }
-    catch (error) {
-        next(error)
+        //console.log(request.body);return;
+        const compliancesApprove = await Compliance.updateMany({ status: request.body.status, duedate: request.body.duedate });
+        response.status(201).json(compliancesApprove);
+    } catch (error) {
+        next(error);
     }
 }
-
-
-// ------------------------------------Create State -------------------------------
-
-export const stateCreate = async (request, response, next) => {
+export const complianceReject = async (request, response, next) => {
     try {
-        const data = request.body
-        const newState = new State(data);
-        await newState.save()
-        response.status(201).json(newState)
-    }
-    catch (error) {
-        next(error)
+        //console.log(request.body);return;
+        const compliances = await Compliance.updateMany({ status: request.body.status, reason: request.body.reason, rejected_at: request.body.rejected_at });
+        response.status(201).json(compliances);
+    } catch (error) {
+        next(error);
     }
 }
-
-// --------------------------------Create CheckList----------------------------------
-
 export const checkListCreate = async (request, response, next) => {
     try {
+        // const act = await CheckList.findOne({act:request.body.act});
+        // if(act) {
+        //     return response.send("409");
+        // }
         const data = request.body
-        const documentFile = request.files.documents[0];
-        const imageFile = request.files.image[0];
+        //  console.log('documentUrl',documentUrl)
+        const documentFile = request.files.document ? request.files.document[0] : null;
+        const imageFile = request.files.image ? request.files.image[0] : null;
         const url = request.protocol + '://' + request.get('host');
+        let imageUrl, formattedImageFileName
+        let documentUrl, formattedDocumentFileName
 
-
-        const formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
-        const formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
-
-
+        if (imageFile) {
+            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
+        }
+        if (documentFile) {
+            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+        }
         const uploadsDirectory = './data/uploads/';
         const imageDirectory = 'images/';
         const documentDirectory = 'documents/';
@@ -883,30 +2269,61 @@ export const checkListCreate = async (request, response, next) => {
                 fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
             }
         });
-        // await sharp(request.file.buffer).resize({ width: 600 }).toFile('./data/uploads/' + formattedFileName);
-        // const profileImage = url + '/' + formattedFileName;
 
-        await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
-        const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-        fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
-        const documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
-
-        // }
+        if (imageFile) {
+            if (imageFile.mimetype.includes('image')) {
+                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+            else if (imageFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + imageDirectory + formattedImageFileName, imageFile.buffer);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+        }
+        if (documentFile) {
+            if (documentFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
+                documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+            }
+        }
+        const newArrDataRules = (data.rule).split("\r\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        const newArrDataQuestion = (data.question).split("\r\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        const newArrDataDescription = (data.description).split("\r\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
         const checklist = {
             state: data.state,
-            act: data.act,
-            rule: data.rule,
             category: data.category,
-            status: data.status,
+            company: data.company,
+            act: data.compliance,
+            executive: data.executive,
+            branchname: data.branch,
+            compliance: data.compliance,
+            rule: data.rule,
+            ruletype: newArrDataRules,
+            question: data.question,
+            questiontype: newArrDataQuestion,
+            descriptiontype: newArrDataDescription,
+            description: data.description,
             image: imageUrl,
             documents: documentUrl,
-            form: data.form,
-            compliances: data.compliances,
+            frequency: data.frequency,
             risk: data.risk,
-            executive: data.executive,
-            branchname: data.branchname
         }
-        // console.log(checklist); return
+        // console.log(checklist);
         const newCheckList = new CheckList(checklist)
         await newCheckList.save()
         response.status(201).json(newCheckList)
@@ -915,22 +2332,573 @@ export const checkListCreate = async (request, response, next) => {
         next(error)
     }
 }
-
-export const checkListGetting = async (request, response, next) => {
+export const checkListFind = async (request, response, next) => {
     try {
-        const checklist = await CheckList.find({}).populate('category')
-        // console.log(checklist);
-        // const data = {}
-        // data = {
-        //     compliance : checklist.compliance.act
-        // }
-        response.status(201).json(checklist)
+        const getAllCheckList = await CheckList.find({})
+            .populate('category', 'name')
+            .populate('state', 'name')
+            .populate('branchname', 'name')
+            .populate('executive', 'firstName lastName')
+            .populate('compliances', 'act');
+
+        const newArr = getAllCheckList.map((data) => {
+            return {
+                _id: data._id,
+                state: data.state.name,
+                compliance: data.compliance,
+                rule: data.rule,
+                category: data.category.name,
+                status: data.status,
+                image: data.image,
+                documents: data.documents,
+                question: data.question,
+                executive: data.executive.firstName + " " + data.executive.lastName,
+                branchname: data.branchname.name,
+                risk: data.risk,
+                approvedate: data.approvedate,
+                created_at: data.date,
+            }
+        })
+        response.status(200).json(newArr)
+    }
+    catch (error) {
+        next(error);
+    }
+}
+export const updateChecklistsById = async (request, response, next) => {
+    try {
+        const data = request.body;
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+        const documentDirectory = 'documents/';
+        const url = request.protocol + '://' + request.get('host');
+        let imageUrl, formattedImageFileName
+        let documentUrl, formattedDocumentFileName
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        // Ensure that the documents directory exists
+        fs.access(uploadsDirectory + documentDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + documentDirectory, { recursive: true });
+            }
+        });
+        if (request.files?.document !== undefined && request.files?.document[0] !== undefined) {
+            const documentFile = request.files.document ? request.files.document[0] : null;
+            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+            if (documentFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
+                documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+            }
+
+        }
+        if (request.files?.image !== undefined && request.files?.image[0] !== undefined) {
+            const imageFile = request.files.image ? request.files.image[0] : null;
+            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
+            if (imageFile.mimetype.includes('image')) {
+                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+            else if (imageFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + imageDirectory + formattedImageFileName, imageFile.buffer);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+        }
+        if (request.files?.document !== undefined && request.files?.document[0] !== undefined && request.files?.image !== undefined && request.files?.image[0] !== undefined) {
+
+            const documentFile = request.files.document ? request.files.document[0] : null;
+            formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+            if (documentFile.mimetype === 'application/pdf') {
+                console.log('both')
+                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, documentFile.buffer);
+                documentUrl = url + '/' + documentDirectory + formattedDocumentFileName;
+            }
+            const imageFile = request.files.image ? request.files.image[0] : null;
+            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
+            if (imageFile.mimetype.includes('image')) {
+                await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+            else if (imageFile.mimetype === 'application/pdf') {
+                fs.writeFileSync(uploadsDirectory + imageDirectory + formattedImageFileName, imageFile.buffer);
+                imageUrl = url + '/' + imageDirectory + formattedImageFileName;
+            }
+        }
+        const newArrDataRules = (data.rule).split("\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        const newArrDataQuestion = (data.question).split("\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        const newArrDataDescription = (data.description).split("\n").map((data, i) => {
+            return {
+                id: i + 1,
+                value: data
+            }
+        })
+        let checklist = {};
+        checklist = {
+            state: data.state,
+            category: data.category,
+            company: data.company,
+            compliances: data.compliance,
+            executive: data.executive,
+            branchname: data.branch,
+            compliance: data.compliance,
+            rule: data.rule,
+            ruletype: newArrDataRules,
+            question: data.question,
+            questiontype: newArrDataQuestion,
+            description: data.description,
+            descriptiontype: newArrDataDescription,
+            image: imageUrl,
+            documents: documentUrl,
+            frequency: data.frequency,
+            approvedate: data.approvedate,
+            risk: data.risk,
+            created_at: data.created_at,
+            updated_at: data.dates
+        }
+        //}
+        // console.log(checklist)
+        const updatedChecklist = await CheckList.updateOne({ _id: request.params.id }, checklist);
+        response.status(201).json(updatedChecklist)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+export const gettingchecklistById = async (request, response, next) => {
+    try {
+
+        const checklist = await CheckList.findOne({ _id: request.params.id });
+        //console.log(checklist);return;
+        response.status(201).json(checklist);
+    } catch (error) {
+        next(error);
+    }
+}
+export const checklistApporve = async (request, response, next) => {
+    try {
+        //console.log(request.body);return;
+        const checklistApprove = await CheckList.updateMany({ status: request.body.status, approvedate: request.body.approvedate });
+        response.status(201).json(checklistApprove);
+    } catch (error) {
+        next(error);
+    }
+}
+export const checklistOnCreateegetting = async (request, response, next) => {
+    try {
+        const newArr = await CheckList.aggregate([
+            {
+                $match: { status: { $eq: 0 } }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "compliances",
+                    localField: "compliance",
+                    foreignField: "_id",
+                    as: "complianceData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branchname",
+                    foreignField: "_id",
+                    as: "branchData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    category: 1,
+                    branchname: 1,
+                    compliance: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    image: 1,
+                    documents: 1,
+                    frequency: 1,
+                    risk: 1,
+                    created_at: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
+                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
+                }
+            }
+        ])
+        // console.log(newArr)
+        response.status(201).json(newArr)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+export const checklistAllgetting = async (request, response, next) => {
+    try {
+        const newArr = await CheckList.aggregate([
+            {
+                $match: {
+                    status: { $eq: 1 }
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "compliances",
+                    localField: "compliance",
+                    foreignField: "_id",
+                    as: "complianceData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branchname",
+                    foreignField: "_id",
+                    as: "branchData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    category: 1,
+                    branchname: 1,
+                    compliance: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    image: 1,
+                    documents: 1,
+                    frequency: 1,
+                    risk: 1,
+                    created_at: 1,
+                    approvedate: 1,
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
+                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                }
+            }
+        ])
+        // console.log(newArr)
+        response.status(201).json(newArr)
     }
     catch (error) {
         next(error)
     }
 }
 
+export const checklistApprovegetting = async (request, response, next) => {
+    try {
+        // const compliance = await Compliance.find({ $and: [ { status: { $eq: 0 } }, { executive: { $ne: '659d4f2609c9923c9e7b8f72' } } ] }).populate("category").populate('state')
+        const matchStage = {}
+        // matchStage['status'] = {$eq : 0}
+        // matchStage['executive'] = { $ne: '659d4f2609c9923c9e7b8f72' }
+        const newArr = await CheckList.aggregate([
+            {
+                $match: {
+                    $and: [
+                        { status: { $eq: 0 } },
+                        { executive: { $ne: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72") } }
+                    ]
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "compliances",
+                    localField: "compliance",
+                    foreignField: "_id",
+                    as: "complianceData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branchname",
+                    foreignField: "_id",
+                    as: "branchData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    category: 1,
+                    branchname: 1,
+                    compliance: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    image: 1,
+                    documents: 1,
+                    frequency: 1,
+                    risk: 1,
+                    created_at: 1,
+                    approvedate: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
+                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
+                }
+            }
+        ])
+        // console.log(newArr)
+        response.status(201).json(newArr)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+export const checklistOnRejectegetting = async (request, response, next) => {
+    try {
+        const newArr = await CheckList.aggregate([
+            {
+                $match: {
+                    status: { $eq: 2 }
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "compliances",
+                    localField: "compliance",
+                    foreignField: "_id",
+                    as: "complianceData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branchname",
+                    foreignField: "_id",
+                    as: "branchData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    category: 1,
+                    branchname: 1,
+                    rule: 1,
+                    question: 1,
+                    description: 1,
+                    image: 1,
+                    documents: 1,
+                    frequency: 1,
+                    risk: 1,
+                    created_at: 1,
+                    rejected_at: 1,
+                    reason: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
+                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
+                }
+            }
+        ])
+        // console.log(newArr)
+        response.status(201).json(newArr)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+export const rejectChecklist = async (request, response, next) => {
+    try {
+        //console.log(request.body);return;
+        const compliances = await CheckList.updateMany({ status: request.body.status, reason: request.body.reason, rejected_at: request.body.rejected_at });
+        response.status(201).json(compliances);
+    } catch (error) {
+        next(error);
+    }
+}
+export const gettingchecklistAllCompliance = async (request, response, next) => {
+    try {
+        //console.log(request.body);return;
+        const compliancesforchecklist = await Compliance.find({});
+        response.status(201).json(compliancesforchecklist);
+    } catch (error) {
+        next(error);
+    }
+}
 // ------------------------------- Checklist All Filter-------------------------------------
 export const checkListAllFilter = async (request, response, next) => {
     try {
@@ -938,12 +2906,13 @@ export const checkListAllFilter = async (request, response, next) => {
         const stateFilter = request.body.state;
         const companyFilter = request.body.company;
         const executiveFilter = request.body.executive;
-        const dateFilter = request.body.date;
-        const adminFilter = request.body.admin
+        const dateFilter = request.body.created_at;
 
         const matchStage = {};
-        matchStage['status'] = { $eq: 0 }
+        matchStage['status'] = { $eq: 1 }
         if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && companyFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "" && companyFilter !== "") {
+            // Both state and createdAt are provided
+            console.log('you are in all');
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
             matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
@@ -951,7 +2920,7 @@ export const checkListAllFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -969,7 +2938,7 @@ export const checkListAllFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -981,7 +2950,7 @@ export const checkListAllFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -993,7 +2962,7 @@ export const checkListAllFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1014,7 +2983,7 @@ export const checkListAllFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1025,7 +2994,7 @@ export const checkListAllFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1036,7 +3005,7 @@ export const checkListAllFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1047,7 +3016,7 @@ export const checkListAllFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1068,7 +3037,7 @@ export const checkListAllFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1084,7 +3053,7 @@ export const checkListAllFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1093,30 +3062,36 @@ export const checkListAllFilter = async (request, response, next) => {
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
         }
+        else if (executiveFilter !== undefined && executiveFilter !== "") {
+            // matchStage['admin'] = "659d4f2609c9923c9e7b8f72"
+            matchStage['admin'] = new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72")
+        }
         else if (stateFilter !== undefined && stateFilter !== "") {
+            console.log('you are in state');
+            // Only state is provided
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());;
         }
         else if (executiveFilter !== undefined && executiveFilter !== "") {
+            console.log('you are in exeec');
             matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
         }
         else if (companyFilter !== undefined && companyFilter !== "") {
+            console.log('you are in company');
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
         }
-        else if (adminFilter !== undefined && adminFilter !== "") {
-            // matchStage['admin'] = "659d4f2609c9923c9e7b8f72"
-            matchStage['admin'] = new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72")
-
-        }
         else if (dateFilter !== undefined && dateFilter !== "") {
+            // Only createdAt is provided
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
         }
 
+
+        // console.log(matchStage);
         const filter = await CheckList.aggregate([
             {
                 $match: matchStage,
@@ -1127,6 +3102,14 @@ export const checkListAllFilter = async (request, response, next) => {
                     localField: "category",
                     foreignField: "_id",
                     as: "categoryData",
+                },
+            },
+            {
+                $lookup: {
+                    from: "compliances",
+                    localField: "compliance",
+                    foreignField: "_id",
+                    as: "complianceData",
                 },
             },
             {
@@ -1162,20 +3145,18 @@ export const checkListAllFilter = async (request, response, next) => {
                 },
             },
             {
-                $lookup: {
-                    from: "admins",
-                    localField: "admin",
-                    foreignField: "_id",
-                    as: "adminData",
-                },
-            },
-            {
                 $project: {
                     _id: 1,
-                    state: 1,
-                    branchname: 1,
                     approvedate: 1,
-                    date: 1,
+                    status: 1,
+                    image: 1,
+                    documents: 1,
+                    rule: 1,
+                    description: 1,
+                    question: 1,
+                    frequency: 1,
+                    risk: 1,
+                    created_at: 1,
                     executive: {
                         $concat: [
                             { $arrayElemAt: ["$executiveData.firstName", 0] },
@@ -1184,18 +3165,20 @@ export const checkListAllFilter = async (request, response, next) => {
                         ]
                     },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
+                    category: { $arrayElemAt: ["$categoryData.name", 0] },
                     company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
                     branchname: { $arrayElemAt: ["$branchData.name", 0] },
-                    admin: { $arrayElemAt: ["$adminData.name", 0] },
                 }
             }
         ]);
+        // console.log(filter);
 
         response.status(201).json(filter);
     } catch (error) {
         next(error);
     }
-};
+}
 
 // ------------------------------- Checklist Approve Filter----------------------------------
 export const checkListApproveFilter = async (request, response, next) => {
@@ -1206,10 +3189,9 @@ export const checkListApproveFilter = async (request, response, next) => {
         const executiveFilter = request.body.executive;
         const branchFilter = request.body.branchname;
         const dateFilter = request.body.created_at;
-
+        // console.log(request.body);
         const matchStage = {};
-        matchStage['status'] = { $eq: 1 }
-
+        matchStage['status'] = { $eq: 0 };
         if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && companyFilter !== undefined && branchFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "" && companyFilter !== "" && branchFilter !== "") {
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
             matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
@@ -1524,6 +3506,10 @@ export const checkListApproveFilter = async (request, response, next) => {
                     status: 1,
                     image: 1,
                     documents: 1,
+                    rule: 1,
+                    description: 1,
+                    question: 1,
+                    frequency: 1,
                     risk: 1,
                     created_at: 1,
                     executive: {
@@ -1542,12 +3528,12 @@ export const checkListApproveFilter = async (request, response, next) => {
             }
 
         ]);
-
+        // console.log('filter', filter);
         response.status(201).json(filter);
     } catch (error) {
         next(error);
     }
-};
+}
 
 // ------------------------------------- Checklist Create Filter-----------------------------------
 
@@ -1560,7 +3546,7 @@ export const checkListCreateFilter = async (request, response, next) => {
         const dateFilter = request.body.created_at;
 
         const matchStage = {};
-
+        matchStage['status'] = { $eq: 0 };
         if (stateFilter !== undefined && dateFilter !== undefined && companyFilter !== undefined && branchFilter !== undefined && stateFilter !== "" && dateFilter !== "" && companyFilter !== "" && branchFilter !== "") {
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
@@ -1652,7 +3638,7 @@ export const checkListCreateFilter = async (request, response, next) => {
             matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString());
         }
         else if (companyFilter !== undefined && companyFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
-            matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString());
+            matchStage['company'] = new mongoose.Types.ObjectId(companyFilterFilter.toString());
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
@@ -1756,6 +3742,10 @@ export const checkListCreateFilter = async (request, response, next) => {
                     status: 1,
                     image: 1,
                     documents: 1,
+                    rule: 1,
+                    description: 1,
+                    question: 1,
+                    frequency: 1,
                     risk: 1,
                     created_at: 1,
                     executive: {
@@ -1789,11 +3779,11 @@ export const checkListRejectedFilter = async (request, response, next) => {
         const companyFilter = request.body.company;
         const executiveFilter = request.body.executive;
         const branchFilter = request.body.branchname;
-        const dateFilter = request.body.date;
-        console.log(stateFilter, companyFilter, executiveFilter, branchFilter, dateFilter);
+        const dateFilter = request.body.created_at;
+        // console.log(stateFilter + '=' + companyFilter + '=' + executiveFilter + '=' + branchFilter + '=' + dateFilter)
 
         const matchStage = {};
-        matchStage['status'] = { $eq: 2 }
+        matchStage['status'] = { $eq: 2 };
         if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && companyFilter !== undefined && branchFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "" && companyFilter !== "" && branchFilter !== "") {
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
             matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
@@ -1803,7 +3793,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1824,7 +3814,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1837,7 +3827,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1850,7 +3840,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1876,7 +3866,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1894,7 +3884,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1906,7 +3896,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1924,7 +3914,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1937,7 +3927,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1949,7 +3939,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1975,7 +3965,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -1989,12 +3979,11 @@ export const checkListRejectedFilter = async (request, response, next) => {
             matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString());
         }
         else if (companyFilter !== undefined && companyFilter !== "" && dateFilter !== undefined && dateFilter !== "") {
-            console.log("i'm in company and date");
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString());
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -2007,7 +3996,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -2017,7 +4006,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -2026,16 +4015,17 @@ export const checkListRejectedFilter = async (request, response, next) => {
         // ------------------ 1 Filter ----------------------
         else if (stateFilter !== undefined && stateFilter !== "") {
             // Only state is provided
+            console.log("You are in state");
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
         }
         else if (executiveFilter !== undefined && executiveFilter !== "") {
             matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
         }
         else if (companyFilter !== undefined && companyFilter !== "") {
-            console.log("i'm in company");
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
         }
         else if (branchFilter !== undefined && branchFilter !== "") {
+            console.log("You are in branch");
             matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
         }
         else if (dateFilter !== undefined && dateFilter !== "") {
@@ -2043,7 +4033,7 @@ export const checkListRejectedFilter = async (request, response, next) => {
             const dateObject = new Date(dateFilter);
             const nextDay = new Date(dateObject);
             nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['date'] = {
+            matchStage['created_at'] = {
                 $gte: dateObject,
                 $lt: nextDay
             };
@@ -2110,1784 +4100,13 @@ export const checkListRejectedFilter = async (request, response, next) => {
                     status: 1,
                     image: 1,
                     documents: 1,
-                    risk: 1,
-                    date: 1,
-                    executive: {
-                        $concat: [
-                            { $arrayElemAt: ["$executiveData.firstName", 0] },
-                            " ",
-                            { $arrayElemAt: ["$executiveData.lastName", 0] }
-                        ]
-                    },
-                    state: { $arrayElemAt: ["$stateData.name", 0] },
-                    category: { $arrayElemAt: ["$categoryData.name", 0] },
-                    company: { $arrayElemAt: ["$companyData.name", 0] },
-                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
-                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
-                }
-            }
-
-        ]);
-
-        response.status(201).json(filter);
-    } catch (error) {
-        next(error);
-    }
-};
-
-
-
-export const createPosts = async (req, res) => {
-
-    // console.log(req.file,'-----'); return;
-    const email = await postMessages.findOne({ email: req.body.email });
-    if (email) {
-        return res.send("409");
-    }
-    const requestBody = req.body;
-    const salt = await bcryptjs.genSaltSync(10);
-    const passhash = await bcryptjs.hashSync(requestBody.Password, salt);
-    try {
-
-        const url = req.protocol + '://' + req.get('host');
-        const formattedFileName = Date.now() + req.file.originalname.split(' ').join('-'); //replace space with -
-
-        fs.access('./data/uploads', (err) => {
-            if (err) {
-                fs.mkdirSync('./data/uploads', { recursive: true });// {recursive: true}, (err) => {});   //it will creates './data/uploads' folder
-            }
-        });
-
-        await sharp(req.file.buffer).resize({ width: 600 }).toFile('./data/uploads/' + formattedFileName);
-        const profileImage = url + '/' + formattedFileName;
-        const user = {
-            Name: requestBody.Name,
-            Occupation: requestBody.Occupation,
-            Email: requestBody.Email,
-            Password: passhash,
-            Phone: requestBody.Phone,
-            Description: requestBody.Description,
-            isAdmin: requestBody.isAdmin,
-            //  Image:requestBody.Email+'-'+req.file.originalname    ////from cloudinary cloud
-            Image: profileImage
-        };
-        //console.log(requestBody); return;
-        const newUser = new postMessages(user);
-        await newUser.save();
-        res.status(201).json(newUser);   ////if data saved properly then code 201
-    } catch (error) {
-        res.status(409).json({ message: error.message }); ////if data saved fails  then code 409
-    }
-
-}
-
-
-
-export const checkListFilter = async (request, response, next) => {
-    try {
-        const stateFilter = request.query.state;
-        const dateFilter = request.query.createdAt;
-
-        console.log(request.query);
-        const matchStage = {};
-
-        if (stateFilter !== undefined && dateFilter !== undefined) {
-            // Both state and createdAt are provided
-            matchStage['state'] = stateFilter;
-
-            const dateObject = new Date(dateFilter);
-            const nextDay = new Date(dateObject);
-            nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['createdAt'] = {
-                $gte: dateObject,
-                $lt: nextDay
-            };
-        } else if (stateFilter !== undefined) {
-            // Only state is provided
-            matchStage['state'] = stateFilter;
-        } else if (dateFilter !== undefined) {
-            // Only createdAt is provided
-            const dateObject = new Date(dateFilter);
-            const nextDay = new Date(dateObject);
-            nextDay.setDate(dateObject.getDate() + 1);
-            matchStage['createdAt'] = {
-                $gte: dateObject,
-                $lt: nextDay
-            };
-        }
-
-        const filter = await CheckList.aggregate([
-            {
-                $match: matchStage,
-            },
-            {
-                $lookup: {
-                    from: "categories",
-                    localField: "category",
-                    foreignField: "_id",
-                    as: "dataresult",
-                },
-            },
-            {
-                $unwind: "$dataresult",
-            },
-        ]);
-
-        response.status(201).json(filter);
-    } catch (error) {
-        next(error);
-    }
-};
-
-export const checkListFind = async (request, response, next) => {
-    try {
-        const getAllCheckList = await CheckList.find({})
-            .populate('category', 'name')
-            .populate('state', 'name')
-            .populate('branchname', 'name')
-            .populate('executive', 'firstName lastName')
-            .populate('compliances', 'act');
-
-        const newArr = getAllCheckList.map((data) => {
-            return {
-                _id: data._id,
-                state: data.state.name,
-                act: data.act,
-                rule: data.rule,
-                category: data.category.name,
-                status: data.status,
-                image: data.image,
-                documents: data.documents,
-                compliances: data.compliances.act,
-                executive: data.executive.firstName + " " + data.executive.lastName,
-                branchname: data.branchname.name,
-                risk: data.risk,
-                approvedate: data.approvedate,
-                date: data.date,
-            }
-        })
-        response.status(200).json(newArr)
-    }
-    catch (error) {
-        next(error);
-    }
-}
-
-// .populate('category').populate('state').populate('branchname').populate('executive').populate('compliances')
-// let arrData = []
-// const arrData = getAllCheckList.map(data => {
-//    if(data.category || data.state){
-//     return data.category = data.category.name
-//    }
-// //    else if(data.state){
-// //     return data.state = data.state.name
-// //    }
-// })
-
-// const { categoryId, stateId, branchId, executiveId, complianceId, companyId } = data
-// let newData = {}
-
-// if (categoryId) {
-//     const checkCatId = await CheckList.findOne({ category: categoryId }).populate('category')
-//     if (!checkCatId) {
-//         response.status(400).json("Give category id not exists")
-//     }
-//     else
-//         newData.catName = checkCatId.category.name
-// }
-// if (stateId) {
-//     const checkStateId = await CheckList.findOne({ state: stateId }).populate('state')
-//     if (!checkStateId) {
-//         response.status(400).json("Given state id not exists")
-//     }
-//     else
-//         newData.stateName = checkStateId.state.name
-// }
-// if (branchId) {
-//     const checkBranchId = await CheckList.findOne({ branchname: branchId }).populate('branchname')
-//     if (!checkBranchId) {
-//         response.status(400).json("Given branch id not exists")
-//     }
-//     else
-//         newData.branchName = checkBranchId.branchname.name
-// }
-// if (executiveId) {
-//     const checkExecId = await CheckList.findOne({ executive: executiveId }).populate('executive')
-//     if (!checkExecId) {
-//         response.status(400).json("Given executive id not exists")
-//     }
-//     else
-//         newData.execName = checkExecId.executive.firstName + " " + checkExecId.executive.lastName
-// }
-// console.log(newData);
-
-// if (complianceId) {
-//     const checkComplianceId = await CheckList.findOne({ compliances: complianceId }).populate('compliances')
-//     if (!checkComplianceId) {
-//         response.status(400).json("Given compliances id not exists")
-//     }
-//     else
-//         newData.complianceName = checkComplianceId.compliances.act
-// }
-
-
-// export const checkListFind = async (request, response, next) => {
-//     try {
-//         const data = request.body;
-//         const { categoryId, stateId, branchId, executiveId, complianceId, companyId } = data;
-
-//         let newData = {};
-
-//         const checkList = await CheckList.findOne({
-//             $and: [
-//                 { category: categoryId },
-//                 { state: stateId },
-//                 { branchname: branchId },
-//                 { executive: executiveId },
-//                 { compliances: complianceId },
-//             ],
-//         })
-//             .populate('category', 'name')
-//             .populate('state', 'name')
-//             .populate('branchname', 'name')
-//             .populate('executive', 'firstName lastName')
-//             .populate('compliances', 'act');
-
-//         if (!checkList) {
-//             response.status(400).json("No matching records found");
-//             return;
-//         }
-
-//         newData.catName = checkList.category ? checkList.category.name : null;
-//         newData.stateName = checkList.state ? checkList.state.name : null;
-//         newData.branchName = checkList.branchname ? checkList.branchname.name : null;
-//         newData.execName = checkList.executive ? `${checkList.executive.firstName} ${checkList.executive.lastName}` : null;
-//         newData.compName = checkList.compliances ? checkList.compliances.act : null;
-//         console.log(newData);
-
-//         response.status(200).json(newData);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
-//  ** Branch **
-
-export const createBranch = async (request, response, next) => {
-    try {
-        const name = request.body.name
-        const branch = {
-            name
-        }
-        const newBranch = new Branch(branch)
-        await newBranch.save()
-        response.status(201).json(newBranch)
-    }
-    catch (error) {
-        next(error)
-    }
-}
-
-export const branchGetting = async (request, response, next) => {
-    try {
-        const branches = await Branch.find({})
-        response.status(200).json(branches)
-    }
-    catch (error) {
-        next(error)
-    }
-}
-
-//  ** Notification **
-
-export const createNotification = async (request, response, next) => {
-    try {
-        const notification = {
-            label,
-            role,
-            description,
-            externallinks,
-            image,
-            isread,
-            dates
-        }
-        const newNotification = new Notification(notification)
-        await newNotification.save()
-    }
-    catch (error) {
-        next(error)
-    }
-}
-
-export const notificationGetting = async (request, response, next) => {
-    try {
-        const notifications = await Notification.find({})
-        response.status(200).json(notifications)
-    }
-    catch (error) {
-        next(error)
-    }
-}
-
-//  ** Executive **
-
-// export const createExecutive = async (request, response, next) => {
-//     try {
-//         const data = request.body
-//         const { name, email, userType, password, mobile, status, image } = data
-//         const executive = {
-//             name: name, email: email, userType: userType, password: password, mobile: mobile, status: status, image: image
-//         }
-//         const newExecutive = new Executive(executive)
-//         await newExecutive.save()
-//         response.status(201).json(newExecutive)
-//     }
-//     catch (error) {
-//         next(error)
-//     }
-// }
-
-// export const executiveGetting = async (request, response, next) => {
-//     try {
-//         const executives = await Executive.find({})
-//         response.status(200).json(executives)
-//     }
-//     catch (error) {
-//         next(error)
-//     }
-// }
-
-// ----------------------------------------- List ------------------------------------------
-export const addlist = async (request, response, next) => {
-    try {
-        const data = request.body
-        const createList = await List.create(data)
-        response.status(201).json(createList)
-    } catch (error) {
-        next(error)
-    }
-}
-
-export const checkData = async (request, response, next) => {
-    try {
-        const data = request.body
-        const { name, age } = data
-        // console.log(data);
-        const newArrData = name.map((data, i) => {
-            return {
-                _id: i + 1,
-                value: data.value
-            }
-        })
-        console.log(newArrData);
-        const userData = {
-            name: newArrData, age
-        }
-        const newUserData = new Checkdata(userData)
-        await newUserData.save()
-        response.status(201).json(newUserData)
-    } catch (error) {
-        next(error)
-    }
-}
-
-export const getCheckData = async (request, response, next) => {
-    try {
-        const userData = await Checkdata.find({})
-        response.status(200).json(userData)
-    } catch (error) {
-        next(error)
-    }
-}
-
-export const checklistOnCreateegetting = async (request, response, next) => {
-    try {
-        const newArr = await CheckList.aggregate([
-            {
-                $match: { status: { $eq: 0 } }
-            },
-            {
-                $lookup: {
-                    from: "categories",
-                    localField: "category",
-                    foreignField: "_id",
-                    as: "categoryData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "states",
-                    localField: "state",
-                    foreignField: "_id",
-                    as: "stateData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "compliances",
-                    localField: "compliance",
-                    foreignField: "_id",
-                    as: "complianceData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "branches",
-                    localField: "branchname",
-                    foreignField: "_id",
-                    as: "branchData",
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    category: 1,
-                    company: 1,
-                    branchname: 1,
-                    compliance: 1,
                     rule: 1,
-                    question: 1,
                     description: 1,
-                    image: 1,
-                    documents: 1,
+                    question: 1,
                     frequency: 1,
                     risk: 1,
                     created_at: 1,
-                    executive: {
-                        $concat: [
-                            { $arrayElemAt: ["$executiveData.firstName", 0] },
-                            " ",
-                            { $arrayElemAt: ["$executiveData.lastName", 0] }
-                        ]
-                    },
-                    state: { $arrayElemAt: ["$stateData.name", 0] },
-                    category: { $arrayElemAt: ["$categoryData.name", 0] },
-                    company: { $arrayElemAt: ["$companyData.name", 0] },
-                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
-                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
-                }
-            }
-        ])
-
-        // const checklist = await CheckList.find({ status: { $eq: 0 } } ).populate("category").populate('state').populate('compliance',"act").populate('branchname')
-
-
-        // let newArr = checklist.map(data => {
-        //     return {
-        //         _id: data._id,
-        //         state: data.state.name,
-        //         category: data.category.name,
-        //         company:data.company,  
-        //         executive: data.executive,
-        //         branchname:data.branchname.name,  
-        //         compliance: data.compliance.act,
-        //         rule: data.rule,
-        //         question: data.question,
-        //         description:data.description,
-        //         image: data.image,
-        //         documents: data.documents,
-        //         frequency:data.frequency,
-        //         risk: data.risk,
-        //         created_at:data.created_at,
-        //     }
-        // })
-        console.log(newArr)
-        response.status(201).json(newArr)
-    }
-    catch (error) {
-        next(error)
-    }
-}
-
-
-
-
-
-
-
-export const checklistApprovegetting = async (request, response, next) => {
-    try {
-        // const compliance = await Compliance.find({ $and: [ { status: { $eq: 0 } }, { executive: { $ne: '659d4f2609c9923c9e7b8f72' } } ] }).populate("category").populate('state')
-        const matchStage = {}
-        // matchStage['status'] = {$eq : 0}
-        // matchStage['executive'] = { $ne: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72") }
-        // console.log(matchStage);
-        const newArr = await CheckList.aggregate([
-            {
-                $match: {
-                    $and: [
-                        { status: { $eq: 0 } },
-                        { executive: { $ne: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72") } }
-                    ]
-                }
-            },
-            {
-                $lookup: {
-                    from: "categories",
-                    localField: "category",
-                    foreignField: "_id",
-                    as: "categoryData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "states",
-                    localField: "state",
-                    foreignField: "_id",
-                    as: "stateData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "compliances",
-                    localField: "compliance",
-                    foreignField: "_id",
-                    as: "complianceData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "branches",
-                    localField: "branchname",
-                    foreignField: "_id",
-                    as: "branchData",
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    category: 1,
-                    company: 1,
-                    branchname: 1,
-                    compliance: 1,
-                    rule: 1,
-                    question: 1,
-                    description: 1,
-                    image: 1,
-                    documents: 1,
-                    frequency: 1,
-                    risk: 1,
-                    created_at: 1,
-                    approvedate: 1,
-                    executive: {
-                        $concat: [
-                            { $arrayElemAt: ["$executiveData.firstName", 0] },
-                            " ",
-                            { $arrayElemAt: ["$executiveData.lastName", 0] }
-                        ]
-                    },
-                    state: { $arrayElemAt: ["$stateData.name", 0] },
-                    category: { $arrayElemAt: ["$categoryData.name", 0] },
-                    company: { $arrayElemAt: ["$companyData.name", 0] },
-                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
-                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
-                }
-            }
-        ])
-        // const checklist = await CheckList.find({ $and: [ { status: { $eq: 0 } }, { executive: { $ne: '659d4f2609c9923c9e7b8f72' } } ] }).populate("category").populate('state').populate('compliance',"act").populate('branchname')
-        // let newArr = checklist.map(data => {
-        //     return {
-        //         _id: data._id,
-        //         state: data.state.name,
-        //         category: data.category.name,
-        //         company:data.company,  
-        //         executive: data.executive,
-        //         branchname:data.branchname.name,  
-        //         compliance: data.compliance.act,
-        //         rule: data.rule,
-        //         question: data.question,
-        //         description:data.description,
-        //         image: data.image,
-        //         documents: data.documents,
-        //         frequency:data.frequency,
-        //         risk: data.risk,
-        //         approvedate: data.approvedate,
-        //         created_at:data.created_at,
-        //     }
-        // })
-        // console.log(checklist)
-        response.status(201).json(newArr)
-    }
-    catch (error) {
-        next(error)
-    }
-}
-export const checklistOnRejectegetting = async (request, response, next) => {
-    try {
-        const newArr = await CheckList.aggregate([
-            {
-                $match: {
-                    status: { $eq: 2 }
-                }
-            },
-            {
-                $lookup: {
-                    from: "categories",
-                    localField: "category",
-                    foreignField: "_id",
-                    as: "categoryData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "states",
-                    localField: "state",
-                    foreignField: "_id",
-                    as: "stateData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "compliances",
-                    localField: "compliance",
-                    foreignField: "_id",
-                    as: "complianceData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "branches",
-                    localField: "branchname",
-                    foreignField: "_id",
-                    as: "branchData",
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    category: 1,
-                    company: 1,
-                    branchname: 1,
-                    compliance: 1,
-                    rule: 1,
-                    question: 1,
-                    description: 1,
-                    image: 1,
-                    documents: 1,
-                    frequency: 1,
-                    risk: 1,
-                    created_at: 1,
-                    rejected_at: 1,
-                    executive: {
-                        $concat: [
-                            { $arrayElemAt: ["$executiveData.firstName", 0] },
-                            " ",
-                            { $arrayElemAt: ["$executiveData.lastName", 0] }
-                        ]
-                    },
-                    state: { $arrayElemAt: ["$stateData.name", 0] },
-                    category: { $arrayElemAt: ["$categoryData.name", 0] },
-                    company: { $arrayElemAt: ["$companyData.name", 0] },
-                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
-                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
-                }
-            }
-        ])
-
-        // const checklist = await CheckList.find({ status: { $eq: 2 } }).populate("category").populate('state').populate('compliance', "act").populate('branchname')
-        // let newArr = checklist.map(data => {
-        //     return {
-        //         _id: data._id,
-        //         state: data.state.name,
-        //         category: data.category.name,
-        //         company: data.company,
-        //         executive: data.executive,
-        //         branchname: data.branchname.name,
-        //         compliance: data.compliance.act,
-        //         rule: data.rule,
-        //         question: data.question,
-        //         description: data.description,
-        //         image: data.image,
-        //         documents: data.documents,
-        //         frequency: data.frequency,
-        //         risk: data.risk,
-        //         rejected_at: data.rejected_at,
-        //     }
-        // })
-        console.log(newArr)
-        response.status(201).json(newArr)
-    }
-    catch (error) {
-        next(error)
-    }
-}
-
-
-
-export const gettingCompliances = async (request, response, next) => { /////////this is when getting on approve compliance page
-    try {
-        const newArr = await Compliance.aggregate([
-            {
-                $match: {
-                    $and: [
-                        { status: { $eq: 0 } },
-                        { executive: { $ne: new mongoose.Types.ObjectId("659d4f2609c9923c9e7b8f72") } }
-                    ]
-                }
-            },
-            {
-                $lookup: {
-                    from: "categories",
-                    localField: "category",
-                    foreignField: "_id",
-                    as: "categoryData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "states",
-                    localField: "state",
-                    foreignField: "_id",
-                    as: "stateData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "executive",
-                    foreignField: "_id",
-                    as: "executiveData",
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    compliance: 1,
-                    rule: 1,
-                    question: 1,
-                    description: 1,
-                    form: 1,
-                    docattachment: 1,
-                    compliancetype: 1,
-                    description: 1,
-                    frequency: 1,
-                    risk: 1,
-                    status: 1,
-                    created_at: 1,
-                    updated_at: 1,
-                    duedate: 1,
-                    state: { $arrayElemAt: ["$stateData.name", 0] },
-                    category: { $arrayElemAt: ["$categoryData.name", 0] },
-                    executive: {
-                        $concat: [
-                            { $arrayElemAt: ["$executiveData.firstName", 0] },
-                            " ",
-                            { $arrayElemAt: ["$executiveData.lastName", 0] }
-                        ]
-                    },
-                }
-            }
-        ])
-        console.log(newArr)
-        response.status(201).json({ message: "Total : " + newArr.length, data: newArr })
-        // const compliance = await Compliance.find({ $and: [ { status: { $eq: 0 } }, { executive: { $ne: '659d4f2609c9923c9e7b8f72' } } ] }).populate("category").populate('state').populate("executive")
-        // let newArr = compliance.map(data => {
-        //     return {
-        //         _id: data._id,
-        //         state: data.state.name,
-        //         act: data.act,
-        //         rule: data.rule,
-        //         category: data.category.name,
-        //         question: data.question,
-        //         form: data.form,
-        //         docattachment: data.docattachment,
-        //         compliancetype: data.compliancetype,
-        //         frequency: data.frequency,
-        //         description: data.description,
-        //         risk: data.risk,
-        //         duedate: data.duedate,
-        //         status: data.status,
-        //         // executive:data.executive.firstName+' '+data.executive.lastName,
-        //         created_at: data.created_at,
-        //         updated_at: data.updated_at
-        //     }
-        // })
-        // response.status(201).json(newArr)
-    }
-    catch (error) {
-        next(error)
-    }
-}
-
-
-
-
-// ---------------------- Audit ------------------------------------
-
-export const gettingAuditor = async (request, response, next) => {
-    try {
-        // const auditor = await User.find( {role : {$eq : "Auditor"}})
-        const auditor = await User.aggregate([
-            {
-                $match: {
-                    role: { $eq: "Auditor" }
-                }
-            }
-        ])
-        response.status(200).json(auditor)
-    } catch (error) {
-        next(error)
-    }
-}
-export const gettingChecklist = async (request, response, next) => {
-    try {
-        // const checklist = await CheckList.find({})
-        const checklist = await CheckList.aggregate([
-            {
-                $match: {
-                    status: 2
-                }              // $match : {} this will fetch the all the documents
-            },
-            {
-                $project: {
-                    _id: 1
-                }
-            }
-        ])
-        response.status(200).json(checklist)
-    } catch (error) {
-        next(error)
-    }
-}
-
-export const createAudit = async (request, response, next) => {
-    try {
-        const data = request.body
-        const { title, company, branch, state, executive, auditor, scope, briefauditor, checkboxlist, auditstatus, status, risk, start_date, end_date } = data
-        const audit = {
-            title, company, branch, state, executive, auditor, scope, briefauditor, checkboxlist, auditstatus, status, risk, start_date, end_date
-        }
-        const newAudit = new Audit(audit)
-        await newAudit.save()
-        response.status(201).json(newAudit)
-    } catch (error) {
-        next(error)
-    }
-}
-
-// const dateObject = new Date(dateFilter);
-//             const nextDay = new Date(dateObject);
-//             nextDay.setDate(dateObject.getDate() + 1);
-//             matchStage['createdAt'] = {
-//                 $gte: dateObject,
-//                 $lt: nextDay
-//             };
-
-// export const auditGetting = async (request, response, next) => {
-//     try {
-//         const auditData = await Audit.aggregate([
-//             {
-//                 $match: {}
-//             },
-
-//             {
-//                 $lookup: {
-//                     from: "companies",
-//                     localField: "company",
-//                     foreignField: "_id",
-//                     as: "companyData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "states",
-//                     localField: "state",
-//                     foreignField: "_id",
-//                     as: "stateData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "branches",
-//                     localField: "branch",
-//                     foreignField: "_id",
-//                     as: "branchData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "users",
-//                     localField: "executive",
-//                     foreignField: "_id",
-//                     as: "executiveData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "users",
-//                     localField: "auditor",
-//                     foreignField: "_id",
-//                     as: "auditorData"
-//                 }
-//             },
-//             {
-//                 $project: {
-//                     title: 1,
-//                     start_date: 1,
-//                     end_date: 1,
-//                     overdue: 1,
-//                     auditstatus: 1,
-//                     risk: 1,
-//                     score: 1,
-//                     executive: {
-//                         $concat: [
-//                             { $arrayElemAt: ["$executiveData.firstName", 0] },
-//                             " ",
-//                             { $arrayElemAt: ["$executiveData.lastName", 0] }
-//                         ]
-//                     },
-//                     auditor: {
-//                         $concat: [
-//                             { $arrayElemAt: ["$auditorData.firstName", 0] },
-//                             " ",
-//                             { $arrayElemAt: ["$auditorData.lastName", 0] }
-//                         ]
-//                     },
-//                     state: { $arrayElemAt: ["$stateData.name", 0] },
-//                     company: { $arrayElemAt: ["$companyData.companyname", 0] },
-//                     branch: { $arrayElemAt: ["$branchData.name", 0] },
-//                     overdue : overDue()
-//                 }
-//             }
-//         ])
-
-//         const overDue = function() {
-
-//             let result
-//             let yy, mm, dd
-
-//             auditData.forEach(data => {
-//                 let currentDate = new Date()
-//                 let endDate = data.end_date
-//                 let ed = endDate.getDate()
-//                 let em = endDate.getMonth() + 1
-//                 let ey = endDate.getFullYear()
-
-//                 let cd = currentDate.getDate()
-//                 let cm = currentDate.getMonth() + 1
-//                 let cy = currentDate.getFullYear()
-
-//                 yy = cy - ey
-
-//                 if (cm >= em) {
-//                     mm = cm - em
-//                 }
-//                 else {
-//                     yy--
-//                     mm = 12 + cm - em
-//                 }
-//                 if (cd >= ed) {
-//                     dd = cd - ed
-//                 }
-//                 else {
-//                     mm--
-//                     dd = getMonthDays(ey, em) + cd - ed
-//                 }
-//                 if (mm < 0) {
-//                     mm = 11
-//                     yy--
-//                 }
-//                 function getMonthDays(year, month) {
-//                     return new Date(year, month, 0).getDate()
-//                 }
-//                 // const dayOfYear = date =>
-//                 // Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86_400_000);
-//                 // console.log(dayOfYear("2024-02-24"));
-//                 result = dd + mm * getMonthDays(ey, em) + yy
-//                 console.log(dd + mm * getMonthDays(ey, em) + yy);
-//                 return result
-//             })
-//         }
-
-//         response.status(200).json(auditData)
-//     } catch (error) {
-//         next(error)
-//     }
-// }
-
-
-
-
-// export const auditGetting = async (request, response, next) => {
-//     try {
-//         const auditData = await Audit.aggregate([
-//             {
-//                 $match: {}
-//             },
-//             {
-//                 $lookup: {
-//                     from: "companies",
-//                     localField: "company",
-//                     foreignField: "_id",
-//                     as: "companyData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "states",
-//                     localField: "state",
-//                     foreignField: "_id",
-//                     as: "stateData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "branches",
-//                     localField: "branch",
-//                     foreignField: "_id",
-//                     as: "branchData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "users",
-//                     localField: "executive",
-//                     foreignField: "_id",
-//                     as: "executiveData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "users",
-//                     localField: "auditor",
-//                     foreignField: "_id",
-//                     as: "auditorData"
-//                 }
-//             },
-//             {
-//                 $project: {
-//                     title: 1,
-//                     start_date: 1,
-//                     end_date: 1,
-//                     overdue: {
-//                         $let: {
-//                             vars: {
-//                                 currentDate: new Date(),
-//                                 endDate: "$end_date"
-//                             },
-//                             in: {
-//                                 $let: {
-//                                     vars: {
-//                                         ed: { $dayOfMonth: "$$endDate" },
-//                                         em: { $month: "$$endDate" },
-//                                         ey: { $year: "$$endDate" },
-//                                         cd: { $dayOfMonth: "$$currentDate" },
-//                                         cm: { $month: "$$currentDate" },
-//                                         cy: { $year: "$$currentDate" }
-//                                     },
-//                                     in: {
-//                                         $let: {
-//                                             vars: {
-//                                                 yy: { $subtract: ["$$cy", "$$ey"] },
-//                                                 mm: {
-//                                                     $cond: {
-//                                                         if: { $gte: ["$$cm", "$$em"] },
-//                                                         then: { $subtract: ["$$cm", "$$em"] },
-//                                                         else: { $subtract: [{ $add: ["$$cm", 12] }, "$$em"] }
-//                                                     }
-//                                                 },
-//                                                 dd: {
-//                                                     $cond: {
-//                                                         if: { $gte: ["$$cd", "$$ed"] },
-//                                                         then: { $subtract: ["$$cd", "$$ed"] },
-//                                                         else: {
-//                                                             $subtract: [
-//                                                                 { $add: ["$$cd", { $dayOfMonth: { $dateFromParts: { year: "$$ey", month: "$$em", day: 0 } } }] },
-//                                                                 "$$ed"
-//                                                             ]
-//                                                         }
-//                                                     }
-//                                                 }
-//                                             },
-//                                             in: { $add: ["$$dd", { $multiply: ["$$mm", { $dayOfMonth: { $dateFromParts: { year: "$$ey", month: "$$em", day: 0 } } }] }, { $multiply: ["$$yy", { $dayOfMonth: { $dateFromParts: { year: "$$ey", month: "$$em", day: 0 } } }] }] }
-//                                         }
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                     },
-//                     auditstatus: 1,
-//                     risk: 1,
-//                     score: 1,
-//                     executive: {
-//                         $concat: [
-//                             { $arrayElemAt: ["$executiveData.firstName", 0] },
-//                             " ",
-//                             { $arrayElemAt: ["$executiveData.lastName", 0] }
-//                         ]
-//                     },
-//                     auditor: {
-//                         $concat: [
-//                             { $arrayElemAt: ["$auditorData.firstName", 0] },
-//                             " ",
-//                             { $arrayElemAt: ["$auditorData.lastName", 0] }
-//                         ]
-//                     },
-//                     state: { $arrayElemAt: ["$stateData.name", 0] },
-//                     company: { $arrayElemAt: ["$companyData.companyname", 0] },
-//                     branch: { $arrayElemAt: ["$branchData.name", 0] }
-//                 }
-//             }
-//         ]);
-
-//         response.status(200).json(auditData);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
-
-// export const auditGetting = async (request, response, next) => {
-//     try {
-//         const auditData = await Audit.aggregate([
-//             {
-//                 $match: {}
-//             },
-//             {
-//                 $lookup: {
-//                     from: "companies",
-//                     localField: "company",
-//                     foreignField: "_id",
-//                     as: "companyData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "states",
-//                     localField: "state",
-//                     foreignField: "_id",
-//                     as: "stateData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "branches",
-//                     localField: "branch",
-//                     foreignField: "_id",
-//                     as: "branchData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "users",
-//                     localField: "executive",
-//                     foreignField: "_id",
-//                     as: "executiveData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "users",
-//                     localField: "auditor",
-//                     foreignField: "_id",
-//                     as: "auditorData"
-//                 }
-//             },
-//             {
-//                 $project: {
-//                     title: 1,
-//                     start_date: 1,
-//                     end_date: 1,
-//                     overdue: {
-//                         $cond: {
-//                             if: { $lt: ["$end_date", new Date()] },
-//                             then: {
-//                                 $ceil: {
-//                                     $divide: [
-//                                         {
-//                                             $subtract: [new Date(), "$end_date"]
-//                                         },
-//                                         1000 * 60 * 60 * 24 // Convert milliseconds to days
-//                                     ]
-//                                 }
-//                             },
-//                             else: 0 // Project is not overdue
-//                         }
-//                     },
-//                     auditstatus: 1,
-//                     risk: 1,
-//                     score: 1,
-//                     executive: {
-//                         $concat: [
-//                             { $arrayElemAt: ["$executiveData.firstName", 0] },
-//                             " ",
-//                             { $arrayElemAt: ["$executiveData.lastName", 0] }
-//                         ]
-//                     },
-//                     auditor: {
-//                         $concat: [
-//                             { $arrayElemAt: ["$auditorData.firstName", 0] },
-//                             " ",
-//                             { $arrayElemAt: ["$auditorData.lastName", 0] }
-//                         ]
-//                     },
-//                     state: { $arrayElemAt: ["$stateData.name", 0] },
-//                     company: { $arrayElemAt: ["$companyData.companyname", 0] },
-//                     branch: { $arrayElemAt: ["$branchData.name", 0] }
-//                 }
-//             }
-//         ]);
-
-//         response.status(200).json(auditData);
-//     } catch (error) {
-//         next(error);
-//     }
-// }
-
-
-export const auditGetting = async (request, response, next) => {
-    try {
-        let auditData = await Audit.aggregate([
-            {
-                $match: {}
-            },
-            {
-                $lookup: {
-                    from: "companies",
-                    localField: "company",
-                    foreignField: "_id",
-                    as: "companyData"
-                }
-            },
-            {
-                $lookup: {
-                    from: "states",
-                    localField: "state",
-                    foreignField: "_id",
-                    as: "stateData"
-                }
-            },
-            {
-                $lookup: {
-                    from: "branches",
-                    localField: "branch",
-                    foreignField: "_id",
-                    as: "branchData"
-                }
-            },
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "executive",
-                    foreignField: "_id",
-                    as: "executiveData"
-                }
-            },
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "auditor",
-                    foreignField: "_id",
-                    as: "auditorData"
-                }
-            },
-            {
-                $project: {
-                    title: 1,
-                    start_date: 1,
-                    end_date: 1,
-                    overdue: {
-                        $cond: {
-                            if: { $lt: ["$end_date", new Date()] },
-                            then: {
-                                $subtract: [
-                                    {
-                                        $ceil: {
-                                            $divide: [
-                                                {
-                                                    $subtract: [new Date(), "$end_date"]
-                                                },
-                                                1000 * 60 * 60 * 24 // Convert milliseconds to days
-                                            ]
-                                        }
-                                    },
-                                    1 // Subtract 1 day from the calculated overdue days
-                                ]
-                            },
-                            else: 0 // Project is not overdue
-                        }
-                    },
-                    auditstatus: 1,
-                    risk: 1,
-                    score: 1,
-                    executive: {
-                        $concat: [
-                            { $arrayElemAt: ["$executiveData.firstName", 0] },
-                            " ",
-                            { $arrayElemAt: ["$executiveData.lastName", 0] }
-                        ]
-                    },
-                    auditor: {
-                        $concat: [
-                            { $arrayElemAt: ["$auditorData.firstName", 0] },
-                            " ",
-                            { $arrayElemAt: ["$auditorData.lastName", 0] }
-                        ]
-                    },
-                    state: { $arrayElemAt: ["$stateData.name", 0] },
-                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
-                    branch: { $arrayElemAt: ["$branchData.name", 0] }
-                }
-            }
-        ]);
-        let users = await User.find({})
-        let auditorData = users.filter(user => {
-            return user.role === "Auditor"
-        })
-        let count = 0
-        auditData.filter(doc => {
-            const result = auditorData.map(data => data.firstName + " " + data.lastName).includes(doc.auditor)
-            if (result && doc.overdue > 0) {
-                return count++
-            }
-        })
-        response.status(200).json(({ total: count, data: auditData }));
-    } catch (error) {
-        next(error);
-    }
-}
-
-
-export const updateAudit = async (request, response, next) => {
-    try {
-        const auditId = request.params.id
-        const data = request.body
-        const checkAuditIdExists = await Audit.findById({ _id: auditId })
-        if (!checkAuditIdExists) {
-            response.status(400).json("Audit id doesn't exists")
-        }
-        const auditData = await Audit.findByIdAndUpdate({ _id: auditId }, data, { new: true })
-        response.status(201).json(auditData)
-    } catch (error) {
-        next(error)
-    }
-}
-
-// ---------------------- Audit Checklist Filter ----------------------
-
-export const auditChecklistFilter = async (request, response, next) => {
-    try {
-        const stateFilter = request.body.state;
-        const branchFilter = request.body.branchname;
-        const categoryFilter = request.body.company;
-        const complianceFilter = request.body.compliance;
-
-        const matchStage = {};
-        matchStage['status'] = { $eq: 0 }
-
-        if (stateFilter !== undefined && complianceFilter !== undefined && categoryFilter !== undefined && branchFilter !== undefined && stateFilter !== "" && complianceFilter !== "" && categoryFilter !== "" && branchFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            matchStage['company'] = new mongoose.Types.ObjectId(categoryFilter.toString())
-            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
-            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString())
-        }
-
-        // ------------ 3 Filter --------------
-        else if (stateFilter !== undefined && stateFilter !== "" && categoryFilter !== undefined && categoryFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
-            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
-
-        }
-        else if (stateFilter !== undefined && stateFilter !== "" && complianceFilter !== undefined && complianceFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
-            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
-
-        }
-        else if (stateFilter !== undefined && stateFilter !== "" && categoryFilter !== undefined && categoryFilter !== "" && complianceFilter !== undefined && complianceFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString());
-            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
-
-        }
-        else if (categoryFilter !== undefined && categoryFilter !== "" && complianceFilter !== undefined && complianceFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
-            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
-            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString())
-            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
-
-        }
-
-        // ------------------ 2 Filter ----------------
-
-        else if (stateFilter !== undefined && stateFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
-        }
-        else if (stateFilter !== undefined && stateFilter !== "" && complianceFilter !== undefined && complianceFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString())
-        }
-        else if (stateFilter !== undefined && stateFilter !== "" && categoryFilter !== undefined && categoryFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
-        }
-        else if (branchFilter !== undefined && branchFilter !== "" && categoryFilter !== undefined && categoryFilter !== "") {
-            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
-            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
-        }
-        else if (branchFilter !== undefined && branchFilter !== "" && complianceFilter !== undefined && complianceFilter !== "") {
-            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
-            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
-        }
-        else if (categoryFilter !== undefined && categoryFilter !== "" && complianceFilter !== undefined && complianceFilter !== "") {
-            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
-            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
-        }
-
-        // ------------------ 1 Filter ----------------------
-        else if (stateFilter !== undefined && stateFilter !== "") {
-            matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
-        }
-        else if (complianceFilter !== undefined && complianceFilter !== "") {
-            matchStage['compliance'] = new mongoose.Types.ObjectId(complianceFilter.toString());
-        }
-        else if (categoryFilter !== undefined && categoryFilter !== "") {
-            matchStage['category'] = new mongoose.Types.ObjectId(categoryFilter.toString())
-        }
-        else if (branchFilter !== undefined && branchFilter !== "") {
-            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
-        }
-
-        // console.log(matchStage);
-        const filter = await CheckList.aggregate([
-            {
-                $match: matchStage,
-            },
-            {
-                $lookup: {
-                    from: "states",
-                    localField: "state",
-                    foreignField: "_id",
-                    as: "stateData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "categories",
-                    localField: "category",
-                    foreignField: "_id",
-                    as: "categoryData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "compliances",
-                    localField: "compliance",
-                    foreignField: "_id",
-                    as: "complianceData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "branches",
-                    localField: "branchname",
-                    foreignField: "_id",
-                    as: "branchData",
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    state: 1,
-                    act: 1,
-                    rule: 1,
-                    category: 1,
-                    form: 1,
-                    document: 1,
-                    question: 1,
-                    description: 1,
-                    compliance: 1,
-                    risk: 1,
-                    consequences: 1,
-                    frequency: 1,
-                    duedate: 1,
-                    remark: 1,
-                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
-                    state: { $arrayElemAt: ["$stateData.name", 0] },
-                    company: { $arrayElemAt: ["$companyData.name", 0] },
-                    branch: { $arrayElemAt: ["$branchData.name", 0] },
-                }
-            }
-        ]);
-
-        response.status(201).json(filter);
-    } catch (error) {
-        next(error);
-    }
-};
-
-
-// export const auditFilter = async (request, response, next) => {
-//     try {
-//         const data = request.body
-//         const matchStage = {}
-//         const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data
-//         let overDueData = await Audit.find({})
-//         let result, cd, cm, cy, dd, md, yd, ed, em, ey
-//         overDueData.forEach(data => {
-//             let currentDate = new Date()
-//             let endDate = data.end_date
-//             ed = endDate.getDate()
-//             em = endDate.getMonth() + 1
-//             ey = endDate.getFullYear()
-
-//             cd = currentDate.getDate()
-//             cm = currentDate.getMonth() + 1
-//             cy = currentDate.getFullYear()
-
-//             dd = cd - ed
-//             md = cm - em
-//             yd = cy - ey
-//             result = Math.abs(dd + md * getMonthDays(ey, em))
-//             // console.log(result);
-
-//             return result
-
-
-//             function getMonthDays(year, month) {
-//                 return new Date(year, month, 0).getDate()
-//             }
-//         })
-//         overDueData.forEach(item=>{
-//             console.log(item.overdue = result);
-//         })
-
-//         const filters = { company, state, branch, executive, auditor, start_date, end_date, overdue: result, auditstatus, risk }
-//         console.log(filters);
-
-//         const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "")
-
-//         if (filterKeys.length > 0) {
-//             for (const key of filterKeys) {
-//                 if (key === "company" || key === "state" || key === "branch" || key === "executive" || key === "auditor") {
-//                     matchStage[key] = new mongoose.Types.ObjectId(filters[key])
-//                 }
-//                 else if (key === "auditstatus" || key === "risk" || key === 'overdue') {
-//                     matchStage[key] = filters[key]
-//                 }
-//                 // else if (key === 'overdue'){
-//                 //     matchStage['overdue'] = filters[key]
-//                 // }
-//                 else if (key === "start_date" || key === "end_date") {
-//                     const dateObject = new Date(filters[key]);
-//                     const nextDay = new Date(dateObject);
-//                     nextDay.setDate(dateObject.getDate() + 1);
-//                     matchStage[key] = {
-//                         $gte: dateObject,
-//                         $lt: nextDay
-//                     };
-//                 }
-//             }
-//         }
-//         const filter = await Audit.aggregate([
-//             {
-//                 $match: matchStage
-//             },
-//             {
-//                 $lookup: {
-//                     from: "users",
-//                     localField: "auditor",
-//                     foreignField: "_id",
-//                     as: "executiveData"
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: "states",
-//                     localField: "state",
-//                     foreignField: "_id",
-//                     as: "stateData",
-//                 },
-//             },
-//             {
-//                 $lookup: {
-//                     from: "categories",
-//                     localField: "category",
-//                     foreignField: "_id",
-//                     as: "categoryData",
-//                 },
-//             },
-//             {
-//                 $lookup: {
-//                     from: "companies",
-//                     localField: "company",
-//                     foreignField: "_id",
-//                     as: "companyData",
-//                 },
-//             },
-//             {
-//                 $lookup: {
-//                     from: "branches",
-//                     localField: "branchname",
-//                     foreignField: "_id",
-//                     as: "branchData",
-//                 },
-//             },
-
-//             {
-//                 $project: {
-//                     title: 1,
-//                     start_date: 1,
-//                     end_date: 1,
-//                     overdue: 1,
-//                     status: 1,
-//                     overdue: {
-//                         $cond: {
-//                             if: { $lt: ["$end_date", new Date()] },
-//                             then: {
-//                                 $subtract: [
-//                                     {
-//                                         $ceil: {
-//                                             $divide: [
-//                                                 {
-//                                                     $subtract: [new Date(), "$end_date"]
-//                                                 },
-//                                                 1000 * 60 * 60 * 24 // Convert milliseconds to days
-//                                             ]
-//                                         }
-//                                     },
-//                                     1 // Subtract 1 day from the calculated overdue days
-//                                 ]
-//                             },
-//                             else: 0 // Project is not overdue
-//                         }
-//                     },
-//             risk: 1,
-//             executive: {
-//                 $concat: [
-//                     { $arrayElemAt: ["$executiveData.firstName", 0] },
-//                     " ",
-//                     { $arrayElemAt: ["$executiveData.lastName", 0] }
-//                 ]
-//             },
-//             state: { $arrayElemAt: ["$stateData.name", 0] },
-//             category: { $arrayElemAt: ["$categoryData.name", 0] },
-//             company: { $arrayElemAt: ["$companyData.name", 0] },
-//             branch: { $arrayElemAt: ["$branchData.name", 0] }
-//                 }
-//             }
-
-//         ])
-// // filter.forEach(data => {
-// //     console.log(data.overdue);
-// // })
-// response.status(200).json(filter)
-
-//     } catch (error) {
-//     next(error)
-// }
-// }
-
-
-export const auditFilter = async (request, response, next) => {
-    try {
-        const data = request.body;
-        const matchStage = {};
-        const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data;
-        let auditDataFilter
-
-        // Define filters
-        const filters = { company, state, branch, executive, auditor, start_date, end_date, auditstatus, risk };
-        const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "");
-
-        // Build match stage based on filters
-        if (filterKeys.length > 0) {
-            for (const key of filterKeys) {
-                if (key === "company" || key === "state" || key === "branch" || key === "executive" || key === "auditor") {
-                    matchStage[key] = new mongoose.Types.ObjectId(filters[key]);
-                } else if (key === "auditstatus" || key === "risk") {
-                    matchStage[key] = filters[key];
-                }
-                // else if(key === "overdue"){
-
-                // }
-                else if (key === "start_date" || key === "end_date") {
-                    const dateObject = new Date(filters[key]);
-                    const nextDay = new Date(dateObject);
-                    nextDay.setDate(dateObject.getDate() + 1);
-                    matchStage[key] = {
-                        $gte: dateObject,
-                        $lt: nextDay
-                    };
-                }
-            }
-        }
-
-        // Perform aggregation
-        auditDataFilter = await Audit.aggregate([
-            { $match: matchStage },
-            // Add your lookup and project stages here
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "auditor",
-                    foreignField: "_id",
-                    as: "executiveData"
-                }
-            },
-            {
-                $lookup: {
-                    from: "states",
-                    localField: "state",
-                    foreignField: "_id",
-                    as: "stateData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "categories",
-                    localField: "category",
-                    foreignField: "_id",
-                    as: "categoryData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "companies",
-                    localField: "company",
-                    foreignField: "_id",
-                    as: "companyData",
-                },
-            },
-            {
-                $lookup: {
-                    from: "branches",
-                    localField: "branchname",
-                    foreignField: "_id",
-                    as: "branchData",
-                },
-            },
-
-            {
-                $project: {
-                    title: 1,
-                    start_date: 1,
-                    end_date: 1,
-                    overdue: 1,
-                    status: 1,
-                    overdue: {
-                        $cond: {
-                            if: { $lt: ["$end_date", new Date()] },
-                            then: {
-                                $subtract: [
-                                    {
-                                        $ceil: {
-                                            $divide: [
-                                                {
-                                                    $subtract: [new Date(), "$end_date"]
-                                                },
-                                                1000 * 60 * 60 * 24 // Convert milliseconds to days
-                                            ]
-                                        }
-                                    },
-                                    1 // Subtract 1 day from the calculated overdue days
-                                ]
-                            },
-                            else: 0 // Project is not overdue
-                        }
-                    },
-                    risk: 1,
+                    reason: 1,
                     executive: {
                         $concat: [
                             { $arrayElemAt: ["$executiveData.firstName", 0] },
@@ -3898,406 +4117,22 @@ export const auditFilter = async (request, response, next) => {
                     state: { $arrayElemAt: ["$stateData.name", 0] },
                     category: { $arrayElemAt: ["$categoryData.name", 0] },
                     company: { $arrayElemAt: ["$companyData.companyname", 0] },
-                    branch: { $arrayElemAt: ["$branchData.name", 0] }
+                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
+                    compliance: { $arrayElemAt: ["$complianceData.act", 0] },
                 }
             }
 
         ]);
-        // console.log(auditDataFilter);
-        if (overdue !== undefined & overdue !== "") {
-            const currentDate = new Date();
-            auditDataFilter = auditDataFilter.filter(doc => {
-                return doc.overdue == overdue
-            });
-        }
-        // console.log(auditDataFilter);
-
-        response.status(200).json({ Total: auditDataFilter.length, data: auditDataFilter });
+        // console.log(filter)
+        response.status(201).json(filter);
     } catch (error) {
         next(error);
     }
-};
-
-// export const auditFilter = async (request, response, next) => {
-//     try {
-//         const data = request.body;
-//         const matchStage = {};
-//         const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data;
-
-//         // Define filters
-//         const filters = { company, state, branch, executive, auditor, start_date, end_date, auditstatus, risk };
-//         const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "");
-
-//         // Build match stage based on filters
-//         if (filterKeys.length > 0) {
-//             for (const key of filterKeys) {
-//                 if (key === "company" || key === "state" || key === "branch" || key === "executive" || key === "auditor") {
-//                     matchStage[key] = new mongoose.Types.ObjectId(filters[key]);
-//                 } else if (key === "auditstatus" || key === "risk" || key === 'overdue') {
-//                     matchStage[key] = filters[key];
-//                 } else if (key === "start_date" || key === "end_date") {
-//                     const dateObject = new Date(filters[key]);
-//                     const nextDay = new Date(dateObject);
-//                     nextDay.setDate(dateObject.getDate() + 1);
-//                     matchStage[key] = {
-//                         $gte: dateObject,
-//                         $lt: nextDay
-//                     };
-//                 }
-//             }
-//         }
-
-//         // Fetch documents from the database based on the match stage
-//         let documents = await Audit.find(matchStage);
-
-//         // Filter documents based on dynamic overdue calculation
-//         documents = documents.filter(doc => {
-//             // Calculate overdue dynamically for each document
-//             const currentDate = new Date();
-//             const endDate = doc.end_date;
-//             const diffInDays = Math.ceil((currentDate - endDate) / (1000 * 60 * 60 * 24));
-//             return diffInDays === overdue;
-//         });
-
-//         response.status(200).json(documents);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
-// export const auditFilter = async (request, response, next) => {
-//     try {
-//         const data = request.body;
-//         const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data;
-
-//         // Define filters
-//         const filters = { company, state, branch, executive, auditor, start_date, end_date, auditstatus, risk };
-//         const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "");
-
-//         // Build match stage based on filters
-//         const matchStage = {};
-//         if (filterKeys.length > 0) {
-//             for (const key of filterKeys) {
-//                 if (key === "company" || key === "state" || key === "branch" || key === "executive" || key === "auditor") {
-//                     matchStage[key] = new mongoose.Types.ObjectId(filters[key]);
-//                 } else if (key === "auditstatus" || key === "risk" || key === 'overdue') {
-//                     matchStage[key] = filters[key];
-//                 } else if (key === "start_date" || key === "end_date") {
-//                     const dateObject = new Date(filters[key]);
-//                     const nextDay = new Date(dateObject);
-//                     nextDay.setDate(dateObject.getDate() + 1);
-//                     matchStage[key] = {
-//                         $gte: dateObject,
-//                         $lt: nextDay
-//                     };
-//                 }
-//             }
-//         }
-
-//         // Fetch documents from the database based on the match stage
-//         let documents = await Audit.find(matchStage);
-//         console.log(documents);
-
-//         // Filter documents based on the calculated overdue
-//         if (overdue !== undefined) {
-//             const currentDate = new Date();
-//             documents = documents.filter(doc => {
-//                 const endDate = new Date(doc.end_date);
-//                 const diffInDays = Math.ceil((currentDate - endDate) / (1000 * 60 * 60 * 24));
-//                 return diffInDays === overdue;
-//             });
-//         }
-
-//         response.status(200).json(documents);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
-
-
-// --------------------- Lise & Reg Functions ------------------------
-
-
-
-// export const createLiseReg = async (request, response, next) => {
-//     try {
-//         const data = request.body
-//         const { regNo, rate, docReqDate, docReqFollow, docReviewDate, docRemark, status, appliedDate, applicationStatus, remark, challlanFees, challanNumber, challanDate, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, company, executive, state, branch
-//         } = data
-
-//         for (const key in data) {
-//             // if (data.hasOwnProperty(key)) {
-//             const value = data[key];
-//             if (value === undefined || value === null || (typeof value === 'string' && value.trim() === '')) {
-//                 response.status(400).json("Data is missing, Either empty, undefined or null") // Input data is empty, null, or undefined
-//             }
-//             // }
-//         }
-//         const documents = request.files.documents ? request.files.documents[0] : null;
-//         const acknowledge = request.files.acknowledge ? request.files.acknowledge[0] : null;
-//         const licenseUpload = request.files.licenseUpload ? request.files.licenseUpload[0] : null;
-//         const challanUpload = request.files.challanUpload ? request.files.challanUpload[0] : null;
-
-
-//         let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName
-
-//         const uploadsDirectory = './data/uploads/';
-//         const imageDirectory = 'images/';
-
-//         fs.access(uploadsDirectory, (err) => {
-//             if (err) {
-//                 fs.mkdirSync(uploadsDirectory, { recursive: true });
-//             }
-//         });
-
-//         // Ensure that the images directory exists
-//         fs.access(uploadsDirectory + imageDirectory, (err) => {
-//             if (err) {
-//                 fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
-//             }
-//         });
-
-//         const url = request.protocol + '://' + request.get('host');
-
-//         if (documents) {
-//             formattedDocName = Date.now() + documents.originalname.split(' ').join('-');
-//             await sharp(documents.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedDocName);
-//             docImageUrl = url + '/' + imageDirectory + formattedDocName;
-//         }
-//         if (acknowledge) {
-//             formattedAckName = Date.now() + acknowledge.originalname.split(' ').join('-');
-//             await sharp(acknowledge.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedAckName);
-//             ackImageUrl = url + '/' + imageDirectory + formattedAckName;
-//         }
-//         if (licenseUpload) {
-//             formattedLicName = Date.now() + licenseUpload.originalname.split(' ').join('-');
-//             await sharp(licenseUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedLicName);
-//             licImageUrl = url + '/' + imageDirectory + formattedLicName;
-//         }
-//         if (challanUpload) {
-//             formattedChallanName = Date.now() + challanUpload.originalname.split(' ').join('-');
-//             await sharp(challanUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedChallanName);
-//             challanImageUrl = url + '/' + imageDirectory + formattedChallanName;
-//         }
-
-//         if (regNo && rate) {
-//             const liseReg = {
-//                 regNo, rate
-//             }
-//             new Lisereg(liseReg)
-//         }
-//         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && status && docRemark) {
-//             const liseReg = {
-//                 regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark
-//             }
-//             new Lisereg(liseReg)
-
-//         }
-//         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge) {
-
-//             const liseReg = {
-//                 regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl
-//             }
-//             new Lisereg(liseReg)
-//         }
-//         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses) {
-
-//             const liseReg = {
-//                 regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses
-//             }
-//             new Lisereg(liseReg)
-
-//         }
-//         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload) {
-
-//             const liseReg = {
-//                 regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl
-//             }
-//             new Lisereg(liseReg)
-
-//         }
-//         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload && invoiceType && invoiceDate && invoiceNumber && submissionDate) {
-
-//             const liseReg = {
-//                 regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate
-//             }
-//             new Lisereg(liseReg)
-
-//         }
-//         if (regNo && rate && documents && docReqDate && docReqFollow && docReviewDate && docRemark && status && docRemark && appliedDate && applicationStatus && remark && acknowledge && challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses && licenseNumber && dateOfIssue && expireDate && renewalDate && licenseUpload && invoiceType && invoiceDate && invoiceNumber && submissionDate && branchName && company && executive && state && branch) {
-
-//             const liseReg = {
-//                 regNo, rate, documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, status, docRemark, appliedDate, applicationStatus, remark, acknowledge: ackImageUrl, challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, invoiceType, invoiceDate, invoiceNumber, submissionDate, branchName, company, executive, state, branch
-//             }
-
-//             const newLiseReg = new Lisereg(liseReg)
-//             await newLiseReg.save()
-//             response.status(201).json(newLiseReg)
-//         }
-//     } catch (error) {
-//         next(error)
-//     }
-// }
-
-
-
-
-// ---------------------------------- Elibrary -------------------------------------------
-
-export const createElibrary = async (request, response, next) => {
-    try {
-        const data = request.body
-        const { category, placeholder, label, date, description } = data
-        const image = request.file
-        const url = request.protocol + '://' + request.get('host');
-        const formattedImageFileName = Date.now() + image.originalname.split(' ').join('-');
-
-        const uploadsDirectory = './data/uploads/';
-        const imageDirectory = 'images/';
-
-        fs.access(uploadsDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory, { recursive: true });
-            }
-        });
-
-        // Ensure that the images directory exists
-        fs.access(uploadsDirectory + imageDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
-            }
-        });
-
-        await sharp(image.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
-        const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-        const elibrary = {
-            category, placeholder, label, date, description, image: imageUrl
-        }
-        const newElibrary = new Elibrary(elibrary)
-        await newElibrary.save()
-        response.status(201).json(newElibrary)
-    } catch (error) {
-        next(error)
-    }
 }
-
-
-export const elibraryGetting = async (request, response, next) => {
-    try {
-        const elibraryData = await Elibrary.aggregate([
-            {
-                $match: {}
-            },
-            {
-                $lookup: {
-                    from: "categories",
-                    localField: "category",
-                    foreignField: "_id",
-                    as: "categoryData"
-                }
-            },
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "executive",
-                    foreignField: "_id",
-                    as: "executiveData"
-                }
-            },
-            {
-                $project: {
-                    placeholder: 1,
-                    image: 1,
-                    approveStatus: 1,
-                    createdAt: 1,
-                    executive: {
-                        $concat: [
-                            { $arrayElemAt: ["$executiveData.firstName", 0] },
-                            " ",
-                            { $arrayElemAt: ["$executiveData.lastName", 0] }
-                        ]
-                    },
-
-                    category: { $arrayElemAt: ["$categoryData.name", 0] }
-                }
-            }
-        ])
-        response.status(200).json(elibraryData)
-    } catch (error) {
-        next(error)
-    }
-}
-export const elibraryGettingById = async (request, response, next) => {
-    try {
-        const { id: elibraryId } = request.params
-        const checkElibraryId = await Elibrary.findById({ _id: elibraryId })
-        if (!checkElibraryId) {
-            response.status(404).json("This elibrary doesn't exists")
-        }
-        response.status(200).json(checkElibraryId)
-        // const filter = await Elibrary.aggregate([
-        //     {
-        //         $match : {
-        //             _id : new mongoose.Types.ObjectId(elibraryId.toString())
-        //         }
-        //     }
-        // ])
-        // response.status(200).json(filter)
-    } catch (error) {
-        next(error)
-    }
-}
-
-export const elibraryApproved = async (request, response, next) => {
-    try {
-        const elibraryData = await Elibrary.aggregate([
-            {
-                $match: {
-                    status: { $eq: 1 }
-                }
-            }
-        ])
-        response.status(200).json(elibraryData)
-    } catch (error) {
-
-    }
-}
-export const elibraryRejected = async (request, response, next) => {
-    try {
-        const elibraryData = await Elibrary.aggregate([
-            {
-                $match: {
-                    status: { $eq: 2 }
-                }
-            }
-        ])
-        response.status(200).json(elibraryData)
-    } catch (error) {
-
-    }
-}
-
-
-// ---------------------------using then catch --------------------------
-// export const elibraryGetting = (request, res, next) => {
-//     try {
-//         Elibrary.find({}).then(response => {
-//             response.map(data => {
-//                 console.log(data.label);
-//             })
-//         })
-//     } catch (error) {
-//         next(error)
-//     }
-// }
-
-
-
 export const createLiseReg = async (request, response, next) => {
     try {
         const data = request.body
-        let { regNo, rate, docReqDate, docReqFollow, docReviewDate, docRemark, docStatus, imagetypedoc, appliedDate, applicationStatus, applicationRemark, acknowledgeType, challlanFees, challanNumber, challanDate, directExpenses, challanUploadType, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUploadType, invoiceType, invoiceDate, invoiceNumber, submissionDate, status, company, executive, state, branch, created_at
+        let { regNo, rate, docReqDate, docReqFollow, docReviewDate, docRemark, docStatus, appliedDate, applicationStatus, applicationRemark, challlanFees, challanNumber, challanDate, directExpenses, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUploadType, invoiceType, invoiceDate, invoiceNumber, submissionDate, company, executive, state, branch, created_at
         } = data
 
         let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName, documents, acknowledge, licenseUpload, challanUpload, newLiseReg, liseReg, findRegNo;
@@ -4359,7 +4194,7 @@ export const createLiseReg = async (request, response, next) => {
         const regNos = await Lisereg.findOne({ regNo: request.body.regNo });
 
         if (regNos) {
-            return response.send({ message: "409, Registration/License Number already exists" });
+            response.send("409");
         }
 
 
@@ -4374,7 +4209,7 @@ export const createLiseReg = async (request, response, next) => {
             // response.status(201).json(newLiseReg)
         }
         const lastInsertedId = await Lisereg.find({}).sort({ '_id': -1 }).limit(1)
-        console.log(lastInsertedId[0].regNo);
+        // console.log(lastInsertedId[0].regNo);
 
         // const  getregNoandrate = getregNoandrates();
 
@@ -4382,7 +4217,7 @@ export const createLiseReg = async (request, response, next) => {
         if (documents && docReqDate && docReqFollow && docReviewDate && docStatus && docRemark) {
             console.log('you are in docremark');
             liseReg = {
-                documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, imagetypedoc
+                documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark
             }
             // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
             // response.status(201).json(newLiseReg)
@@ -4391,7 +4226,7 @@ export const createLiseReg = async (request, response, next) => {
             console.log('you are in ack');
 
             liseReg = {
-                appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, acknowledgeType
+                appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl
             }
             // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
             // response.status(201).json(newLiseReg)
@@ -4400,10 +4235,10 @@ export const createLiseReg = async (request, response, next) => {
             console.log('you are in totalexpenses');
             const checkChallanNumber = await Lisereg.findOne({ challanNumber })
             if (checkChallanNumber) {
-                return response.send({ message: "409, Challan Number already exists" })
+                response.send("409");// return response.send({ message: "409, Challan Number is already exists!" })
             }
             liseReg = {
-                challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, challanUploadType
+                challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses
             }
             // const newLiseReg = await Lisereg.findOneAndUpdate({ regNo }, liseReg, { new: true })
             // response.status(201).json(newLiseReg)
@@ -4413,7 +4248,7 @@ export const createLiseReg = async (request, response, next) => {
         if (dateOfIssue && expireDate && renewalDate && licenseUpload) {
             console.log('you are in licenseupload');
             liseReg = {
-                licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, licenseUploadType
+                licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl
             }
             console.log(liseReg);
             // const newLiseReg = new Lisereg(liseReg)
@@ -4425,7 +4260,7 @@ export const createLiseReg = async (request, response, next) => {
 
             const checkInvoiceNumber = await Lisereg.findOne({ invoiceNumber })
             if (checkInvoiceNumber) {
-                return response.send({ message: "409, Invoice Number already exists" })
+                response.send("409");// return response.send({ message: "409, Invoice Number is already exists!" })
             }
             liseReg = {
                 invoiceType, invoiceDate, invoiceNumber, submissionDate
@@ -4451,129 +4286,6 @@ export const createLiseReg = async (request, response, next) => {
         next(error)
     }
 }
-
-export const liseRegUpdateById = async (request, response, next) => {
-    try {
-        const liseRegId = request.params.id
-        const checkLiseRegId = await Lisereg.findById({ _id: liseRegId })
-        if (!checkLiseRegId) {
-            response.status(404).json("Given lisereg id doesn't exists")
-        }
-
-        const data = request.body
-
-        let { regNo, rate, docReqDate, docReqFollow, docReviewDate, docRemark, docStatus, imagetypedoc, appliedDate, applicationStatus, applicationRemark, acknowledgeType, challlanFees, challanNumber, challanDate, directExpenses, challanUploadType, inDirectExpenses, totalExpenses, licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUploadType, invoiceType, invoiceDate, invoiceNumber, submissionDate, status, company, executive, state, branch, created_at
-        } = data
-
-        let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName, documents, acknowledge, licenseUpload, challanUpload, newLiseReg, liseReg;
-
-        console.log(data);
-        const uploadsDirectory = './data/uploads/';
-        const imageDirectory = 'images/';
-
-        fs.access(uploadsDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory, { recursive: true });
-            }
-        });
-        // Ensure that the images directory exists
-        fs.access(uploadsDirectory + imageDirectory, (err) => {
-            if (err) {
-                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
-            }
-        });
-
-        const url = request.protocol + '://' + request.get('host');
-        if (request.files?.documents !== undefined && request.files?.documents[0] !== undefined) {
-            documents = request.files.documents[0];
-            if (documents) {
-                formattedDocName = Date.now() + documents.originalname.split(' ').join('-');
-                await sharp(documents.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedDocName);
-                docImageUrl = url + '/' + imageDirectory + formattedDocName;
-            }
-        }
-        if (request.files?.acknowledge !== undefined && request.files.acknowledge[0] !== undefined) {
-            acknowledge = request.files.acknowledge[0];
-            if (acknowledge) {
-                formattedAckName = Date.now() + acknowledge.originalname.split(' ').join('-');
-                await sharp(acknowledge.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedAckName);
-                ackImageUrl = url + '/' + imageDirectory + formattedAckName;
-            }
-        }
-        if (request.files?.licenseUpload !== undefined && request.files.licenseUpload[0] !== undefined) {
-            licenseUpload = request.files.licenseUpload[0];
-            if (licenseUpload) {
-                formattedLicName = Date.now() + licenseUpload.originalname.split(' ').join('-');
-                await sharp(licenseUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedLicName);
-                licImageUrl = url + '/' + imageDirectory + formattedLicName;
-            }
-        }
-        if (request.files?.challanUpload !== undefined && request.files.challanUpload[0] !== undefined) {
-            challanUpload = request.files.challanUpload[0];
-            if (challanUpload) {
-                formattedChallanName = Date.now() + challanUpload.originalname.split(' ').join('-');
-                await sharp(challanUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedChallanName);
-                challanImageUrl = url + '/' + imageDirectory + formattedChallanName;
-            }
-        }
-        if (regNo && rate) {
-            console.log('you are here');
-            liseReg = {
-                regNo, rate
-            }
-        }
-        if (documents && docReqDate && docReqFollow && docReviewDate && docStatus && docRemark) {
-            console.log('you are in docremark');
-            liseReg = {
-                documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark, imagetypedoc
-            }
-        }
-        if (applicationRemark && appliedDate && applicationStatus && acknowledge) {
-            console.log('you are in ack');
-            liseReg = {
-                appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl, acknowledgeType
-            }
-        }
-        if (challlanFees && challanNumber && challanDate && challanUpload && directExpenses && inDirectExpenses && totalExpenses) {
-            console.log('you are in totalexpenses');
-            // const checkChallanNumber = await Lisereg.findOne({ challanNumber })
-            // if (checkChallanNumber) {
-            //     return response.send({ message: "409, Challan Number already exists" })
-            // }
-            liseReg = {
-                challlanFees, challanNumber, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses, challanUploadType
-            }
-        }
-        if (dateOfIssue && expireDate && renewalDate && licenseUpload) {
-            console.log('you are in licenseupload');
-            liseReg = {
-                licenseNumber, dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl, licenseUploadType
-            }
-            console.log(liseReg);
-        }
-        if (invoiceType && invoiceDate && invoiceNumber && submissionDate) {
-            console.log('you are in submission date');
-
-            liseReg = {
-                invoiceType, invoiceDate, invoiceNumber, submissionDate
-            }
-        }
-        if (branch && company && executive && state) {
-            console.log('you are in branch, Done!!');
-            liseReg = {
-                company, executive, branch, state, created_at
-            }
-        }
-        console.log('finish');
-        newLiseReg = await Lisereg.findByIdAndUpdate({ _id: liseRegId }, liseReg, { new: true })
-        response.status(201).json(newLiseReg)
-
-    } catch (error) {
-        next(error)
-    }
-}
-
-
 export const liseRegGetting = async (requxest, response, next) => {
     try {
         const liseReg = await Lisereg.aggregate([
@@ -4620,6 +4332,7 @@ export const liseRegGetting = async (requxest, response, next) => {
                     docReviewDate: 1,
                     appliedDate: 1,
                     remark: 1,
+                    docStatus: 1,
                     acknowledge: 1,
                     challlanFees: 1,
                     challanNumber: 1,
@@ -4649,7 +4362,7 @@ export const liseRegGetting = async (requxest, response, next) => {
                         ]
                     },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
-                    comapany: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
                     branch: { $arrayElemAt: ["$branchData.name", 0] },
                     createdAt: 1,
                     updatedAt: 1,
@@ -4663,9 +4376,153 @@ export const liseRegGetting = async (requxest, response, next) => {
         next(error)
     }
 }
+export const liseRegUpdateById = async (request, response, next) => {
+    try {
+        const liseRegId = request.params.id
+        // const checkLiseRegId = await Lisereg.findById({ _id: liseRegId })
+        // if (!checkLiseRegId) {
+        //     response.status(404).json("Given lisereg id doesn't exists")
+        // }
 
+        const data = request.body
 
+        let { rate, docReqDate, docReqFollow, docReviewDate, docRemark, docStatus, appliedDate, applicationStatus, applicationRemark, challlanFees, challanNumber, challanDate, directExpenses, inDirectExpenses, totalExpenses, dateOfIssue, expireDate, renewalDate, invoiceType, invoiceDate, submissionDate, company, executive, state, branch, updated_at
+        } = data
 
+        let docImageUrl, ackImageUrl, challanImageUrl, licImageUrl, formattedDocName, formattedAckName, formattedChallanName, formattedLicName, documents, acknowledge, licenseUpload, challanUpload, newLiseReg, liseReg;
+
+        // console.log(data);
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
+        // Ensure that the images directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+
+        const url = request.protocol + '://' + request.get('host');
+        if (request.files?.documents !== undefined && request.files?.documents[0] !== undefined) {
+            documents = request.files.documents[0];
+            if (documents) {
+                formattedDocName = Date.now() + documents.originalname.split(' ').join('-');
+                await sharp(documents.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedDocName);
+                docImageUrl = url + '/' + imageDirectory + formattedDocName;
+            }
+        }
+        if (request.files?.acknowledge !== undefined && request.files.acknowledge[0] !== undefined) {
+            acknowledge = request.files.acknowledge[0];
+            if (acknowledge) {
+                formattedAckName = Date.now() + acknowledge.originalname.split(' ').join('-');
+                await sharp(acknowledge.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedAckName);
+                ackImageUrl = url + '/' + imageDirectory + formattedAckName;
+            }
+        }
+        if (request.files?.licenseUpload !== undefined && request.files.licenseUpload[0] !== undefined) {
+            licenseUpload = request.files.licenseUpload[0];
+            if (licenseUpload) {
+                formattedLicName = Date.now() + licenseUpload.originalname.split(' ').join('-');
+                await sharp(licenseUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedLicName);
+                licImageUrl = url + '/' + imageDirectory + formattedLicName;
+            }
+        }
+        // console.log(request.files);//return;
+        if (request.files?.challanUpload !== undefined && request.files.challanUpload[0] !== undefined) {
+            challanUpload = request.files.challanUpload[0];
+            if (challanUpload) {
+                formattedChallanName = Date.now() + challanUpload.originalname.split(' ').join('-');
+                await sharp(challanUpload.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedChallanName);
+                challanImageUrl = url + '/' + imageDirectory + formattedChallanName;
+            }
+        }
+        if (rate) {
+            console.log('you are here');
+            liseReg = {
+                rate
+            }
+        }
+        if (documents || docReqDate && docReqFollow && docReviewDate && docStatus && docRemark) {
+            console.log('you are in docremark');
+            if (documents) {
+                liseReg = {
+                    documents: docImageUrl, docReqDate, docReqFollow, docReviewDate, docStatus, docRemark
+                }
+            }
+            else {
+                liseReg = {
+                    docReqDate, docReqFollow, docReviewDate, docStatus, docRemark
+                }
+            }
+        }
+        if (applicationRemark && appliedDate && applicationStatus || acknowledge) {
+            console.log('you are in ack');
+            if (acknowledge) {
+                liseReg = {
+                    appliedDate, applicationStatus, applicationRemark, acknowledge: ackImageUrl
+                }
+            }
+            else {
+                liseReg = {
+                    appliedDate, applicationStatus, applicationRemark,
+                }
+            }
+        }
+        if (challlanFees && challanDate && directExpenses && inDirectExpenses && totalExpenses || challanUpload) {
+            console.log('you are in totalexpenses');
+            // const checkChallanNumber = await Lisereg.findOne({ challanNumber })
+            // if (checkChallanNumber) {
+            //     return response.send({ message: "409, Challan Number already exists" })
+            // }
+            if (challanUpload) {
+                liseReg = {
+                    challlanFees, challanDate, challanUpload: challanImageUrl, directExpenses, inDirectExpenses, totalExpenses
+                }
+            } else {
+                liseReg = {
+                    challlanFees, challanNumber, challanDate, directExpenses, inDirectExpenses, totalExpenses
+                }
+            }
+        }
+        if (dateOfIssue && expireDate && renewalDate || licenseUpload) {
+            console.log('you are in licenseupload');
+            if (licenseUpload) {
+                liseReg = {
+                    dateOfIssue, expireDate, renewalDate, licenseUpload: licImageUrl
+                }
+            }
+            else {
+                liseReg = {
+                    dateOfIssue, expireDate, renewalDate
+                }
+            }
+        }
+        if (invoiceType && invoiceDate && submissionDate) {
+            console.log('you are in submission date');
+
+            liseReg = {
+                invoiceType, invoiceDate, submissionDate
+            }
+        }
+        if (branch && company && executive && state) {
+            console.log('you are in branch, Done!!');
+            liseReg = {
+                company, executive, branch, state, updated_at
+            }
+        }
+        console.log('finish');
+        newLiseReg = await Lisereg.findByIdAndUpdate({ _id: liseRegId }, liseReg, { new: true })
+        response.status(201).json(newLiseReg)
+
+    } catch (error) {
+        next(error)
+    }
+}
 export const liseRegHistoryFilter = async (request, response, next) => {
     try {
         const stateFilter = request.body.state;
@@ -4673,11 +4530,12 @@ export const liseRegHistoryFilter = async (request, response, next) => {
         const executiveFilter = request.body.executive;
         const branchFilter = request.body.branchname;
         const dateFilter = request.body.created_at;
-
+        // console.log(request.body);
         const matchStage = {};
         matchStage['status'] = { $eq: 0 }
 
         if (stateFilter !== undefined && dateFilter !== undefined && executiveFilter !== undefined && companyFilter !== undefined && branchFilter !== undefined && stateFilter !== "" && dateFilter !== "" && executiveFilter !== "" && companyFilter !== "" && branchFilter !== "") {
+            console.log('in all')
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
             matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
@@ -4693,6 +4551,7 @@ export const liseRegHistoryFilter = async (request, response, next) => {
         }
         // ------------- 4 Filter -----------------
         else if (stateFilter !== undefined && stateFilter !== "" && companyFilter !== undefined && companyFilter !== "" && executiveFilter !== undefined && executiveFilter !== "" && branchFilter !== undefined && branchFilter !== "") {
+            console.log('with 4 filter')
             matchStage['state'] = new mongoose.Types.ObjectId(stateFilter.toString());
             matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
@@ -4914,10 +4773,11 @@ export const liseRegHistoryFilter = async (request, response, next) => {
             matchStage['executive'] = new mongoose.Types.ObjectId(executiveFilter.toString())
         }
         else if (companyFilter !== undefined && companyFilter !== "") {
+            console.log('i m in company alone');
             matchStage['company'] = new mongoose.Types.ObjectId(companyFilter.toString())
         }
         else if (branchFilter !== undefined && branchFilter !== "") {
-            matchStage['branchname'] = new mongoose.Types.ObjectId(branchFilter.toString())
+            matchStage['branch'] = new mongoose.Types.ObjectId(branchFilter.toString())
         }
         else if (dateFilter !== undefined && dateFilter !== "") {
 
@@ -4962,7 +4822,7 @@ export const liseRegHistoryFilter = async (request, response, next) => {
             {
                 $lookup: {
                     from: "branches",
-                    localField: "branchname",
+                    localField: "branch",
                     foreignField: "_id",
                     as: "branchData",
                 },
@@ -4972,8 +4832,9 @@ export const liseRegHistoryFilter = async (request, response, next) => {
                     _id: 1,
                     approvedate: 1,
                     approvalStatus: 1,
-                    sentData: 1,
+                    sentDate: 1,
                     created_at: 1,
+                    regNo: 1,
                     executive: {
                         $concat: [
                             { $arrayElemAt: ["$executiveData.firstName", 0] },
@@ -4982,191 +4843,139 @@ export const liseRegHistoryFilter = async (request, response, next) => {
                         ]
                     },
                     state: { $arrayElemAt: ["$stateData.name", 0] },
-                    company: { $arrayElemAt: ["$companyData.name", 0] },
-                    branchname: { $arrayElemAt: ["$branchData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    branch: { $arrayElemAt: ["$branchData.name", 0] },
                 }
             }
 
         ]);
-
+        // console.log(filter)
         response.status(201).json(filter);
     } catch (error) {
         next(error);
     }
-};
-
-
-
-
-// **************************** ------DASHBOARD------- *************************
-
-export const dashboard = async (request, response, next) => {
-
 }
 
+export const regsApporve = async (request, response, next) => {
+    try {
+        const objectapprove = { status: request.body.status, approvedate: request.body.approvedate }
+        const riseregsApprove = await Lisereg.updateOne({ _id: request.body.id }, { $set: objectapprove },)
+        response.status(201).json(riseregsApprove);
+    } catch (error) {
+        next(error);
+    }
+}
+export const liseRegGettingById = async (request, response, next) => {
+    try {
+        const liseRegGettingByIDobj = await Lisereg.findById({ _id: request.params.id })
+        const newObj = {};
+        {
+            newObj._id = liseRegGettingByIDobj._id,
+            newObj.regNo = liseRegGettingByIDobj.regNo,
+            newObj.rate = liseRegGettingByIDobj.rate.toString(),
+            newObj.documents = liseRegGettingByIDobj.documents,
+            newObj.docReqDate = liseRegGettingByIDobj.docReqDate,
+            newObj.docReqFollow = liseRegGettingByIDobj.docReqFollow,
+            newObj.docReviewDate = liseRegGettingByIDobj.docReviewDate,
+            newObj.docStatus = liseRegGettingByIDobj.docStatus,
+            newObj.appliedDate = liseRegGettingByIDobj.appliedDate,
+            newObj.remark = liseRegGettingByIDobj.remark,
+            newObj.applicationStatus = liseRegGettingByIDobj.applicationStatus,
+            newObj.applicationRemark = liseRegGettingByIDobj.applicationRemark,
+            newObj.acknowledge = liseRegGettingByIDobj.acknowledge,
+            newObj.challlanFees = liseRegGettingByIDobj.challlanFees.toString(),
+            newObj.challanNumber = liseRegGettingByIDobj.challanNumber,
+            newObj.challanDate = liseRegGettingByIDobj.challanDate,
+            newObj.challanUpload = liseRegGettingByIDobj.challanUpload
+            newObj.directExpenses = liseRegGettingByIDobj.directExpenses.toString(),
+                newObj.inDirectExpenses = liseRegGettingByIDobj.inDirectExpenses.toString(),
+                newObj.totalExpenses = liseRegGettingByIDobj.totalExpenses.toString(),
+                newObj.licenseNumber = liseRegGettingByIDobj.licenseNumber,
+                newObj.dateOfIssue = liseRegGettingByIDobj.dateOfIssue,
+                newObj.renewalDate = liseRegGettingByIDobj.renewalDate,
+                newObj.expireDate = liseRegGettingByIDobj.expireDate,
+                newObj.licenseUpload = liseRegGettingByIDobj.licenseUpload,
+                newObj.invoiceType = liseRegGettingByIDobj.invoiceType,
+                newObj.invoiceDate = liseRegGettingByIDobj.invoiceDate,
+                newObj.invoiceNumber = liseRegGettingByIDobj.invoiceNumber,
+                newObj.submissionDate = liseRegGettingByIDobj.submissionDate,
+                newObj.branch = liseRegGettingByIDobj.branch,
+                newObj.company = liseRegGettingByIDobj.company,
+                newObj.state = liseRegGettingByIDobj.state,
+                newObj.executive = liseRegGettingByIDobj.executive,
+                newObj.status = liseRegGettingByIDobj.status,
+                newObj.applicationStatus = liseRegGettingByIDobj.applicationStatus,
+                newObj.docRemark = liseRegGettingByIDobj.docRemark
+        }
 
-// ************************ --------- Company ---------- **********************
-
-
-// ************************ --------- Company Create ---------- **********************
-
-// export const companyCreate = async (request, response, next) => {
-//     try {
-//         const data = request.body
-//         const {
-//             companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at, updated_at
-//         } = data
-//         let dataB1, dataB2, dataB3
-
-//         const uploadImage = async (imageFile) => {
-//             const url = request.protocol + '://' + request.get('host');
-//             const uploadsDirectory = './data/uploads/';
-//             const imageDirectory = 'images/';
-//             // return await Promise.all(imageFile.map(async (img) => {
-//             fs.access(uploadsDirectory, (err) => {
-//                 if (err) {
-//                     fs.mkdirSync(uploadsDirectory, { recursive: true });
-//                 }
-//             });
-//             fs.access(uploadsDirectory + imageDirectory, (err) => {
-//                 if (err) {
-//                     fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
-//                 }
-//             });
-//             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
-//             const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-//             console.log(imageUrl);
-//             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
-//             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
-//             return imageUrl;
-//             // }))
-//         };
-
-//         // const images = request.files
-//         // console.log(images.length);
-//         // images.forEach(image => {
-//         //     return uploadImage(image)
-//         // })
-
-//         if (RegistrationB1.length > 0) {
-//             dataB1 = RegistrationB1.map(item => {
-//                 return {
-//                     name: item.name,
-//                     nameimage: item.nameimage,
-//                     details: item.details,
-//                     remarks: item.remarks,
-//                     din: item.din,
-//                     dindetails: item.dindetails,
-//                     dinremark: item.dinremark,
-//                     dinimage: item.dinimage,
-//                     pan: item.pan,
-//                     pandetails: item.pandetails,
-//                     panremark: item.panremark,
-//                     panimage: item.panimage,
-//                     aadhaar: item.aadhaar,
-//                     aadhaardetails: item.aadhaardetails,
-//                     aadhaarremark: item.aadhaarremark,
-//                     aadhaarimage: item.aadhaarimage,
-//                     mobile: item.mobile,
-//                     mobiledetail: item.mobiledetail,
-//                     mobileremark: item.mobileremark,
-//                     email: item.email,
-//                     emaildetails: item.emaildetails,
-//                     emailremark: item.emailremark
-//                 };
-//             });
-//             console.log(dataB1);
-//         }
-//         if (RegistrationB2.length > 0) {
-//             dataB2 = RegistrationB2.map(function (item) {
-//                 return {
-//                     name: item.name,
-//                     details: item.details,
-//                     image: uploadImage(request.files.find(img => img.fieldname === "image")),
-//                     remarks: item.remarks,
-//                     designation: item.designation,
-//                     designationdetails: item.designationdetails,
-//                     designationimage: uploadImage(request.files[10]),
-//                     designationremark: item.designationremark,
-//                     pan: item.pan,
-//                     pandetails: item.pandetails,
-//                     panimage: uploadImage(request.files[11]),
-//                     panremark: item.panremark,
-//                     aadhaar: item.aadhaar,
-//                     aadhaardetails: item.aadhaardetails,
-//                     aadhaarimage: uploadImage(request.files[12]),
-//                     aadhaarremark: item.aadhaarremark,
-//                     mobile: item.mobile,
-//                     mobiledetail: item.mobiledetail,
-//                     mobileremark: item.mobileremark,
-//                     email: item.email,
-//                     emaildetails: item.emaildetails,
-//                     emailremark: item.emailremark,
-//                     authletter: item.authletter,
-//                     authletterdetails: item.authletterdetails,
-//                     authletterremark: item.authletterremark
-//                 };
-//             });
-//             console.log(dataB2);
-//         }
-
-//         if (RegistrationB3.length > 0) {
-//             dataB3 = RegistrationB3.map(item => {
-//                 return {
-//                     name: item.name,
-//                     details: item.details,
-//                     remarks: item.remarks,
-//                     pan: item.pan,
-//                     pandetails: item.pandetails,
-//                     panremark: item.panremark,
-//                     aadhaar: item.aadhaar,
-//                     aadhaardetails: item.aadhaardetails,
-//                     aadhaarremark: item.aadhaarremark,
-//                     mobile: item.mobile,
-//                     mobiledetail: item.mobiledetail,
-//                     mobileremark: item.mobileremark,
-//                     email: item.email,
-//                     emaildetails: item.emaildetails,
-//                     emailremark: item.emailremark,
-//                     prefferd: item.prefferd,
-//                     prefferdetails: item.prefferdetails,
-//                     prefferdremark: item.prefferdremark
-//                 };
-//             });
-//             console.log(dataB3);
-//         }
+        response.status(201).json(newObj)
+    }
+    catch (error) {
+        next(error)
+    }
+}
+export const elibraryCreate = async (request, response, next) => {
+    try {
+        const imageFile = request.file;
+        const url = request.protocol + '://' + request.get('host');
+        let imageUrl, formattedImageFileName
+        const uploadsDirectory = './data/uploads/';
+        const imageDirectory = 'images/';
+        // console.log(imageFile);
 
 
-//         const company = {
-//             companyregistration, companyregistrationdetails, companyregistrationimage: await uploadImage(request.files[1]), companyregistrationremark, companycin, companycindetails, companyciniamge: await uploadImage(request.files[2]), companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceimage: await uploadImage(request.files[3]), companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityimage: await uploadImage(request.files[4]), companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanimage: await uploadImage(request.files[5]), companypanremark, companytan, companytandetails, companytanimage: await uploadImage(request.files[6]), companytanremark, companytin, companytindetails, companytinimage: await uploadImage(request.files[7]), companytinremark, companygst, companygstdetails, companygstimage: await uploadImage(request.files[8]), companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at, updated_at
+        fs.access(uploadsDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory, { recursive: true });
+            }
+        });
 
-//         }
-//         const newCompany = new Registration(company)
-//         await newCompany.save()
-//         response.status(201).json(newCompany)
-//     } catch (error) {
-//         next(error)
-//     }
+        // Ensure that the documents directory exists
+        fs.access(uploadsDirectory + imageDirectory, (err) => {
+            if (err) {
+                fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
+            }
+        });
+        if (imageFile) {
+            formattedImageFileName = Date.now() + imageFile.originalname.split(' ').join('-');
+            await sharp(request.file.buffer).resize({ width: 600 }).toFile('./data/uploads/' + formattedImageFileName);
+            imageUrl = url + '/' + formattedImageFileName;
+        }
 
-// }
-
-
-
-// export const companyCreate = async (request, response, next) => {
+        const elibrary = {
+            label: request.body.label,
+            role: request.body.role,
+            description: request.body.description,
+            image: imageUrl,
+            dates: request.body.dates,
+            state: request.body.state
+        }
+        // console.log(notification);
+        const newelibrary = new Elibrary(elibrary);
+        await newelibrary.save();
+        response.status(201).json(newelibrary);
+    } catch (error) {
+        // response.status(404).json({ message: 'error.message' })
+        next(error);
+    }
+}
+// export const createCompany = async (request, response, next) => {
 //     try {
 //         const data = request.body;
 //         const {
-//             companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at, updated_at
+//             companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at
 //         } = data;
-
-//         const uploadImages = async (files) => {
-//             if (!files) return [];
+//         let dataB1,dataB2,dataB3
+//         const uploadImage = async (imageFile) => {
+//             if (!imageFile) {
+//                 return null; // Return null if image is not provided
+//             }
 
 //             const url = request.protocol + '://' + request.get('host');
 //             const uploadsDirectory = './data/uploads/';
 //             const imageDirectory = 'images/';
 
-//             return await Promise.all(files.map(async (imageFile) => {
+//             // return await Promise.all(files.map(async (imageFile) => {
 //                 fs.access(uploadsDirectory, (err) => {
 //                     if (err) {
 //                         fs.mkdirSync(uploadsDirectory, { recursive: true });
@@ -5182,215 +4991,9 @@ export const dashboard = async (request, response, next) => {
 //                 const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
 //                 await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
 //                 return imageUrl;
-//             }));
+//             // }));
 //         };
 
-//         const images = [
-//             request.files?.[1],
-//             request.files?.[2],
-//             request.files?.[3],
-//             request.files?.[4],
-//             request.files?.[5],
-//             request.files?.[6],
-//             request.files?.[7],
-//             request.files?.[8],
-//         ];
-
-//         const uploadedImages = await uploadImages(images);
-
-//         const company = {
-//             companyregistration, companyregistrationdetails, companyregistrationimage: uploadedImages[0], companyregistrationremark, companycin, companycindetails, companyciniamge: uploadedImages[1], companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceimage: uploadedImages[2], companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityimage: uploadedImages[3], companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanimage: uploadedImages[4], companypanremark, companytan, companytandetails, companytanimage: uploadedImages[5], companytanremark, companytin, companytindetails, companytinimage: uploadedImages[6], companytinremark, companygst, companygstdetails, companygstimage: uploadedImages[7], companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at, updated_at
-//         };
-
-//         const newCompany = new Registration(company);
-//         await newCompany.save();
-//         response.status(201).json(newCompany);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
-
-
-
-
-
-
-
-
-
-
-// const companyregistrationimage = request.files.companyregistrationimage ? request.files.companyregistrationimage[0] : null;
-// const companyciniamge = request.files.companyciniamge ? request.files.companyciniamge[0] : null;
-// const companyauthorityimage = request.files.companyauthorityimage ? request.files.companyauthorityimage[0] : null;
-// const companyissuedplaceimage = request.files.companyissuedplaceimage ? request.files.companyissuedplaceimage[0] : null;
-// const companytanimage = request.files.companytanimage ? request.files.companytanimage[0] : null;
-// const companytinimage = request.files.companytinimage ? request.files.companytinimage[0] : null;
-// const companygstimage = request.files.companygstimage ? request.files.companygstimage[0] : null;
-// const companypanimage = request.files.companypanimage ? request.files.companypanimage[0] : null;
-
-// export const companyCreate = async (request, response, next) => {
-//     try {
-//         const data = request.body;
-//         const { /* destructure properties from data */ } = data;
-
-//         if (!request.files) {
-//             throw new Error("No files uploaded");
-//         }
-
-//         // Assuming `RegistrationB1`, `RegistrationB2`, and `RegistrationB3` are arrays
-//         let dataB1, dataB2, dataB3;
-
-//         const uploadImage = async (imageFile) => {
-//             // Check if imageFile exists
-//             if (!imageFile) {
-//                 return null;
-//             }
-
-//             const url = request.protocol + '://' + request.get('host');
-//             const uploadsDirectory = './data/uploads/';
-//             const imageDirectory = 'images/';
-
-//             // Ensure directories exist
-//             fs.mkdirSync(uploadsDirectory, { recursive: true });
-//             fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
-
-//             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
-//             const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-//             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
-
-//             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
-
-//             return imageUrl;
-//         };
-
-//         // Process images
-//         const companyregistrationimage = await uploadImage(request.files.companyregistrationimage);
-//         const companyciniamge = await uploadImage(request.files.companyciniamge);
-//         // Repeat for other fields...
-
-//         const company = {
-//             companyregistration, companyregistrationdetails, companyregistrationimage,
-//             companyregistrationremark, companycin, companycindetails, companyciniamge,
-//             companycinremark, companyissuedplace, companyissuedplacedetails,
-//             // Include other properties...
-//             RegistrationB1: dataB1, RegistrationB2: dataB2, RegistrationB3: dataB3,
-//             created_at, updated_at
-//         };
-
-//         const newCompany = new Registration(company);
-//         await newCompany.save();
-//         response.status(201).json(newCompany);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
-// export const companyCreate = async (request, response, next) => {
-//     try {
-//         const data = request.body;
-//         const {
-//             companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1, RegistrationB2, RegistrationB3, created_at, updated_at
-//         } = data
-
-//         if (!request.files) {
-//             throw new Error("No files uploaded");
-//         }
-
-//         let dataB1, dataB2, dataB3;
-
-//         const uploadImage = async (imageFile) => {
-//             if (!imageFile) {
-//                 return null;
-//             }
-
-//             const url = request.protocol + '://' + request.get('host');
-//             const uploadsDirectory = './data/uploads/';
-//             const imageDirectory = 'images/';
-
-//             fs.mkdirSync(uploadsDirectory, { recursive: true });
-//             fs.mkdirSync(uploadsDirectory + imageDirectory, { recursive: true });
-
-//             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
-//             const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-//             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
-
-//             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
-
-//             return imageUrl;
-//         };
-
-//         // Process images for each item in RegistrationB2
-//         if (RegistrationB2 && RegistrationB2.length > 0) {
-//             dataB2 = await Promise.all(RegistrationB2.map(async (item) => {
-//                 console.log(item);
-//                 const imageFields = ['designationimage', 'panimage', 'aadhaarimage']; // Add other image fields here
-//                 const processedItem = { ...item }; // Copy the item object
-//                 for (const field of imageFields) {
-//                     if (item[field]) {
-//                         processedItem[field] = await uploadImage(request.files[field]);
-//                     }
-//                 }
-
-//                 return processedItem;
-//             }));
-//         }
-
-//         // Other parts of the code remain the same
-
-//         const company = {
-//             companyregistration, companyregistrationdetails, companyregistrationimage: uploadImage(request.files[0]),
-//             companyregistrationremark, companycin, companycindetails, companyciniamge : uploadImage(request.files[1]),
-//             companycinremark, companyissuedplace, companyissuedplacedetails,
-//             // Include other properties...
-//             RegistrationB1: dataB1, RegistrationB2: dataB2, RegistrationB3: dataB3,
-//             created_at, updated_at
-//         };
-
-//         const newCompany = new Registration(company);
-//         await newCompany.save();
-//         response.status(201).json(newCompany);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
-
-
-// export const createCompanyRegistration = async (request, response, next) => {
-//     try {
-//         const data = request.body;
-//         const {
-//             // A Starts
-//             companyname, companydetails, companyremark, companyaddress, companystate, companydistrict, companypin, comapnyaddressdetails, companyaddressremark, companytype, companytypedetails, companytyperemark, companycategory, companycategorydetails, companycategoryremark, companynatureofbusiness, companynatureofbusinessdetails, companynatureofbusinessremark,
-//             // B Starts
-//             companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1, RegistrationB2, RegistrationB3,
-//             // C Starts
-//             ClientcontactC1, ClientcontactC2, ClientcontactC3, ClientcontactC4,
-//             // D Starts
-//             pfnumber, pfdetails, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, OtherRegsitrationD1PFsubcodes, OtherRegsitrationD1ESIsubcodes, OtherRegsitrationD3NSP, OtherRegsitrationD3FL, OtherRegsitrationD3OTP, OtherRegsitrationD3WOE, OtherRegsitrationD3TD, OtherRegsitrationD3MSME, OtherRegsitrationD3BOCW, OtherRegsitrationD3IMW, esinumber, esidetails, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressremark, registrationD3, registrationD3details, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3remark, fpD3, fpD3details, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3remark, doregistrationptrD3,
-//         } = data;
-//         // pfnumber, pfaddressimage
-
-//         const uploadImage = async (imageFile) => {
-//             if (!imageFile) {
-//                 return null; // Return null if image is not provided
-//             }
-//             const url = request.protocol + '://' + request.get('host');
-//             const uploadsDirectory = './data/uploads/';
-//             const imageDirectory = 'images/';
-//             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
-//             const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-//             // console.log(imageUrl);
-//             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
-//             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
-//             return imageUrl;
-//         };
-
-//         // ***********************-------- B Dynamic Image Handling ----------***********************
-
-//         let dataB1, dataB2, dataB3
-//         // Process RegistrationB1
 //         if (RegistrationB1 !== undefined && RegistrationB1.length > 0) {
 //             dataB1 = await Promise.all(RegistrationB1.map(async (item, index) => ({
 //                 ...item,
@@ -5400,165 +5003,27 @@ export const dashboard = async (request, response, next) => {
 //                 aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][aadhaarimage]`)),
 //             })));
 //         }
-//         // Process RegistrationB2
+//         // Process images for RegistrationB2
 //         if (RegistrationB2 !== undefined && RegistrationB2.length > 0) {
 //             dataB2 = await Promise.all(RegistrationB2.map(async (item, index) => ({
 //                 ...item,
-//                 image: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][image]`)),
+//                 nameimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][nameimage]`)),
 //                 designationimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][designationimage]`)),
 //                 panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][panimage]`)),
 //                 aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][aadhaarimage]`)),
 //             })));
 //         }
-//         // Process RegistrationB3
+
+//         // Process images for RegistrationB3
 //         if (RegistrationB3 !== undefined && RegistrationB3.length > 0) {
-//             dataB3 = await Promise.all(RegistrationB3.map(async (item, index) => ({
+//             dataB3 = await Promise.all(RegistrationB3.map(async (item,index) => ({
 //                 ...item,
-//                 panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][panimage]`)),
-//                 aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][aadhaarimage]`)),
+//                 nameimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][nameimage]`)),
+//                 panimage: await uploadImage(request.files.find(img => img.fieldname ===  `RegistrationB3[${index}][panimage]`)),
+//                 aadhaarimage: await uploadImage(request.files.find(img => img.fieldname ===  `RegistrationB3[${index}][aadhaarimage]`)),
 //             })));
 //         }
-
-//         // ***********************-------- C Dynamic Image Handling ----------***********************
-
-//         let clientDataC1, clientDataC2, clientDataC3, clientDataC4
-//         if (ClientcontactC1 !== undefined && ClientcontactC1.length > 0) {
-//             clientDataC1 = await Promise.all(ClientcontactC1.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][nameimage]`)),
-//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][designationimage]`))
-//                 }
-//             }))
-//         }
-//         if (ClientcontactC2 !== undefined && ClientcontactC2.length > 0) {
-//             clientDataC2 = await Promise.all(ClientcontactC2.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][nameimage]`)),
-//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][designationimage]`))
-//                 }
-//             }))
-//         }
-//         if (ClientcontactC3 !== undefined && ClientcontactC3.length > 0) {
-//             clientDataC3 = await Promise.all(ClientcontactC3.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][nameimage]`)),
-//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][designationimage]`))
-//                 }
-//             }))
-//         }
-//         if (ClientcontactC4 !== undefined && ClientcontactC4.length > 0) {
-//             clientDataC4 = await Promise.all(ClientcontactC4.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][nameimage]`)),
-//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][designationimage]`))
-//                 }
-//             }))
-//         }
-
-//         // ***********************-------- D Dynamic Image Handling ----------***********************
-
-//         let dataPFsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
-//         if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
-//             dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     regimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][regimage]`)),
-//                     docimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][docimage]`)),
-//                     offaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][offaddressimage]`))
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD1ESIsubcodes !== undefined && OtherRegsitrationD1ESIsubcodes.length > 0) {
-//             dataESIsubcodes = await Promise.all(OtherRegsitrationD1ESIsubcodes.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     esiimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esiimage]`)),
-//                     esidocimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esidocimage]`)),
-//                     esioffaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esioffaddressimage]`))
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3FL !== undefined && OtherRegsitrationD3FL.length > 0) {
-//             dataFL = await Promise.all(OtherRegsitrationD3FL.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][managerlicenseimage]`)),
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3NSP !== undefined && OtherRegsitrationD3NSP.length > 0) {
-//             dataNSP = await Promise.all(OtherRegsitrationD3NSP.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3NSP[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3OTP !== undefined && OtherRegsitrationD3OTP.length > 0) {
-//             dataOTP = await Promise.all(OtherRegsitrationD3OTP.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3OTP[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3WOE !== undefined && OtherRegsitrationD3WOE.length > 0) {
-//             dataWOE = await Promise.all(OtherRegsitrationD3WOE.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3WOE[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3TD !== undefined && OtherRegsitrationD3TD.length > 0) {
-//             dataTD = await Promise.all(OtherRegsitrationD3TD.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3TD[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3MSME !== undefined && OtherRegsitrationD3MSME.length > 0) {
-//             dataMSME = await Promise.all(OtherRegsitrationD3MSME.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3MSME[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3BOCW !== undefined && OtherRegsitrationD3BOCW.length > 0) {
-//             dataBOCW = await Promise.all(OtherRegsitrationD3BOCW.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3BOCW[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3IMW !== undefined && OtherRegsitrationD3IMW.length > 0) {
-//             dataIMW = await Promise.all(OtherRegsitrationD3IMW.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3IMW[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-
-
-//         // Upload company images
 //         const company = {
-//             // A Starts
-//             companyimage: await uploadImage(request.files.find(img => img.fieldname === "companyimage")),
-//             companyaddressimage: await uploadImage(request.files.find(img => img.fieldname === "companyaddressimage")),
-//             companytypeimage: await uploadImage(request.files.find(img => img.fieldname === "companytypeimage")),
-//             companycategoryimage: await uploadImage(request.files.find(img => img.fieldname === "companycategoryimage")),
-//             companynatureofbusinessimage: await uploadImage(request.files.find(img => img.fieldname === "companynatureofbusinessimage")),
-//             companyname, companydetails, companyremark, companyaddress, companystate, companydistrict, companypin, comapnyaddressdetails, companyaddressremark, companytype, companytypedetails, companytyperemark, companycategory, companycategorydetails, companycategoryremark, companynatureofbusiness, companynatureofbusinessdetails, companynatureofbusinessremark,
-//             // B Starts
 //             companyregistrationimage: await uploadImage(request.files.find(img => img.fieldname === "companyregistrationimage")),
 //             companyciniamge: await uploadImage(request.files.find(img => img.fieldname === "companyciniamge")),
 //             companyissuedplaceimage: await uploadImage(request.files.find(img => img.fieldname === "companyissuedplaceimage")),
@@ -5567,55 +5032,17 @@ export const dashboard = async (request, response, next) => {
 //             companytanimage: await uploadImage(request.files.find(img => img.fieldname === "companytanimage")),
 //             companytinimage: await uploadImage(request.files.find(img => img.fieldname === "companytinimage")),
 //             companygstimage: await uploadImage(request.files.find(img => img.fieldname === "companygstimage")),
-//             companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark,
-//             RegistrationB1: dataB1,
-//             RegistrationB2: dataB2,
-//             RegistrationB3: dataB3,
-//             // C Starts
-//             ClientcontactC1: clientDataC1,
-//             ClientcontactC2: clientDataC2,
-//             ClientcontactC3: clientDataC3,
-//             ClientcontactC4: clientDataC4,
-//             // D Starts
-//             pfimage: await uploadImage(request.files.find(img => img.fieldname === "pfimage")),
-//             pfaddressimage: await uploadImage(request.files.find(img => img.fieldname === "pfaddressimage")),
-//             esiimage: await uploadImage(request.files.find(img => img.fieldname === "esiimage")),
-//             esiaddressimage: await uploadImage(request.files.find(img => img.fieldname === "esiaddressimage")),
-//             registrationD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationD3image")),
-//             managernameD3image: await uploadImage(request.files.find(img => img.fieldname === "managernameD3image")),
-//             issueauthfD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfD3image")),
-//             fpD3image: await uploadImage(request.files.find(img => img.fieldname === "fpD3image")),
-//             issueauthfpD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfpD3image")),
-//             powerfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerfpD3image")),
-//             powerhpfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerhpfpD3image")),
-//             registrationlwfD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationlwfD3image")),
-//             registrationptrD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationptrD3image")),
-//             pfnumber, pfdetails, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, esinumber, esidetails, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressremark, registrationD3, registrationD3details, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3remark, fpD3, fpD3details, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3remark, doregistrationptrD3,
-//             OtherRegsitrationD1PFsubcodes: dataPFsubcodes,
-//             OtherRegsitrationD1ESIsubcodes: dataESIsubcodes,
-//             OtherRegsitrationD3NSP: dataNSP,
-//             OtherRegsitrationD3OTP: dataOTP,
-//             OtherRegsitrationD3WOE: dataWOE,
-//             OtherRegsitrationD3TD: dataTD,
-//             OtherRegsitrationD3MSME: dataMSME,
-//             OtherRegsitrationD3BOCW: dataBOCW,
-//             OtherRegsitrationD3IMW: dataIMW,
-//             OtherRegsitrationD3FL: dataFL,
+//             companyregistration, companyregistrationdetails, companyregistrationremark, companycin, companycindetails, companycinremark, companyissuedplace, companyissuedplacedetails, companyissuedplaceremark, companyauthority, companyauthoritydetails, companyauthorityremark, companyregistrationdate, companypan, companypandetails, companypanremark, companytan, companytandetails, companytanremark, companytin, companytindetails, companytinremark, companygst, companygstdetails, companygstremark, RegistrationB1: dataB1, RegistrationB2: dataB2, RegistrationB3: dataB3, created_at
 //         };
 
-
-//         // Save company data to database
-//         const newCompany = new Company(company);
+//         const newCompany = new RegistrationB(company);
 //         await newCompany.save();
 //         response.status(201).json(newCompany);
 //     } catch (error) {
 //         next(error);
 //     }
-
-
-
-/** pradeep code*/
-export const createCompanyRegistration = async (request, response, next) => {
+// }
+export const createCompany = async (request, response, next) => {
     try {
         let data = request.body;
         let {
@@ -5627,13 +5054,17 @@ export const createCompanyRegistration = async (request, response, next) => {
             ClientcontactC1, ClientcontactC2, ClientcontactC3, ClientcontactC4,
             // D Starts
             pfnumber, pfdetails, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, OtherRegsitrationD1PFsubcodes, OtherRegsitrationD1ESIsubcodes, OtherRegsitrationD3NSP, OtherRegsitrationD3FL, OtherRegsitrationD3OTP, OtherRegsitrationD3WOE, OtherRegsitrationD3TD, OtherRegsitrationD3MSME, OtherRegsitrationD3BOCW, OtherRegsitrationD3IMW, esinumber, esidetails, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressremark, registrationD3, registrationD3details, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3remark, fpD3, fpD3details, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3remark, doregistrationptrD3,
+
             // E Starts 
-            isEngaged, isEngagedDet, isEngagedRemark, contLabRegNoE, contLabRegNoEDet, contLabRegNoERemark, dateOfRegistrationE, dateOfRegEDet, dateOfRegERemark, noOfContractEmployeesE, noOfContractEmpEDet, noOfContractEmpERemark, noOfContractorsE, noOfContractorsEDet, noOfContractorsERemark, nameOfContractorE1, nameOfContractorsE1Det, nameOfContractorsE1Remark, nameOfEstablishmentE1, nameOfEstablishmentE1Det, nameOfEstablishmentE1Remark, regAddContractorE1, regAddContractorE1Det, regAddContractorE1Remark, agreementExpiryDateE2, agreementExpiryDateE2Det, agreementExpiryDateE2Remark, agreementRenewalDateE2, agreementRenewalDateE2Det, agreementRenewalDateE2Remark, natureOfWorkAgreementE2, natureOfWorkAgreementE2Det, natureOfWorkAgreementE2Remark, noOfEmpDeployedAgreementE2, noOfEmpDeployedAgreementE2Det, noOfEmpDeployedAgreementE2Remark, companyTypeLabourE3, companyTypeLabourE3Det, companyTypeLabourE3Remark, contractLabourLicNoE3, contractLabourLicNoE3Det, contractLabourLicNoE3Remark, contractLicDateE3, contractLicDateE3Det, contractLicDateE3Remark, contractExpiryDateE3, contractExpiryDateE3Det, contractExpiryDateE3Remark, contractRenewalDueDateE3, contractRenewalDueDateE3Det, contractRenewalDueDateE3Remark, noOfWorkersContractE3, noOfWorkersContractE3Det, noOfWorkersContractE3Remark, panContractorsE3, panContractorsE3Det, panContractorsE3Remark, gstContractorsE3, gstContractorsE3Det, gstContractorsE3Remark, pfRegContractorsE3, pfRegContractorsE3Det, pfRegContractorsE3Remark, esicRegContractorsE3, esicRegContractorsE3Det, esicRegContractorsE3Remark, shopsandEstContractorsE3, shopsandEstContractorsE3Det, shopsandEstContractorsE3Remark, lwfRegContractorsE3, lwfRegContractorsE3Det, lwfRegContractorsE3Remark, profTaxContractorsE3, profTaxContractorsE3Det, profTaxContractorsE3Remark,
-            // F Starts : in this renewalDateF52 was written 2 times as payload, so i removed one
-            branchaddress, branchstate, branchdistrict, branchpin, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regisocontractaddress, regisocontractstate, regisocontractdistrict, regisocontractpin, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark,
+             contLabRegNoE, contLabRegNoEDet, contLabRegNoERemark, dateOfRegistrationE, dateOfRegEDet, dateOfRegERemark, noOfContractEmployeesE, noOfContractEmpEDet, noOfContractEmpERemark, noOfContractorsE, noOfContractorsEDet, noOfContractorsERemark, nameOfContractorE1, nameOfContractorsE1Det, nameOfContractorsE1Remark, nameOfEstablishmentE1, nameOfEstablishmentE1Det, nameOfEstablishmentE1Remark, regAddContractorE1, regStateContractorE1, regDistContractorE1, regPinContractorE1, regAddContractorE1Det, regAddContractorE1Remark, agreementExpiryDateE2, agreementExpiryDateE2Det, agreementExpiryDateE2Remark, agreementRenewalDateE2, agreementRenewalDateE2Det, agreementRenewalDateE2Remark, natureOfWorkAgreementE2, natureOfWorkAgreementE2Det, natureOfWorkAgreementE2Remark, noOfEmpDeployedAgreementE2, noOfEmpDeployedAgreementE2Det, noOfEmpDeployedAgreementE2Remark, companyTypeLabourE3, companyTypeLabourE3Det, companyTypeLabourE3Remark, contractLabourLicNoE3, contractLabourLicNoE3Det, contractLabourLicNoE3Remark, contractLicDateE3, contractLicDateE3Det, contractLicDateE3Remark, contractExpiryDateE3, contractExpiryDateE3Det, contractExpiryDateE3Remark, contractRenewalDueDateE3, contractRenewalDueDateE3Det, contractRenewalDueDateE3Remark, noOfWorkersContractE3, noOfWorkersContractE3Det, noOfWorkersContractE3Remark, panContractorsE3, panContractorsE3Det, panContractorsE3Remark, gstContractorsE3, gstContractorsE3Det, gstContractorsE3Remark, pfRegContractorsE3, pfRegContractorsE3Det, pfRegContractorsE3Remark, esicRegContractorsE3, esicRegContractorsE3Det, esicRegContractorsE3Remark, shopsandEstContractorsE3, shopsandEstContractorsE3Det, shopsandEstContractorsE3Remark, lwfRegContractorsE3, lwfRegContractorsE3Det, lwfRegContractorsE3Remark, profTaxContractorsE3, profTaxContractorsE3Det, profTaxContractorsE3Remark,
+            // F Starts
+            contractorAddBranchF, contractorStateBranchF, contractorDistBranchF, contractorPinBranchF, branchOpeningDateF, contractorAddBranchFDet, contractorAddBranchFRemark, noOfEmpBranchF, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regAddContractorF51, regStateContractorF51, regDistContractorF51, regPinContractorF51, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark, F1branch, F1RLicense, F1FL, F1FP, F54NSP, F54OTP, F54WOE, F54TL,
             // G Starts
-            g12ncw, g12ncwdet, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoedet, g12ncwcoeremark, g13form, g13formdet, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5licenecedet, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeedet, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeedet, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls, GCC4TL,
+            // G Starts
+            g12ncw, g12ncwdet, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoedet, g12ncwcoeremark, g13form, g13formdet, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5licenecedet, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeedet, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeedet, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls, GCC4TL,created_at
+
         } = data;
+        // pfnumber, pfaddressimage
         let company, newCompany;
         const uploadImage = async (imageFile) => {
             let imageUrl
@@ -5669,19 +5100,12 @@ export const createCompanyRegistration = async (request, response, next) => {
             }
 
             if (imageFile.mimetype === 'application/pdf') {
-                const formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
+                const formattedDocumentFileName = Date.now() + imageFile.originalname.split(' ').join('-');
                 imageUrl = url + '/' + documentDirectory + formattedDocumentFileName;
                 fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, imageFile.buffer);
             }
             return imageUrl;
         };
-
-        // await sharp(request.file.buffer).resize({ width: 600 }).toFile('./data/uploads/' + formattedFileName);
-        // const profileImage = url + '/' + formattedFileName;
-
-        await sharp(imageFile.buffer).resize({ width: 600 }).toFile(uploadsDirectory + imageDirectory + formattedImageFileName);
-        const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-
 
         // ***********************-------- B Dynamic Image Handling ----------***********************
 
@@ -5843,7 +5267,6 @@ export const createCompanyRegistration = async (request, response, next) => {
                 }
             }))
         }
-
         // ***********************-------- F Dynamic Image Handling ----------***********************
         let dataF1branch, dataF1RLicense, dataF1FL, dataF1FP, dataF54NSP, dataF54OTP, dataF54WOE, dataF54TL
 
@@ -5924,7 +5347,6 @@ export const createCompanyRegistration = async (request, response, next) => {
                 }
             }))
         }
-
         if (companyname && companyaddress && companystate && companydistrict && companypin && companytype && companycategory && companynatureofbusiness) {
             // A Starts
             company = {
@@ -5997,12 +5419,10 @@ export const createCompanyRegistration = async (request, response, next) => {
                 OtherRegsitrationD3FL: dataFL,
             }
         }
-
-        // E Starts 
-
-        if (isEngaged && isEngagedDet && isEngagedRemark && contLabRegNoE && contLabRegNoEDet && contLabRegNoERemark && dateOfRegistrationE && dateOfRegEDet && dateOfRegERemark && noOfContractEmployeesE && noOfContractEmpEDet && noOfContractEmpERemark && noOfContractorsE && noOfContractorsEDet && noOfContractorsERemark && nameOfContractorE1 && nameOfContractorsE1Det && nameOfContractorsE1Remark && nameOfEstablishmentE1 && nameOfEstablishmentE1Det && nameOfEstablishmentE1Remark && regAddContractorE1 && regAddContractorE1Det && regAddContractorE1Remark && agreementExpiryDateE2 && agreementExpiryDateE2Det && agreementExpiryDateE2Remark && agreementRenewalDateE2 && agreementRenewalDateE2Det && agreementRenewalDateE2Remark && natureOfWorkAgreementE2 && natureOfWorkAgreementE2Det && natureOfWorkAgreementE2Remark && noOfEmpDeployedAgreementE2 && noOfEmpDeployedAgreementE2Det && noOfEmpDeployedAgreementE2Remark && companyTypeLabourE3 && companyTypeLabourE3Det && companyTypeLabourE3Remark && contractLabourLicNoE3 && contractLabourLicNoE3Det && contractLabourLicNoE3Remark && contractLicDateE3 && contractLicDateE3Det && contractLicDateE3Remark && contractExpiryDateE3 && contractExpiryDateE3Det && contractExpiryDateE3Remark && contractRenewalDueDateE3 && contractRenewalDueDateE3Det && contractRenewalDueDateE3Remark && noOfWorkersContractE3 && noOfWorkersContractE3Det && noOfWorkersContractE3Remark && panContractorsE3 && panContractorsE3Det && panContractorsE3Remark && gstContractorsE3 && gstContractorsE3Det && gstContractorsE3Remark && pfRegContractorsE3 && pfRegContractorsE3Det && pfRegContractorsE3Remark && esicRegContractorsE3 && esicRegContractorsE3Det && esicRegContractorsE3Remark && shopsandEstContractorsE3 && shopsandEstContractorsE3Det && shopsandEstContractorsE3Remark && lwfRegContractorsE3 && lwfRegContractorsE3Det && lwfRegContractorsE3Remark && profTaxContractorsE3 && profTaxContractorsE3Det && profTaxContractorsE3Remark) {
+        if (contLabRegNoE && dateOfRegistrationE && noOfContractEmployeesE && noOfContractorsE && regAddContractorE1 && regStateContractorE1 && regDistContractorE1 && regPinContractorE1 && nameOfContractorE1 && nameOfEstablishmentE1 && agreementExpiryDateE2 && agreementRenewalDateE2 && natureOfWorkAgreementE2 && noOfEmpDeployedAgreementE2 && companyTypeLabourE3 && contractLabourLicNoE3 && contractLicDateE3 && contractExpiryDateE3 && contractRenewalDueDateE3 && noOfWorkersContractE3 && panContractorsE3 && gstContractorsE3 && pfRegContractorsE3 && esicRegContractorsE3 && shopsandEstContractorsE3 && lwfRegContractorsE3 && profTaxContractorsE3) {
+            ///E starts
             company = {
-                isEngagedFile: await uploadImage(request.files.find(img => img.fieldname === "isEngagedFile")),
+                // isEngagedFile: await uploadImage(request.files.find(img => img.fieldname === "isEngagedFile")),
                 contLabRegNoEFile: await uploadImage(request.files.find(img => img.fieldname === "contLabRegNoEFile")),
                 dateOfRegEFile: await uploadImage(request.files.find(img => img.fieldname === "dateOfRegEFile")),
                 noOfContractEmpEFile: await uploadImage(request.files.find(img => img.fieldname === "noOfContractEmpEFile")),
@@ -6027,33 +5447,86 @@ export const createCompanyRegistration = async (request, response, next) => {
                 shopsandEstContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "shopsandEstContractorsE3File")),
                 lwfRegContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "lwfRegContractorsE3File")),
                 profTaxContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "profTaxContractorsE3File")),
-                isEngaged, isEngagedDet, isEngagedRemark, contLabRegNoE, contLabRegNoEDet, contLabRegNoERemark, dateOfRegistrationE, dateOfRegEDet, dateOfRegERemark, noOfContractEmployeesE, noOfContractEmpEDet, noOfContractEmpERemark, noOfContractorsE, noOfContractorsEDet, noOfContractorsERemark, nameOfContractorE1, nameOfContractorsE1Det, nameOfContractorsE1Remark, nameOfEstablishmentE1, nameOfEstablishmentE1Det, nameOfEstablishmentE1Remark, regAddContractorE1, regAddContractorE1Det, regAddContractorE1Remark, agreementExpiryDateE2, agreementExpiryDateE2Det, agreementExpiryDateE2Remark, agreementRenewalDateE2, agreementRenewalDateE2Det, agreementRenewalDateE2Remark, natureOfWorkAgreementE2, natureOfWorkAgreementE2Det, natureOfWorkAgreementE2Remark, noOfEmpDeployedAgreementE2, noOfEmpDeployedAgreementE2Det, noOfEmpDeployedAgreementE2Remark, companyTypeLabourE3, companyTypeLabourE3Det, companyTypeLabourE3Remark, contractLabourLicNoE3, contractLabourLicNoE3Det, contractLabourLicNoE3Remark, contractLicDateE3, contractLicDateE3Det, contractLicDateE3Remark, contractExpiryDateE3, contractExpiryDateE3Det, contractExpiryDateE3Remark, contractRenewalDueDateE3, contractRenewalDueDateE3Det, contractRenewalDueDateE3Remark, noOfWorkersContractE3, noOfWorkersContractE3Det, noOfWorkersContractE3Remark, panContractorsE3, panContractorsE3Det, panContractorsE3Remark, gstContractorsE3, gstContractorsE3Det, gstContractorsE3Remark, pfRegContractorsE3, pfRegContractorsE3Det, pfRegContractorsE3Remark, esicRegContractorsE3, esicRegContractorsE3Det, esicRegContractorsE3Remark, shopsandEstContractorsE3, shopsandEstContractorsE3Det, shopsandEstContractorsE3Remark, lwfRegContractorsE3, lwfRegContractorsE3Det, lwfRegContractorsE3Remark, profTaxContractorsE3, profTaxContractorsE3Det, profTaxContractorsE3Remark
+                contLabRegNoE, contLabRegNoEDet, contLabRegNoERemark, dateOfRegistrationE, dateOfRegEDet, dateOfRegERemark, noOfContractEmployeesE, noOfContractEmpEDet, noOfContractEmpERemark, noOfContractorsE, noOfContractorsEDet, noOfContractorsERemark, nameOfContractorE1, nameOfContractorsE1Det, nameOfContractorsE1Remark, nameOfEstablishmentE1, nameOfEstablishmentE1Det, nameOfEstablishmentE1Remark, regAddContractorE1, regStateContractorE1, regDistContractorE1, regPinContractorE1, regAddContractorE1Det, regAddContractorE1Remark, agreementExpiryDateE2, agreementExpiryDateE2Det, agreementExpiryDateE2Remark, agreementRenewalDateE2, agreementRenewalDateE2Det, agreementRenewalDateE2Remark, natureOfWorkAgreementE2, natureOfWorkAgreementE2Det, natureOfWorkAgreementE2Remark, noOfEmpDeployedAgreementE2, noOfEmpDeployedAgreementE2Det, noOfEmpDeployedAgreementE2Remark, companyTypeLabourE3, companyTypeLabourE3Det, companyTypeLabourE3Remark, contractLabourLicNoE3, contractLabourLicNoE3Det, contractLabourLicNoE3Remark, contractLicDateE3, contractLicDateE3Det, contractLicDateE3Remark, contractExpiryDateE3, contractExpiryDateE3Det, contractExpiryDateE3Remark, contractRenewalDueDateE3, contractRenewalDueDateE3Det, contractRenewalDueDateE3Remark, noOfWorkersContractE3, noOfWorkersContractE3Det, noOfWorkersContractE3Remark, panContractorsE3, panContractorsE3Det, panContractorsE3Remark, gstContractorsE3, gstContractorsE3Det, gstContractorsE3Remark, pfRegContractorsE3, pfRegContractorsE3Det, pfRegContractorsE3Remark, esicRegContractorsE3, esicRegContractorsE3Det, esicRegContractorsE3Remark, shopsandEstContractorsE3, shopsandEstContractorsE3Det, shopsandEstContractorsE3Remark, lwfRegContractorsE3, lwfRegContractorsE3Det, lwfRegContractorsE3Remark, profTaxContractorsE3, profTaxContractorsE3Det, profTaxContractorsE3Remark,
             }
         }
-        // /* F Starts * 
-        if (branchaddress && branchstate && branchdistrict && branchpin && branchOpeningDateF && noOfEmpBranchF && managerNameF1 && managerMobNoF1 && managerEmailF1 && managerAadharNoF1 && managerPanF1 && shopsEstLicenseF2 && contractLabRegNoF5 && regDateContractorF5 && coOfContractEmpF5 && noOfContractorsF5 && contractorNameF51 && establishmentNameF51 && regisocontractaddress && regisocontractstate && regisocontractdistrict && regisocontractpin && expiryDateF52 && renewalDateF52 && natureOfWorkF52 && noOfEmpDeployedF52 && contractLabLicNoF53 && licenseDateF53 && expiryDateF53 && renewalDateF53 && noOfWorkerF53 && panF53 && gstF53 && pfRegF53 && esicRegF53 && shopsEstF53 && lwfRegF53 && profTaxF53) {
+        // /* F Starts */
+        if (contractorAddBranchF && contractorStateBranchF && contractorDistBranchF && contractorPinBranchF && branchOpeningDateF && noOfEmpBranchF && managerNameF1 && managerMobNoF1 && managerEmailF1 && managerAadharNoF1 && managerPanF1 && shopsEstLicenseF2 && regDateContractorF5 && noOfContractorsF5 && contractorNameF51 && establishmentNameF51 && regAddContractorF51 && regStateContractorF51 && regDistContractorF51 && regPinContractorF51 && expiryDateF52 && renewalDateF52 && natureOfWorkF52 && noOfEmpDeployedF52 && companyTypeF53 && contractLabLicNoF53 && licenseDateF53 && expiryDateF53 && renewalDateF53 && noOfWorkerF53 && panF53 && gstF53 && pfRegF53 && esicRegF53 && shopsEstF53 && lwfRegF53 && profTaxF53) {
 
             company = {
-                contractorAddBranchFFile: await uploadImage(request.files.find(img => img.fieldname === "contractorAddBranchFFile")),
                 managerNameF1File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF1File")),
+                managerMobNoF1File: await uploadImage(request.files.find(img => img.fieldname === "managerMobNoF1File")),
+                managerEmailF1File: await uploadImage(request.files.find(img => img.fieldname === "managerEmailF1File")),
                 managerAadharNoF1File: await uploadImage(request.files.find(img => img.fieldname === "managerAadharNoF1File")),
-                managerPanF1File: await uploadImage(request.files.find(img => img.fieldname === "shopsEstLicenseF2File")),
+                managerPanF1File: await uploadImage(request.files.find(img => img.fieldname === "managerPanF1File")),
                 shopsEstLicenseF2File: await uploadImage(request.files.find(img => img.fieldname === "shopsEstLicenseF2File")),
+                numberF2File: await uploadImage(request.files.find(img => img.fieldname === "numberF2File")),
+                regDateF2File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF2File")),
+                expiryDateF2File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF2File")),
+                renewalDateF2File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF2File")),
+                managerNameF2File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF2File")),
+                noOfEmployeesF2File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmployeesF2File")),
+                maleF2File: await uploadImage(request.files.find(img => img.fieldname === "maleF2File")),
+                issuingAuthorityF2File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF2File")),
+                numberF3File: await uploadImage(request.files.find(img => img.fieldname === "numberF3File")),
+                regDateF3File: await uploadImage(request.files.find(img => img.fieldname === "regDateF3File")),
+                expiryDateF3File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF3File")),
+                renewalDateF3File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF3File")),
+                managerNameF3File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF3File")),
+                noOfEmployeesF3File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmployeesF3File")),
+                maleF3File: await uploadImage(request.files.find(img => img.fieldname === "maleF3File")),
+                issuingAuthorityF3File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF3File")),
+                numberF4File: await uploadImage(request.files.find(img => img.fieldname === "numberF4File")),
+                regDateF4File: await uploadImage(request.files.find(img => img.fieldname === "regDateF4File")),
+                issuingAuthorityF4File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF4File")),
+                numberF5File: await uploadImage(request.files.find(img => img.fieldname === "numberF5File")),
+                regDateF5File: await uploadImage(request.files.find(img => img.fieldname === "regDateF5File")),
+                issuingAuthorityF5File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF5File")),
                 contractLabRegNoF5File: await uploadImage(request.files.find(img => img.fieldname === "contractLabRegNoF5File")),
+                regDateContractorF5File: await uploadImage(request.files.find(img => img.fieldname === "regDateContractorF5File")),
+                noOfContractEmpF5File: await uploadImage(request.files.find(img => img.fieldname === "noOfContractEmpF5File")),
+                noOfContractorsF5File: await uploadImage(request.files.find(img => img.fieldname === "noOfContractorsF5File")),
                 contractorNameF51File: await uploadImage(request.files.find(img => img.fieldname === "contractorNameF51File")),
                 establishmentNameF51File: await uploadImage(request.files.find(img => img.fieldname === "establishmentNameF51File")),
                 regAddContractorF51File: await uploadImage(request.files.find(img => img.fieldname === "regAddContractorF51File")),
+                expiryDateF52File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF52File")),
+                renewalDateF52File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF52File")),
                 natureOfWorkF52File: await uploadImage(request.files.find(img => img.fieldname === "natureOfWorkF52File")),
+                noOfEmpDeployedF52File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmpDeployedF52File")),
                 companyTypeF53File: await uploadImage(request.files.find(img => img.fieldname === "companyTypeF53File")),
                 contractLabLicNoF53File: await uploadImage(request.files.find(img => img.fieldname === "contractLabLicNoF53File")),
-                panF53File: await uploadImage(request.files.find(img => img.fieldname === "panF53File")),
+                licenseDateF53File: await uploadImage(request.files.find(img => img.fieldname === "licenseDateF53File")),
+                expiryDateF53File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF53File")),
+                renewalDateF53File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF53File")),
+                noOfWorkerF53File: await uploadImage(request.files.find(img => img.fieldname === "noOfWorkerF53File")),
+                panF53File: await uploadImage(request.files.find(img => img.fieldname === "gstF53File")),
                 gstF53File: await uploadImage(request.files.find(img => img.fieldname === "gstF53File")),
                 pfRegF53File: await uploadImage(request.files.find(img => img.fieldname === "pfRegF53File")),
                 esicRegF53File: await uploadImage(request.files.find(img => img.fieldname === "esicRegF53File")),
                 shopsEstF53File: await uploadImage(request.files.find(img => img.fieldname === "shopsEstF53File")),
                 lwfRegF53File: await uploadImage(request.files.find(img => img.fieldname === "lwfRegF53File")),
                 profTaxF53File: await uploadImage(request.files.find(img => img.fieldname === "profTaxF53File")),
-                branchaddress, branchstate, branchdistrict, branchpin, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regisocontractaddress, regisocontractstate, regisocontractdistrict, regisocontractpin, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark,
+                number54File: await uploadImage(request.files.find(img => img.fieldname === "number54File")),
+                regDate54File: await uploadImage(request.files.find(img => img.fieldname === "regDate54File")),
+                expiryDate54File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate54File")),
+                renewalDate54File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate54File")),
+                issuingAuthority54File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthority54File")),
+                number55File: await uploadImage(request.files.find(img => img.fieldname === "number55File")),
+                regDate55File: await uploadImage(request.files.find(img => img.fieldname === "regDate55File")),
+                expiryDate55File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate55File")),
+                renewalDate55File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate55File")),
+                issuingAuthoritye55File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthoritye55File")),
+                number56File: await uploadImage(request.files.find(img => img.fieldname === "number56File")),
+                regDate56File: await uploadImage(request.files.find(img => img.fieldname === "regDate56File")),
+                expiryDate56File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate56File")),
+                renewalDate56File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate56File")),
+                issuingAuthority56File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthority56File")),
+                number57File: await uploadImage(request.files.find(img => img.fieldname === "number57File")),
+                regDate57File: await uploadImage(request.files.find(img => img.fieldname === "regDate57File")),
+                expiryDate57File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate57File")),
+                renewalDate57File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate57File")),
+                issuingAuthority57File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthority57File")),
+                regAddContractorF51, regStateContractorF51, regDistContractorF51, regPinContractorF51, contractorAddBranchFDet, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Det, managerNameF1Remark, managerMobNoF1, managerMobNoF1Det, managerMobNoF1Remark, managerEmailF1, managerEmailF1Det, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Det, managerAadharNoF1Remark, managerPanF1, managerPanF1Det, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Det, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Det, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Det, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Det, establishmentNameF51Remark, regAddContractorF51Det, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Det, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53, companyTypeF53Det, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Det, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Det, panF53Remark, gstF53, gstF53Det, gstF53Remark, pfRegF53, pfRegF53Det, pfRegF53Remark, esicRegF53, esicRegF53Det, esicRegF53Remark, shopsEstF53, shopsEstF53Det, shopsEstF53Remark, lwfRegF53, lwfRegF53Det, lwfRegF53Remark, profTaxF53, profTaxF53Det, profTaxF53Remark,
                 F1branch: dataF1branch,
                 F1RLicense: dataF1RLicense,
                 F1FL: dataF1FL,
@@ -6075,216 +5548,114 @@ export const createCompanyRegistration = async (request, response, next) => {
                 g13form5licensefeeimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5licensefeeimage")),
                 g13form5securityfeeimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5securityfeeimage")),
                 g12ncw, g12ncwdet, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoedet, g12ncwcoeremark, g13form, g13formdet, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5licenecedet, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeedet, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeedet, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls,
-                GCC4TL: dataGCC4TL
+                GCC4TL: dataGCC4TL,created_at
             }
         }
+        // Save company data to database
+        // const newCompany = new Companys(company);
+        // await newCompany.save();
         newCompany = await Companydata.findOneAndUpdate({ _id: lastInsertedIdcompany }, company, { new: true })
         response.status(201).json(newCompany);
-
-    }
-    catch (error) {
+    } catch (error) {
         next(error);
     }
 }
+export const gettingCompany = async (request, response, next) => {
+    try {
+        const company = await Company.find();
+        response.status(201).json(company);
+    } catch (error) {
+        // response.status(404).json({ message: error.message })
+        next(error);
+    }
+}
+export const gettingCompanyTable = async (request, response, next) => {
+    try {
+        const company = await Companydata.aggregate([
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData"
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData"
+                },
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData"
+                },
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branch",
+                    foreignField: "_id",
+                    as: "branchData"
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    regNo: 1,
+                    rate: 1,
+                    documents: 1,
+                    docReqDate: 1,
+                    docReqFollow: 1,
+                    docReviewDate: 1,
+                    appliedDate: 1,
+                    remark: 1,
+                    docStatus: 1,
+                    acknowledge: 1,
+                    challlanFees: 1,
+                    challanNumber: 1,
+                    challanDate: 1,
+                    challanUpload: 1,
+                    directExpenses: 1,
+                    inDirectExpenses: 1,
+                    totalExpenses: 1,
+                    licenseNumber: 1,
+                    dateOfIssue: 1,
+                    renewalDate: 1,
+                    expireDate: 1,
+                    licenseUpload: 1,
+                    invoiceType: 1,
+                    invoiceDate: 1,
+                    invoiceNumber: 1,
+                    submissionDate: 1,
+                    branchName: 1,
+                    status: 1,
+                    applicationStatus: 1,
+                    docRemark: 1,
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    company: { $arrayElemAt: ["$companyData.companyname", 0] },
+                    branch: { $arrayElemAt: ["$branchData.name", 0] },
+                    createdAt: 1,
+                    updatedAt: 1,
+                }
+            }
 
-
-/** pradeep code ends*/
-
-
-
-
-// ------------------------------- Rough Space -----------------------------
-
-
-
-// export const createCompanyClientContact = async (request, response, next) => {
-//     try {
-//         const data = request.body
-//         const { ClientcontactC1, ClientcontactC2, ClientcontactC3, ClientcontactC4 } = data
-//         const uploadImage = async (imageFile) => {
-//             if (!imageFile) {
-//                 return null;
-//             }
-//             const url = request.protocol + "://" + request.get('host');
-//             const uploadsDirectory = './data/uploads/';
-//             const imageDirectory = 'images/';
-//             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
-//             const imageUrl = url + '/' + imageDirectory + formattedImageFileName
-//             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
-//             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
-//             return imageUrl
-//         }
-//         let clientDataC1, clientDataC2, clientDataC3, clientDataC4
-//         if (ClientcontactC1 !== undefined && ClientcontactC1.length > 0) {
-//             clientDataC1 = await Promise.all(ClientcontactC1.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][nameimage]`)),
-//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][designationimage]`))
-//                 }
-//             }))
-//         }
-//         if (ClientcontactC2 !== undefined && ClientcontactC2.length > 0) {
-//             clientDataC2 = await Promise.all(ClientcontactC2.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][nameimage]`)),
-//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][designationimage]`))
-//                 }
-//             }))
-//         }
-//         if (ClientcontactC3 !== undefined && ClientcontactC3.length > 0) {
-//             clientDataC3 = await Promise.all(ClientcontactC3.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][nameimage]`)),
-//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][designationimage]`))
-//                 }
-//             }))
-//         }
-//         if (ClientcontactC4 !== undefined && ClientcontactC4.length > 0) {
-//             clientDataC4 = await Promise.all(ClientcontactC4.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][nameimage]`)),
-//                     designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][designationimage]`))
-//                 }
-//             }))
-//         }
-
-//         const clientContact = {
-//             ClientcontactC1: clientDataC1, ClientcontactC2: clientDataC2, ClientcontactC3: clientDataC3, ClientcontactC4: clientDataC4, created_at, updated_at
-//         }
-//         const newClientContact = new ClientContact(clientContact)
-//         await newClientContact.save()
-//         response.status(201).json(newClientContact)
-//     } catch (error) {
-//         next(error)
-//     }
-// }
-
-// export const createOtherRegistration = async (request, response, next) => {
-//     try {
-//         const data = request.body
-//         const { pfnumber, pfdetails, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, OtherRegsitrationD1PFsubcodes, OtherRegsitrationD1ESIsubcodes, OtherRegsitrationD3NSP, OtherRegsitrationD3FL, OtherRegsitrationD3OTP, OtherRegsitrationD3WOE, OtherRegsitrationD3TD, OtherRegsitrationD3MSME, OtherRegsitrationD3BOCW, OtherRegsitrationD3IMW, esinumber, esidetails, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressremark, registrationD3, registrationD3details, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3remark, fpD3, fpD3details, fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3remark, doregistrationptrD3,
-//         } = data
-
-//         const uploadImage = async (imageFile) => {
-//             if (!imageFile) {
-//                 return null; // Return null if image is not provided
-//             }
-//             const url = request.protocol + '://' + request.get('host');
-//             const uploadsDirectory = './data/uploads/';
-//             const imageDirectory = 'images/';
-//             const formattedImageFileName = Date.now() + '-' + imageFile.originalname.split(' ').join('-');
-//             const imageUrl = url + '/' + imageDirectory + formattedImageFileName;
-//             // console.log(imageUrl);
-//             const imagePath = uploadsDirectory + imageDirectory + formattedImageFileName;
-//             await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
-//             return imageUrl;
-//         };
-//         let dataPFsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
-//         if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
-//             dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     regimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][regimage]`)),
-//                     docimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][docimage]`)),
-//                     offaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][offaddressimage]`))
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD1ESIsubcodes !== undefined && OtherRegsitrationD1ESIsubcodes.length > 0) {
-//             dataESIsubcodes = await Promise.all(OtherRegsitrationD1ESIsubcodes.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     esiimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esiimage]`)),
-//                     esidocimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esidocimage]`)),
-//                     esioffaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esioffaddressimage]`))
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3FL !== undefined && OtherRegsitrationD3FL.length > 0) {
-//             dataFL = await Promise.all(OtherRegsitrationD3FL.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][managerlicenseimage]`)),
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3NSP !== undefined && OtherRegsitrationD3NSP.length > 0) {
-//             dataNSP = await Promise.all(OtherRegsitrationD3NSP.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3NSP[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3OTP !== undefined && OtherRegsitrationD3OTP.length > 0) {
-//             dataOTP = await Promise.all(OtherRegsitrationD3OTP.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3OTP[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3WOE !== undefined && OtherRegsitrationD3WOE.length > 0) {
-//             dataWOE = await Promise.all(OtherRegsitrationD3WOE.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3WOE[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3TD !== undefined && OtherRegsitrationD3TD.length > 0) {
-//             dataTD = await Promise.all(OtherRegsitrationD3TD.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3TD[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3MSME !== undefined && OtherRegsitrationD3MSME.length > 0) {
-//             dataMSME = await Promise.all(OtherRegsitrationD3MSME.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3MSME[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3BOCW !== undefined && OtherRegsitrationD3BOCW.length > 0) {
-//             dataBOCW = await Promise.all(OtherRegsitrationD3BOCW.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3BOCW[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-//         if (OtherRegsitrationD3IMW !== undefined && OtherRegsitrationD3IMW.length > 0) {
-//             dataIMW = await Promise.all(OtherRegsitrationD3IMW.map(async (item, index) => {
-//                 return {
-//                     ...item,
-//                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3IMW[${index}][issuingauthimage]`)),
-//                 }
-//             }))
-//         }
-
-//         const otherRegistration = {
-//             pfnumber, pfdetails, pfimage: await uploadImage(request.files.find(img => img.fieldname === "pfimage")), pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, pfaddressdetails, pfaddressimage: await uploadImage(request.files.find(img => img.fieldname === "pfaddressimage")), esinumber, esidetails, esiimage: await uploadImage(request.files.find(img => img.fieldname === "esiimage")), esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressdetails, esiaddressimage: await uploadImage(request.files.find(img => img.fieldname === "esiaddressimage")), esiaddressremark, registrationD3, registrationD3details, registrationD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationD3image")), registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3details, managernameD3image: await uploadImage(request.files.find(img => img.fieldname === "managernameD3image")), managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3details, issueauthfD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfD3image")), issueauthfD3remark, fpD3, fpD3details, fpD3image: await uploadImage(request.files.find(img => img.fieldname === "fpD3image")), fpD3remark, doapp, issueauthfpD3, issueauthfpD3details, issueauthfpD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfpD3image")), issueauthfpD3remark, powerfpD3, powerfpD3details, powerfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerfpD3image")), powerfpD3remark, powerhpfpD3, powerhpfpD3details, powerhpfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerhpfpD3image")), powerhpfpD3remark, registrationlwfD3, registrationlwfD3details, registrationlwfD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationlwfD3image")), registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3details, registrationptrD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationptrD3image")), registrationptrD3remark, doregistrationptrD3,
-//             OtherRegsitrationD1PFsubcodes: dataPFsubcodes,
-//             OtherRegsitrationD1ESIsubcodes: dataESIsubcodes,
-//             OtherRegsitrationD3NSP: dataNSP,
-//             OtherRegsitrationD3OTP: dataOTP,
-//             OtherRegsitrationD3WOE: dataWOE,
-//             OtherRegsitrationD3TD: dataTD,
-//             OtherRegsitrationD3MSME: dataMSME,
-//             OtherRegsitrationD3BOCW: dataBOCW,
-//             OtherRegsitrationD3IMW: dataIMW,
-//             OtherRegsitrationD3FL: dataFL,
-//         }
-//     }
-//     catch (error) {
-//         next(error)
-//     }
-// }
+        ])
+        response.status(201).json(company)
+    }
+    catch (error) {
+        next(error)
+    }
+}
