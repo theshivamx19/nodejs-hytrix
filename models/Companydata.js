@@ -4043,7 +4043,7 @@ const companySchema = new mongoose.Schema({
     GCC4TL : {
         type : Array,
         default : null
-    }
+    },
     
 g12ncwimage : {
     type : String,

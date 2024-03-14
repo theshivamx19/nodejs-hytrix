@@ -2,7 +2,7 @@ import express from "express";
 import cors from 'cors'
 import { isAdmin, protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
-import { login, logout, catCreate, catGettting, catEditById, createCompliances, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, addlist, checkData, getCheckData, updateCompliancesById, complianceFilter, complianceRejectedFilter, checkListRejectedFilter, checkListCreateFilter, checkListApproveFilter, checkListAllFilter, createElibrary, elibraryGetting, elibraryApproved, elibraryRejected, checklistOnCreateegetting, checklistApprovegetting, checklistOnRejectegetting, gettingCompliances, complianceApproveFilter, gettingAuditor, gettingChecklist, createAudit, auditGetting, updateAudit, createLiseReg, liseRegGetting, liseRegUpdateById, liseRegHistoryFilter, elibraryGettingById, auditFilter, createCompanyRegistration, createCompanyClientContact } from '../controllers/Admin.js';
+import { login, logout, catCreate, catGettting, catEditById, createCompliances, complianceGetting, userCreate, userGetting, stateCreate, checkListCreate, checkListGetting, checkListFilter, checkListFind, createBranch, branchGetting, createNotification, notificationGetting, checkData, getCheckData, updateCompliancesById, complianceFilter, complianceRejectedFilter, checkListRejectedFilter, checkListCreateFilter, checkListApproveFilter, checkListAllFilter, createElibrary, elibraryGetting, elibraryApproved, elibraryRejected, checklistOnCreateegetting, checklistApprovegetting, checklistOnRejectegetting, gettingCompliances, complianceApproveFilter, gettingAuditor, gettingChecklist, createAudit, auditGetting, updateAudit, createLiseReg, liseRegGetting, liseRegUpdateById, liseRegHistoryFilter, elibraryGettingById, auditFilter, createCompanyRegistration, createCompanyClientContact } from '../controllers/Admin.js';
 
 import { upload } from "../middlewares/multerConfig.js";
 // import multer from "multer";
@@ -66,7 +66,7 @@ router.get('/notificationGetting', notificationGetting)
 // router.post('/createExecutive', createExecutive)
 // router.get('/executiveGetting', executiveGetting)
 
-router.post('/addlist', addlist)
+// router.post('/addlist', addlist)
 
 router.post('/checkData', checkData)
 router.get('/getCheckData', getCheckData)

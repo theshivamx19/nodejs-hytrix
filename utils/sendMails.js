@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import transporter from '../utils/transporter.js';
+// import transporter from '../utils/transporter.js';
 import generateToken from '../utils/generateToken.js';
 
 dotenv.config();
