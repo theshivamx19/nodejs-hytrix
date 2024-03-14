@@ -5668,10 +5668,10 @@ export const createCompanyRegistration = async (request, response, next) => {
                 await sharp(imageFile.buffer).resize({ width: 600 }).toFile(imagePath);
             }
 
-            if (imageFile.mimetype === 'file/pdf') {
+            if (imageFile.mimetype === 'application/pdf') {
                 const formattedDocumentFileName = Date.now() + documentFile.originalname.split(' ').join('-');
                 imageUrl = url + '/' + documentDirectory + formattedDocumentFileName;
-                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, imageUrl.buffer);
+                fs.writeFileSync(uploadsDirectory + documentDirectory + formattedDocumentFileName, imageFile.buffer);
             }
             return imageUrl;
         };
