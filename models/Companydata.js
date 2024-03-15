@@ -35,6 +35,10 @@ const companySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "State"
     },
+    executive: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },    
     companydistrict: {
         type: String,
         // required: true,
@@ -4828,29 +4832,7 @@ g13form5securityfeedet : {
     //     index: true
     // },
     /***G ends */
-    status: {
-        type: Number,
-        index: true,
-        default: 0
-    },
-    created_at: {
-        type: Date,
-        default: null,
-        index: true
-    },
-    updated_at: {
-        type: Date,
-        default: null,
-    },
-    // Some Extra field to show data in Get all company data
-
-    profile : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true
-    },
-    reason : {
+     reason : {
         type : String,
         default : null,
         trim : true,
@@ -4872,16 +4854,38 @@ g13form5securityfeedet : {
         default : null,
         index : true
     },
+    compActInActStatus : {
+        type: Number,
+        index: true,
+        default: 0
+    },
     compIntractStatus : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true
+        type: Number,
+        index: true,
+        default: 0
     },
     inactiveDate : {
         type : Date,
         default : null,
         index : true
+    },
+    status: {
+        type: Number,
+        index: true,
+        default: 0
+    },
+    created_at: {
+        type: Date,
+        default: null,
+        index: true
+    },
+    updated_at: {
+        type: Date,
+        default: null,
+    },
+    rejected_at: {
+        type: Date,
+        default: null,
     }
 })
 const Companydata = mongoose.model("Companydata", companySchema)
