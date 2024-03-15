@@ -5576,7 +5576,7 @@ export const gettingCompanyTable = async (request, response, next) => {
             {
                 $match: {}
             },
-            
+
 
             // {
             //     $lookup: {
@@ -5630,12 +5630,12 @@ export const gettingCompanyTable = async (request, response, next) => {
                     profile: 1,
                     reason: 1,
                     approveDate: 1,
+                    rejected_at: 1,
                     license: 1,
                     receivedDate: 1,
                     compIntractStatus: 1,
                     inactiveDate: 1,
                     companyname: 1,
-                    F1branch : {$arrayElemAt  : ["F1branch.name", 1]},
 
                     // companystate: 1,
                     // companydistrict: 1,
@@ -5656,9 +5656,28 @@ export const gettingCompanyTable = async (request, response, next) => {
                     updated_at: 1,
                 }
             }
-
         ])
-        response.status(201).json(company)
+        const branchData = await Companydata.aggregate([
+            {
+                $match: {}
+            },
+            {
+                $unwind: "$F1branch",
+            },
+            {
+                $group: {
+                    _id: "$id",
+                    noOfF1branch: {
+                        $sum: 1,
+                    },
+                },
+            },
+
+            // $project : {
+            //     F1branch : {$arrayElemAt  : ["F1branch.name", 1]},
+            // }
+        ])
+        response.status(201).json([company, branchData])
     }
     catch (error) {
         next(error)
