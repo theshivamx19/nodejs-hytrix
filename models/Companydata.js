@@ -9,12 +9,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    companydetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // companydetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     companyimage: {
         type: Object,
     },
@@ -38,7 +38,7 @@ const companySchema = new mongoose.Schema({
     executive: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-    },    
+    },
     companydistrict: {
         type: String,
         // required: true,
@@ -53,12 +53,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    comapnyaddressdetails: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true
-    },
+    // comapnyaddressdetails: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true
+    // },
     companyaddressimage: {
         type: Object,
     },
@@ -74,12 +74,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true
     },
-    companytypedetails: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true
-    },
+    // companytypedetails: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true
+    // },
     companytypeimage: {
         type: Object,
     },
@@ -93,12 +93,12 @@ const companySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
     },
-    companycategorydetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // companycategorydetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     companycategoryimage: {
         type: Object,
     },
@@ -115,12 +115,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true,
     },
-    companynatureofbusinessdetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true,
-    },
+    // companynatureofbusinessdetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true,
+    // },
     companynatureofbusinessimage: {
         type: Object,
     },
@@ -139,12 +139,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    companyregistrationdetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // companyregistrationdetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     companyregistrationimage: {
         type: Object,
     },
@@ -161,12 +161,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    companycindetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // companycindetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     companyciniamge: {
         type: Object
     },
@@ -183,12 +183,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    companyissuedplacedetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // companyissuedplacedetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     companyissuedplaceimage: {
         type: Object
     },
@@ -205,12 +205,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    companyauthoritydetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // companyauthoritydetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     companyauthorityimage: {
         type: Object
     },
@@ -227,12 +227,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    companypandetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // companypandetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     companypanimage: {
         type: Object
     },
@@ -249,12 +249,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    companytandetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // companytandetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     companytanimage: {
         type: Object
     },
@@ -271,12 +271,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    companytindetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // companytindetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     companytinimage: {
         type: Object
     },
@@ -293,12 +293,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    companygstdetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // companygstdetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     companygstimage: {
         type: Object
     },
@@ -346,12 +346,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true
     },
-    pfdetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // pfdetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     pfimage: {
         type: Object,
     },
@@ -386,12 +386,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    pfaddressdetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // pfaddressdetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
 
     pfaddressimage: {
         type: Object
@@ -412,12 +412,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    esidetails: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // esidetails: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     esiimage: {
         type: Object
     },
@@ -459,13 +459,13 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    esiaddressdetails: {
-        type: String,
-        trim: true,
-        // required: true,
-        default: null,
-        index: true
-    },
+    // esiaddressdetails: {
+    //     type: String,
+    //     trim: true,
+    //     // required: true,
+    //     default: null,
+    //     index: true
+    // },
     esiaddressimage: {
         type: Object
     },
@@ -485,12 +485,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    registrationD3details: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // registrationD3details: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     registrationD3image: {
         type: Object
     },
@@ -545,12 +545,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    issueauthfD3details: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true
-    },
+    // issueauthfD3details: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true
+    // },
     issueauthfD3image: {
         type: Object
     },
@@ -567,12 +567,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    fpD3details: {
-        type: String,
-        defualt: null,
-        trim: true,
-        index: true
-    },
+    // fpD3details: {
+    //     type: String,
+    //     defualt: null,
+    //     trim: true,
+    //     index: true
+    // },
     fpD3image: {
         type: Object
     },
@@ -595,12 +595,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    powerfpD3details: {
-        type: String,
-        defualt: null,
-        trim: true,
-        index: true
-    },
+    // powerfpD3details: {
+    //     type: String,
+    //     defualt: null,
+    //     trim: true,
+    //     index: true
+    // },
     powerfpD3image: {
         type: Object
     },
@@ -617,12 +617,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    powerhpfpD3details: {
-        type: String,
-        defualt: null,
-        trim: true,
-        index: true
-    },
+    // powerhpfpD3details: {
+    //     type: String,
+    //     defualt: null,
+    //     trim: true,
+    //     index: true
+    // },
     powerhpfpD3image: {
         type: Object
     },
@@ -639,12 +639,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    issueauthfpD3details: {
-        type: String,
-        defualt: null,
-        trim: true,
-        index: true
-    },
+    // issueauthfpD3details: {
+    //     type: String,
+    //     defualt: null,
+    //     trim: true,
+    //     index: true
+    // },
     issueauthfpD3image: {
         type: Object
     },
@@ -661,12 +661,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    registrationlwfD3details: {
-        type: String,
-        defualt: null,
-        trim: true,
-        index: true
-    },
+    // registrationlwfD3details: {
+    //     type: String,
+    //     defualt: null,
+    //     trim: true,
+    //     index: true
+    // },
     registrationlwfD3image: {
         type: Object
     },
@@ -689,12 +689,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    registrationptrD3details: {
-        type: String,
-        defualt: null,
-        trim: true,
-        index: true
-    },
+    // registrationptrD3details: {
+    //     type: String,
+    //     defualt: null,
+    //     trim: true,
+    //     index: true
+    // },
     registrationptrD3image: {
         type: Object
     },
@@ -738,10 +738,10 @@ const companySchema = new mongoose.Schema({
         type: Array,
         default: null,
     },
-    OtherRegsitrationD3FL: {
-        type: Array,
-        default: null,
-    },
+    // OtherRegsitrationD3FL: {
+    //     type: Array,
+    //     default: null,
+    // },
     /***D ends */
     /***E starts */
     isEngaged: {
@@ -751,12 +751,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    isEngagedDet: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // isEngagedDet: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     isEngagedFile: {
         type: Object,
         default: null
@@ -774,12 +774,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    contLabRegNoEDet: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // contLabRegNoEDet: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     contLabRegNoEFile: {
         type: Object,
         default: null
@@ -797,12 +797,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    dateOfRegEDet: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // dateOfRegEDet: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     dateOfRegEFile: {
         type: Object,
         default: null
@@ -820,12 +820,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    noOfContractEmpEDet: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // noOfContractEmpEDet: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     noOfContractEmpEFile: {
         type: Object,
         default: null
@@ -843,12 +843,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    noOfContractorsEDet: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // noOfContractorsEDet: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     noOfContractorsEFile: {
         type: Object,
         default: null
@@ -867,12 +867,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    nameOfContractorsE1Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // nameOfContractorsE1Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     nameOfContractorsE1File: {
         type: Object,
         default: null
@@ -890,12 +890,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    nameOfEstablishmentE1Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // nameOfEstablishmentE1Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     nameOfEstablishmentE1File: {
         type: Object,
         default: null
@@ -931,12 +931,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    regAddContractorE1Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // regAddContractorE1Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     regAddContractorE1File: {
         type: Object,
         default: null
@@ -954,12 +954,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    agreementExpiryDateE2Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // agreementExpiryDateE2Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     agreementExpiryDateE2File: {
         type: Object,
         default: null
@@ -976,12 +976,12 @@ const companySchema = new mongoose.Schema({
         index: true,
         default: null,
     },
-    agreementRenewalDateE2Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // agreementRenewalDateE2Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     agreementRenewalDateE2DetFile: {
         type: Object,
         default: null
@@ -999,12 +999,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    natureOfWorkAgreementE2Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // natureOfWorkAgreementE2Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     natureOfWorkAgreementE2File: {
         type: Object,
         default: null
@@ -1022,12 +1022,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true
     },
-    noOfEmpDeployedAgreementE2Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // noOfEmpDeployedAgreementE2Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     noOfEmpDeployedAgreementE2File: {
         type: Object,
         default: null
@@ -1046,12 +1046,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    companyTypeLabourE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // companyTypeLabourE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     companyTypeLabourE3File: {
         type: Object,
         default: null
@@ -1069,12 +1069,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    contractLabourLicNoE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // contractLabourLicNoE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     contractLabourLicNoE3File: {
         type: Object,
         default: null
@@ -1091,12 +1091,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    contractLicDateE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // contractLicDateE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     contractLicDateE3File: {
         type: Object,
         default: null
@@ -1113,12 +1113,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    contractExpiryDateE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // contractExpiryDateE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     contractExpiryDateE3File: {
         type: Object,
         default: null
@@ -1135,12 +1135,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    contractRenewalDueDateE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // contractRenewalDueDateE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     contractRenewalDueDateE3File: {
         type: Object,
         default: null
@@ -1158,12 +1158,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    noOfWorkersContractE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // noOfWorkersContractE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     noOfWorkersContractE3File: {
         type: Object,
         default: null
@@ -1181,12 +1181,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    panContractorsE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // panContractorsE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     panContractorsE3File: {
         type: Object,
         default: null
@@ -1204,12 +1204,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    gstContractorsE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // gstContractorsE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     gstContractorsE3File: {
         type: Object,
         default: null
@@ -1227,12 +1227,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    pfRegContractorsE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // pfRegContractorsE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     pfRegContractorsE3File: {
         type: Object,
         default: null
@@ -1250,12 +1250,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    esicRegContractorsE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // esicRegContractorsE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     esicRegContractorsE3File: {
         type: Object,
         default: null
@@ -1273,12 +1273,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    shopsandEstContractorsE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // shopsandEstContractorsE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     shopsandEstContractorsE3File: {
         type: Object,
         default: null
@@ -1296,12 +1296,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    lwfRegContractorsE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // lwfRegContractorsE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     lwfRegContractorsE3File: {
         type: Object,
         default: null
@@ -1319,12 +1319,12 @@ const companySchema = new mongoose.Schema({
         default: null,
         index: true
     },
-    profTaxContractorsE3Det: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // profTaxContractorsE3Det: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     profTaxContractorsE3File: {
         type: Object,
         default: null
@@ -1362,12 +1362,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    contractorAddBranchFDet: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // contractorAddBranchFDet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     contractorAddBranchFRemark: {
         type: String,
         default: null,
@@ -1392,12 +1392,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    managerNameF1Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // managerNameF1Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     managerNameF1Remark: {
         type: String,
         default: null,
@@ -1410,12 +1410,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    managerMobNoF1Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // managerMobNoF1Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     managerMobNoF1Remark: {
         type: String,
         default: null,
@@ -1428,12 +1428,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    managerEmailF1Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // managerEmailF1Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     managerEmailF1Remark: {
         type: String,
         default: null,
@@ -1446,12 +1446,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    managerAadharNoF1Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // managerAadharNoF1Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     managerAadharNoF1Remark: {
         type: String,
         default: null,
@@ -1464,12 +1464,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    managerPanF1Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // managerPanF1Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     managerPanF1Remark: {
         type: String,
         default: null,
@@ -1482,12 +1482,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    shopsEstLicenseF2Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // shopsEstLicenseF2Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     shopsEstLicenseF2Remark: {
         type: String,
         default: null,
@@ -1500,12 +1500,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    contractLabRegNoF5Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // contractLabRegNoF5Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     contractLabRegNoF5Remark: {
         type: String,
         default: null,
@@ -1536,12 +1536,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    contractorNameF51Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // contractorNameF51Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     contractorNameF51Remark: {
         type: String,
         default: null,
@@ -1554,12 +1554,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    establishmentNameF51Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // establishmentNameF51Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     establishmentNameF51Remark: {
         type: String,
         default: null,
@@ -1590,12 +1590,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    regAddContractorF51Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // regAddContractorF51Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     regAddContractorF51Remark: {
         type: String,
         default: null,
@@ -1620,12 +1620,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    natureOfWorkF52Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // natureOfWorkF52Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     natureOfWorkF52Remark: {
         type: String,
         default: null,
@@ -1638,12 +1638,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    companyTypeF53Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // companyTypeF53Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     companyTypeF53Remark: {
         type: String,
         default: null,
@@ -1656,12 +1656,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    contractLabLicNoF53Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // contractLabLicNoF53Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     contractLabLicNoF53Remark: {
         type: String,
         default: null,
@@ -1698,12 +1698,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    panF53Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // panF53Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     panF53Remark: {
         type: String,
         default: null,
@@ -1716,12 +1716,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    gstF53Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // gstF53Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     gstF53Remark: {
         type: String,
         default: null,
@@ -1734,12 +1734,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    pfRegF53Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // pfRegF53Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     pfRegF53Remark: {
         type: String,
         default: null,
@@ -1752,12 +1752,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    esicRegF53Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // esicRegF53Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     esicRegF53Remark: {
         type: String,
         default: null,
@@ -1770,12 +1770,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    shopsEstF53Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // shopsEstF53Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     shopsEstF53Remark: {
         type: String,
         default: null,
@@ -1788,12 +1788,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    lwfRegF53Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // lwfRegF53Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     lwfRegF53Remark: {
         type: String,
         default: null,
@@ -1806,12 +1806,12 @@ const companySchema = new mongoose.Schema({
         trim: true,
         index: true,
     },
-    profTaxF53Det: {
-        type: String,
-        default: null,
-        trim: true,
-        index: true,
-    },
+    // profTaxF53Det: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
     profTaxF53Remark: {
         type: String,
         default: null,
@@ -3828,299 +3828,299 @@ const companySchema = new mongoose.Schema({
     /***F ends */
     /***G starts */
 
-    g12ncw : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g12ncw: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g12ncwdet : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    // g12ncwdet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
+    g12ncwremark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g12ncwremark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g12ncwdate: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g12ncwdate : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g12ncwdatevalid: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g12ncwdatevalid : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g12ncwnow: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g12ncwnow : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g12ncwcoe: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g12ncwcoe : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    // g12ncwcoedet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
+    g12ncwcoeremark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g12ncwcoedet : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g12ncwcoeremark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    // g13formdet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
+    g13formremark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5date: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13formdet : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5dateofcommence: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13formremark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5licenece: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5date : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    // g13form5licenecedet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
+    g13form5liceneceremark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5dateofcommence : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5licensedol: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5licenece : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5licensedolvalid: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5licenecedet : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5licensedoldor: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5liceneceremark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5licenseworkers: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5licensedol : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5licensemanresp: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5licensedolvalid : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5licensefee: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5licensedoldor : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    // g13form5licensefeedet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
+    g13form5licensefeeremark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5licenseworkers : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5securityfee: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5licensemanresp : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    // g13form5securityfeedet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true,
+    // },
+    g13form5securityfeeremark: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5licensefee : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g14dcwc: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5licensefeedet : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g14dncc: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5licensefeeremark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g14dars: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5securityfee : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g14dls: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true,
     },
-    g13form5securityfeedet : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g12ncwimage: {
+        type: Object,
+        default: null
     },
-    g13form5securityfeeremark : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g12ncwcoeimage: {
+        type: Object,
+        default: null
     },
-    g14dcwc : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13formimage: {
+        type: Object,
+        default: null
     },
-    g14dncc : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5liceneceimage: {
+        type: Object,
+        default: null
     },
-    g14dars : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5licensefeeimage: {
+        type: Object,
+        default: null
     },
-    g14dls : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true,
+    g13form5securityfeeimage: {
+        type: Object,
+        default: null
     },
-    g12ncwimage : {
-        type : Object,
-        default : null
+    GCC4TL: {
+        type: Array,
+        default: null
     },
-    g12ncwcoeimage : {
-        type : Object,
-        default : null
+
+    g12ncwimage: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true
     },
-    g13formimage : {
-        type : Object,
-        default : null
+    g12ncwcoeimage: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true
     },
-    g13form5liceneceimage : {
-        type : Object,
-        default : null
+    g13formimage: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true
     },
-    g13form5licensefeeimage : {
-        type : Object,
-        default : null
+    g13form5liceneceimage: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true
     },
-    g13form5securityfeeimage : {
-        type : Object,
-        default : null
+    g13form5licensefeeimage: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true
     },
-    GCC4TL : {
-        type : Array,
-        default : null
+    g13form5securityfeeimage: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true
     },
-    
-g12ncwimage : {
-    type : String,
-    default : null,
-    trim : true,
-    index : true
-},
-g12ncwcoeimage : {
-    type : String,
-    default : null,
-    trim : true,
-    index : true
-},
-g13formimage : {
-    type : String,
-    default : null,
-    trim : true,
-    index : true
-},
-g13form5liceneceimage : {
-    type : String,
-    default : null,
-    trim : true,
-    index : true
-},
-g13form5licensefeeimage : {
-    type : String,
-    default : null,
-    trim : true,
-    index : true
-},
-g13form5securityfeeimage : {
-    type : String,
-    default : null,
-    trim : true,
-    index : true
-},
-g12ncwdet : {
-    type : String,
-    default : null,
-    trim : true,
-    index : true
-},
-g12ncwcoedet : {
-    type : String,
-    default : null,
-    trim : true,
-    index : true
-},
-g13formdet : {
-    type : String,
-    default : null,
-    trim : true,
-    index : true
-},
-g13form5licenecedet : {
-    type : String,
-    default : null,
-    trim : true,
-    index : true
-},
-g13form5licensefeedet : {
-    type : String,
-    default : null,
-    trim : true,
-    index : true
-},
-g13form5securityfeedet : {
-    type : String,
-    default : null,
-    trim : true,
-    index : true
-},
+    // g12ncwdet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true
+    // },
+    // g12ncwcoedet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true
+    // },
+    // g13formdet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true
+    // },
+    // g13form5licenecedet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true
+    // },
+    // g13form5licensefeedet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true
+    // },
+    // g13form5securityfeedet: {
+    //     type: String,
+    //     default: null,
+    //     trim: true,
+    //     index: true
+    // },
 
 
 
@@ -4832,42 +4832,42 @@ g13form5securityfeedet : {
     //     index: true
     // },
     /***G ends */
-     reason : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true
+    reason: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true
     },
-    approveDate : {
-        type : Date,
-        default : null,
-        index : true
+    approveDate: {
+        type: Date,
+        default: null,
+        index: true
     },
-    license : {
-        type : String,
-        default : null,
-        trim : true,
-        index : true
+    license: {
+        type: String,
+        default: null,
+        trim: true,
+        index: true
     },
-    receivedDate : {
-        type : Date,
-        default : null,
-        index : true
+    receivedDate: {
+        type: Date,
+        default: null,
+        index: true
     },
-    compActInActStatus : {
+    compActInActStatus: {
         type: Number,
         index: true,
         default: 0
     },
-    compIntractStatus : {
+    compIntractStatus: {
         type: Number,
         index: true,
         default: 0
     },
-    inactiveDate : {
-        type : Date,
-        default : null,
-        index : true
+    inactiveDate: {
+        type: Date,
+        default: null,
+        index: true
     },
     status: {
         type: Number,
@@ -4886,7 +4886,98 @@ g13form5securityfeedet : {
     rejected_at: {
         type: Date,
         default: null,
-    }
+    },
+// ------------------ some new fields added --------------------
+    issuingauthremark: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    issuingauthimage: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    issuingauth: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    nof: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    nom: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    noe: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    managerlicenseremark: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    managerlicenseimage : {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    managernamelicense: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    doddr: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    doe: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    dor: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    licensenumber: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    licensenumberimage: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
+    licensenumberremark: {
+        type : String,
+        default : null,
+        trim : true,
+        index : true
+    },
 })
 const Companydata = mongoose.model("Companydata", companySchema)
 export default Companydata;
