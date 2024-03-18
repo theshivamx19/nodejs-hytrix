@@ -1,7 +1,7 @@
 import express from "express";
 import { isAdmin, protectRoute } from '../middlewares/authMiddleware.js';
 import axios from 'axios'; //here axios only used to validate reCaptcha
-import { login, logout, auditoreGet, createAudit, catCreate, catGettting, catEditById, deleteCat, stateGetting, gettingUser, notificationCreate, createUser, editUser, deleteUser, gettingCompany, gettingCompanyTable, gettingBranch, gettingCompliances, gettingCompliancesAll, createBranch, createCompliances, gettingNotification, gettingCompliancesById, gettingCompliancesOnCreate, updateCompliancesById, complianceApporve, gettingCompliancesReject, complianceReject, complianceFilter, complianceRejectedFilter, gettingCompliancesAllFilter, checkListCreate, checkListFind, updateChecklistsById, checklistOnCreateegetting, gettingchecklistById, checklistAllgetting, checklistApporve, checkListAllFilter, checkListCreateFilter, checklistApprovegetting, checkListApproveFilter, checklistOnRejectegetting, rejectChecklist, checkListRejectedFilter, gettingchecklistAllCompliance, complianceApproveFilter, gettingAuditDetail, createLiseReg, liseRegGetting, liseRegUpdateById, liseRegHistoryFilter, regsApporve, liseRegGettingById, auditChecklistFilter, auditchecklistGetonCreate, auditFilter, gettingOnGoingAuditDetail, gettingAuditorOverdueDashboard, elibraryCreate, createCompany, gettingCompanyById } from '../controllers/Admin.js';
+import { login, logout, auditoreGet, createAudit, catCreate, catGettting, catEditById, deleteCat, stateGetting, gettingUser, notificationCreate, createUser, editUser, deleteUser, gettingCompany, gettingCompanyTable, gettingBranch, gettingCompliances, gettingCompliancesAll, createBranch, createCompliances, gettingNotification, gettingCompliancesById, gettingCompliancesOnCreate, updateCompliancesById, complianceApporve, gettingCompliancesReject, complianceReject, complianceFilter, complianceRejectedFilter, gettingCompliancesAllFilter, checkListCreate, checkListFind, updateChecklistsById, checklistOnCreateegetting, gettingchecklistById, checklistAllgetting, checklistApporve, checkListAllFilter, checkListCreateFilter, checklistApprovegetting, checkListApproveFilter, checklistOnRejectegetting, rejectChecklist, checkListRejectedFilter, gettingchecklistAllCompliance, complianceApproveFilter, gettingAuditDetail, createLiseReg, liseRegGetting, liseRegUpdateById, liseRegHistoryFilter, regsApporve, liseRegGettingById, auditChecklistFilter, auditchecklistGetonCreate, auditFilter, gettingOnGoingAuditDetail, gettingAuditorOverdueDashboard, elibraryCreate, createCompany, gettingCompanyById, updateCompanyById } from '../controllers/Admin.js';
 
 //elibraryGet ,createRegistrationTab2,createRegistrationTab3,createRegistrationTab4,createRegistrationTab5,createRegistrationTab6,createRegistrationTab7
 import { upload } from "../middlewares/multerConfig.js";
@@ -100,6 +100,7 @@ router.post('/createCompany', upload.any(), createCompany);
 router.get('/gettingCompany', gettingCompany);
 router.get('/gettingCompanyTable', gettingCompanyTable);
 router.get('/gettingCompanyById/:id', gettingCompanyById);
+router.put('/updateCompanyById/:id', updateCompanyById);
 /*company end*/
 // router.post('/createCompany',  upload.any(), createCompany)
 // router.post('/companytab2',  upload.array('files'), createRegistrationTab2)
@@ -110,4 +111,4 @@ router.get('/gettingCompanyById/:id', gettingCompanyById);
 // router.post('/companytab6',  upload.any(), createRegistrationTab6)
 // router.post('/companytab7', upload.any(), createRegistrationTab7)
 
-export default router;
+export default router
