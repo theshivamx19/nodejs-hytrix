@@ -6197,7 +6197,6 @@ export const updateCompanyById = async (request, response, next) => {
 
         } = data
         // pfnumber, pfaddressimage
-        let company, newCompany;
         const uploadImage = async (imageFile) => {
             let imageUrl
             if (!imageFile) {
@@ -6238,7 +6237,7 @@ export const updateCompanyById = async (request, response, next) => {
             }
             return imageUrl;
         };
-
+        
         // ***********************-------- B Dynamic Image Handling ----------***********************
 
         let dataB1, dataB2, dataB3
@@ -6270,7 +6269,7 @@ export const updateCompanyById = async (request, response, next) => {
                 aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][aadhaarimage]`)),
             })));
         }
-
+        
         // ***********************-------- C Dynamic Image Handling ----------***********************
 
         let clientDataC1, clientDataC2, clientDataC3, clientDataC4
@@ -6312,7 +6311,7 @@ export const updateCompanyById = async (request, response, next) => {
         }
 
         // ***********************-------- D Dynamic Image Handling ----------***********************
-
+        
         let dataPFsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
         if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
             dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(async (item, index) => {
@@ -6401,7 +6400,7 @@ export const updateCompanyById = async (request, response, next) => {
         }
         // ***********************-------- F Dynamic Image Handling ----------***********************
         let dataF1branch, dataF1RLicense, dataF1FL, dataF1FP, dataF54NSP, dataF54OTP, dataF54WOE, dataF54TL
-
+        
         if (F1branch !== undefined && F1branch.length > 0) {
             dataF1branch = await Promise.all(F1branch.map(async (item, index) => {
                 return {
@@ -6479,9 +6478,14 @@ export const updateCompanyById = async (request, response, next) => {
                 }
             }))
         }
-
+        
         // **************----------- SAVING STATIC DATA ------------*****************
+        const checkCompanyName = await Companydata.findOne({id : companyId})
+        if(checkCompanyName.companyname === companyname){
+            response.status(409).json("Company name already exists or you cannot update")
+        }
 
+        let company, newCompany;
         if (companyname && companyaddress && companystate && companydistrict && companypin && companytype && companycategory && companynatureofbusiness || companyimage || request.files.fieldname === "companyaddressimage" || request.files.fieldname === "companytypeimage" || request.files.fieldname === "companycategoryimage" || request.files.fieldname === "companynatureofbusinessimage") {
             // A Starts
             company = {
@@ -6502,10 +6506,10 @@ export const updateCompanyById = async (request, response, next) => {
         // newCompany = new Companydata(company);
         // await newCompany.save();
         // console.log(companyregistration,companycin,companyissuedplace,companyauthority,companyregistrationdate,companypan,companytan,companytin,companygst)
-
+        
         // const lastInsertedcompany = await Companydata.find({}).sort({ '_id': -1 }).limit(1)
         // const lastInsertedIdcompany = lastInsertedcompany.length > 0 ? lastInsertedcompany[0]._id : null;
-
+        
         // console.log(companyregistration ,  companycin , companyissuedplace, companyauthority, companyregistrationdate, companypan, companytan, companytin, companygst);return;
         if (companyregistration && companycin && companyissuedplace && companyauthority && companyregistrationdate && companypan && companytan && companytin && companygst || request.files.fieldname === "companyregistrationimage" || request.files.fieldname === "companyciniamge" || request.files.fieldname === "companyissuedplaceimage" || request.files.fieldname === "companyauthorityimage" || request.files.fieldname === "companypanimage" || request.files.fieldname === "companytanimage" || request.files.fieldname === "companytinimage" || request.files.fieldname === "companygstimage" || RegistrationB1 || RegistrationB2 || RegistrationB3) {
             company = {
@@ -6701,7 +6705,7 @@ export const updateCompanyById = async (request, response, next) => {
         // Save company data to database
         // const newCompany = new Companys(company);
         // await newCompany.save();
-        newCompany = await Companydata.findOneAndUpdate({ _id: lastInsertedIdcompany }, company, { new: true })
+        newCompany = await Companydata.findOneAndUpdate({ _id: companyId }, company, { new: true })
         response.status(201).json(newCompany);
     } catch (error) {
         next(error);
