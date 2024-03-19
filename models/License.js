@@ -29,11 +29,12 @@ const licenseSchema = new mongoose.Schema({
     activatedDate : {
         type : Date,
         default : new Date(),
-        index : true
+    },
+    approved_at : {
+        type : Date,
     },
     expiryDate : {
         type : Date,
-        index : true
     }
 
 }, {timestamps : true})
