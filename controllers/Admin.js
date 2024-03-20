@@ -20,6 +20,7 @@ import sharp from 'sharp';
 import mongoose from 'mongoose'
 import { log } from 'console';
 import { request } from 'http';
+import License from '../models/License.js';
 export const login = async (req, res, next) => {
     try {
         const user = await Admin.findOne({ email: req.body.email });
@@ -6237,7 +6238,7 @@ export const updateCompanyById = async (request, response, next) => {
             }
             return imageUrl;
         };
-        
+
         // ***********************-------- B Dynamic Image Handling ----------***********************
 
         let dataB1, dataB2, dataB3
@@ -6269,7 +6270,7 @@ export const updateCompanyById = async (request, response, next) => {
                 aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][aadhaarimage]`)),
             })));
         }
-        
+
         // ***********************-------- C Dynamic Image Handling ----------***********************
 
         let clientDataC1, clientDataC2, clientDataC3, clientDataC4
@@ -6311,7 +6312,7 @@ export const updateCompanyById = async (request, response, next) => {
         }
 
         // ***********************-------- D Dynamic Image Handling ----------***********************
-        
+
         let dataPFsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
         if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
             dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(async (item, index) => {
@@ -6400,7 +6401,7 @@ export const updateCompanyById = async (request, response, next) => {
         }
         // ***********************-------- F Dynamic Image Handling ----------***********************
         let dataF1branch, dataF1RLicense, dataF1FL, dataF1FP, dataF54NSP, dataF54OTP, dataF54WOE, dataF54TL
-        
+
         if (F1branch !== undefined && F1branch.length > 0) {
             dataF1branch = await Promise.all(F1branch.map(async (item, index) => {
                 return {
@@ -6478,10 +6479,10 @@ export const updateCompanyById = async (request, response, next) => {
                 }
             }))
         }
-        
+
         // **************----------- SAVING STATIC DATA ------------*****************
-        const checkCompanyName = await Companydata.findOne({id : companyId})
-        if(checkCompanyName.companyname === companyname){
+        const checkCompanyName = await Companydata.findOne({ id: companyId })
+        if (checkCompanyName.companyname === companyname) {
             response.status(409).json("Company name already exists or you cannot update")
         }
 
@@ -6506,10 +6507,10 @@ export const updateCompanyById = async (request, response, next) => {
         // newCompany = new Companydata(company);
         // await newCompany.save();
         // console.log(companyregistration,companycin,companyissuedplace,companyauthority,companyregistrationdate,companypan,companytan,companytin,companygst)
-        
+
         // const lastInsertedcompany = await Companydata.find({}).sort({ '_id': -1 }).limit(1)
         // const lastInsertedIdcompany = lastInsertedcompany.length > 0 ? lastInsertedcompany[0]._id : null;
-        
+
         // console.log(companyregistration ,  companycin , companyissuedplace, companyauthority, companyregistrationdate, companypan, companytan, companytin, companygst);return;
         if (companyregistration && companycin && companyissuedplace && companyauthority && companyregistrationdate && companypan && companytan && companytin && companygst || request.files.fieldname === "companyregistrationimage" || request.files.fieldname === "companyciniamge" || request.files.fieldname === "companyissuedplaceimage" || request.files.fieldname === "companyauthorityimage" || request.files.fieldname === "companypanimage" || request.files.fieldname === "companytanimage" || request.files.fieldname === "companytinimage" || request.files.fieldname === "companygstimage" || RegistrationB1 || RegistrationB2 || RegistrationB3) {
             company = {
@@ -6711,3 +6712,107 @@ export const updateCompanyById = async (request, response, next) => {
         next(error);
     }
 }
+
+
+export const companyLcreate = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { licenseName, licenseUpload, company, state, branch, executive, activatedDate, approved_at, expiryDate } = data
+        const companyLicense = { licenseName, licenseUpload, company, state, branch, executive, activatedDate, approved_at, expiryDate }
+        const newCompanyLicense = new License(companyLicense)
+        await newCompanyLicense.save()
+        response.status(201).json(newCompanyLicense)
+    } catch (error) {
+        next(error)
+    }
+}
+export const companyL = async (request, response, next) => { ///getting licence with lookup
+    try {
+        const companyLicense = await License.aggregate([
+            {
+                $match: {}
+            },
+            {
+                $lookup: {
+                    from: 'companies',
+                    localField: 'company',
+                    foreignField: "_id",
+                    as: "companyData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branch",
+                    foreignField: "_id",
+                    as: "branchData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData"
+                }
+            },
+            {
+                $project: {
+                    licenseName: 1,
+                    licenseUpload: 1,
+                    company: 1,
+                    state: 1,
+                    branch: 1,
+                    executive: 1,
+                    activatedDate: 1,
+                    approved_at: 1,
+                    expiryDat: 1,
+                    company: { $arrayElemAt: ["$companyData", 0] },
+                    state: { $arrayElemAt: ["$stateData", 0] },
+                    branch: { $arrayElemAt: ["branchData", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["executiveData.lastName", 0] }
+                        ]
+                    }
+                }
+            }
+        ])
+        response.status(200).json(companyLicense)
+    } catch (error) {
+        next(error)
+    }
+}
+export const companyLUpdateById = async (request, response, next) => { ////update license by id
+    try {
+        const companyLicenseId = request.params.id
+        const checkCompLicenseId = await License.findOne({ _id: companyLicenseId })
+        if (!checkCompLicenseId) {
+            return response.status(404).json("Given company license id does not exists")
+        }
+        const data = request.body
+        // const { licenseName, licenseUpload, company, state, branch, executive, activatedDate, approved_at, expiryDate } = data
+        const updatedCompLicense = await License.findByIdAndUpdate({ _id: companyLicenseId }, data, { new: true })
+        response.status(201).json(updatedCompLicense)
+    } catch (error) {
+        next(error)
+    }
+}
+
+// export const companyLById = async (request, response, next) => { ////getting license for edit
+//     try {
+
+//     } catch (error) {
+//         next(error)
+//     }
+// }
