@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const companyInteractionSchema = new mongoose.model({
+const companyProfileSchema = new mongoose.Schema({
     companyTitle: {
         type: String,
         required: true,
@@ -20,25 +20,7 @@ const companyInteractionSchema = new mongoose.model({
         trim: true,
         index: true
     },
-    licenseName: {
-        type: String,
-        required: true,
-        trim: true,
-        index: true
-    },
-    licenseUpload: {
-        type: Object
-    },
-    activatedDate: {
-        type: Date,
-        default: new Date(),
-    },
-    approved_at: {
-        type: Date,
-    },
-    expiryDate: {
-        type: Date,
-    },
+
     company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Company"
@@ -56,7 +38,7 @@ const companyInteractionSchema = new mongoose.model({
         ref: "User"
     },
 
-}, { timestamps: true })
+}, {timestamps : true})
 
-const Companyinteraction = mongoose.model('Companyinteraction', companyInteractionSchema)
-export default Companyinteraction;
+const Companyprofile = mongoose.model('Companyprofile', companyProfileSchema)
+export default Companyprofile;
