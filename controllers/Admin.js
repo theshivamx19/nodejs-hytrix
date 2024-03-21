@@ -46,7 +46,10 @@ export const login = async (req, res, next) => {
         //res.cookie('access_token',token,{expire : 36000 + Date.now(), httpOnly:true}).status(200).json({...otherDetails});
         otherDetails.access_token = token;
         otherDetails.tokenexp = 60 * 24 * 60 * 60 * 1000;
-        res.cookie('access_token', token, { maxAge: (60 * 24 * 60 * 60 * 1000) /* cookie will expires in 20 days*/, httpOnly: true }).status(201).json({ ...otherDetails });
+        res.cookie('access_token', token, {
+            maxAge: (60 * 24 * 60 * 60 * 1000) /* cookie will expires in 20 days*/,
+            httpOnly: true
+        }).status(201).json({ ...otherDetails });
 
     } catch (error) {
         //res.status(400).json({ message: error.message });
@@ -6816,3 +6819,20 @@ export const companyLUpdateById = async (request, response, next) => { ////updat
 //         next(error)
 //     }
 // }
+
+
+export const createCompanyInteraction = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { companyTitle, details, companyUpload, remark, licenseName, licenseUpload, activatedDate, approved_at, expiryDate, company, state, branch, executive } = data
+        const companyInteraction = {
+            companyTitle, details, companyUpload, remark, licenseName, licenseUpload, activatedDate, approved_at, expiryDate, company, state, branch, executive
+        }
+        const newCompanyInteraction = new companyInteraction(companyInteraction)
+        await newCompanyInteraction.save()
+        response.status(201).json(newCompanyInteraction)
+    } catch (error) {
+        next(error)
+    }
+}
+
