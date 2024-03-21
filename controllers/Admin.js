@@ -20,6 +20,7 @@ import sharp from 'sharp';
 import mongoose from 'mongoose'
 import { log } from 'console';
 import { request } from 'http';
+import License from '../models/License.js';
 export const login = async (req, res, next) => {
     try {
         const user = await Admin.findOne({ email: req.body.email });
@@ -45,7 +46,10 @@ export const login = async (req, res, next) => {
         //res.cookie('access_token',token,{expire : 36000 + Date.now(), httpOnly:true}).status(200).json({...otherDetails});
         otherDetails.access_token = token;
         otherDetails.tokenexp = 60 * 24 * 60 * 60 * 1000;
-        res.cookie('access_token', token, { maxAge: (60 * 24 * 60 * 60 * 1000) /* cookie will expires in 20 days*/, httpOnly: true }).status(201).json({ ...otherDetails });
+        res.cookie('access_token', token, {
+            maxAge: (60 * 24 * 60 * 60 * 1000) /* cookie will expires in 20 days*/,
+            httpOnly: true
+        }).status(201).json({ ...otherDetails });
 
     } catch (error) {
         //res.status(400).json({ message: error.message });
@@ -6753,3 +6757,124 @@ export const updateCompanyById = async (request, response, next) => {
         next(error);
     }
 }
+
+
+export const companyLcreate = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { licenseName, licenseUpload, company, state, branch, executive, activatedDate, approved_at, expiryDate } = data
+        const companyLicense = { licenseName, licenseUpload, company, state, branch, executive, activatedDate, approved_at, expiryDate }
+        const newCompanyLicense = new License(companyLicense)
+        await newCompanyLicense.save()
+        response.status(201).json(newCompanyLicense)
+    } catch (error) {
+        next(error)
+    }
+}
+export const companyL = async (request, response, next) => { ///getting licence with lookup
+    try {
+        const companyLicense = await License.aggregate([
+            {
+                $match: {}
+            },
+            {
+                $lookup: {
+                    from: 'companies',
+                    localField: 'company',
+                    foreignField: "_id",
+                    as: "companyData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branch",
+                    foreignField: "_id",
+                    as: "branchData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData"
+                }
+            },
+            {
+                $project: {
+                    licenseName: 1,
+                    licenseUpload: 1,
+                    company: 1,
+                    state: 1,
+                    branch: 1,
+                    executive: 1,
+                    activatedDate: 1,
+                    approved_at: 1,
+                    expiryDat: 1,
+                    company: { $arrayElemAt: ["$companyData", 0] },
+                    state: { $arrayElemAt: ["$stateData", 0] },
+                    branch: { $arrayElemAt: ["branchData", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["executiveData.lastName", 0] }
+                        ]
+                    }
+                }
+            }
+        ])
+        response.status(200).json(companyLicense)
+    } catch (error) {
+        next(error)
+    }
+}
+export const companyLUpdateById = async (request, response, next) => { ////update license by id
+    try {
+        const companyLicenseId = request.params.id
+        const checkCompLicenseId = await License.findOne({ _id: companyLicenseId })
+        if (!checkCompLicenseId) {
+            return response.status(404).json("Given company license id does not exists")
+        }
+        const data = request.body
+        // const { licenseName, licenseUpload, company, state, branch, executive, activatedDate, approved_at, expiryDate } = data
+        const updatedCompLicense = await License.findByIdAndUpdate({ _id: companyLicenseId }, data, { new: true })
+        response.status(201).json(updatedCompLicense)
+    } catch (error) {
+        next(error)
+    }
+}
+
+// export const companyLById = async (request, response, next) => { ////getting license for edit
+//     try {
+
+//     } catch (error) {
+//         next(error)
+//     }
+// }
+
+
+export const createCompanyInteraction = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { companyTitle, details, companyUpload, remark, licenseName, licenseUpload, activatedDate, approved_at, expiryDate, company, state, branch, executive } = data
+        const companyInteraction = {
+            companyTitle, details, companyUpload, remark, licenseName, licenseUpload, activatedDate, approved_at, expiryDate, company, state, branch, executive
+        }
+        const newCompanyInteraction = new companyInteraction(companyInteraction)
+        await newCompanyInteraction.save()
+        response.status(201).json(newCompanyInteraction)
+    } catch (error) {
+        next(error)
+    }
+}
+
