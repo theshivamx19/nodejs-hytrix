@@ -5059,7 +5059,8 @@ export const createCompany = async (request, response, next) => {
             pfnumber, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, OtherRegsitrationD1PFsubcodes, OtherRegsitrationD1ESIsubcodes, OtherRegsitrationD3NSP, OtherRegsitrationD3FL, OtherRegsitrationD3OTP, OtherRegsitrationD3WOE, OtherRegsitrationD3TD, OtherRegsitrationD3MSME, OtherRegsitrationD3BOCW, OtherRegsitrationD3IMW, esinumber, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressremark, registrationD3, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3remark, fpD3, fpD3remark, doapp, issueauthfpD3, issueauthfpD3remark, powerfpD3, powerfpD3remark, powerhpfpD3, powerhpfpD3remark, registrationlwfD3, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3remark, doregistrationptrD3,
 
             // E Starts 
-            contLabRegNoE, contLabRegNoERemark, dateOfRegistrationE, dateOfRegERemark, noOfContractEmployeesE, noOfContractEmpERemark, noOfContractorsE, noOfContractorsERemark, nameOfContractorE1, nameOfContractorsE1Remark, nameOfEstablishmentE1, nameOfEstablishmentE1Remark, regAddContractorE1, regStateContractorE1, regDistContractorE1, regPinContractorE1, regAddContractorE1Remark, agreementExpiryDateE2, agreementExpiryDateE2Remark, agreementRenewalDateE2, agreementRenewalDateE2Remark, natureOfWorkAgreementE2, natureOfWorkAgreementE2Remark, noOfEmpDeployedAgreementE2, noOfEmpDeployedAgreementE2Remark, companyTypeLabourE3, companyTypeLabourE3Remark, contractLabourLicNoE3, contractLabourLicNoE3Remark, contractLicDateE3, contractLicDateE3Remark, contractExpiryDateE3, contractExpiryDateE3Remark, contractRenewalDueDateE3, contractRenewalDueDateE3Remark, noOfWorkersContractE3, noOfWorkersContractE3Remark, panContractorsE3, panContractorsE3Remark, gstContractorsE3, gstContractorsE3Remark, pfRegContractorsE3, pfRegContractorsE3Remark, esicRegContractorsE3, esicRegContractorsE3Remark, shopsandEstContractorsE3, shopsandEstContractorsE3Remark, lwfRegContractorsE3, lwfRegContractorsE3Remark, profTaxContractorsE3, profTaxContractorsE3Remark,
+            Tab5E,
+            // contLabRegNoE, contLabRegNoERemark, dateOfRegistrationE, dateOfRegERemark, noOfContractEmployeesE, noOfContractEmpERemark, noOfContractorsE, noOfContractorsERemark, nameOfContractorE1, nameOfContractorsE1Remark, nameOfEstablishmentE1, nameOfEstablishmentE1Remark, regAddContractorE1, regStateContractorE1, regDistContractorE1, regPinContractorE1, regAddContractorE1Remark, agreementExpiryDateE2, agreementExpiryDateE2Remark, agreementRenewalDateE2, agreementRenewalDateE2Remark, natureOfWorkAgreementE2, natureOfWorkAgreementE2Remark, noOfEmpDeployedAgreementE2, noOfEmpDeployedAgreementE2Remark, companyTypeLabourE3, companyTypeLabourE3Remark, contractLabourLicNoE3, contractLabourLicNoE3Remark, contractLicDateE3, contractLicDateE3Remark, contractExpiryDateE3, contractExpiryDateE3Remark, contractRenewalDueDateE3, contractRenewalDueDateE3Remark, noOfWorkersContractE3, noOfWorkersContractE3Remark, panContractorsE3, panContractorsE3Remark, gstContractorsE3, gstContractorsE3Remark, pfRegContractorsE3, pfRegContractorsE3Remark, esicRegContractorsE3, esicRegContractorsE3Remark, shopsandEstContractorsE3, shopsandEstContractorsE3Remark, lwfRegContractorsE3, lwfRegContractorsE3Remark, profTaxContractorsE3, profTaxContractorsE3Remark,
 
             // F Starts
             contractorAddBranchF, contractorStateBranchF, contractorDistBranchF, contractorPinBranchF, branchOpeningDateF, contractorAddBranchFRemark, noOfEmpBranchF, managerNameF1, managerNameF1Remark, managerMobNoF1, managerMobNoF1Remark, managerEmailF1, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Remark, managerPanF1, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Remark, regAddContractorF51, regStateContractorF51, regDistContractorF51, regPinContractorF51, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Remark, gstF53, gstF53Remark, pfRegF53, pfRegF53Remark, esicRegF53, esicRegF53Remark, shopsEstF53, shopsEstF53Remark, lwfRegF53, lwfRegF53Remark, profTaxF53, profTaxF53Remark, F1branch, F1RLicense, F1FL, F1FP, F54NSP, F54OTP, F54WOE, F54TL,
@@ -5113,455 +5114,496 @@ export const createCompany = async (request, response, next) => {
         };
 
         // ***********************-------- B Dynamic Image Handling ----------***********************
+  
+    // async function processDynamicImages(dataArray, filesArray, fieldname) {
+    //     if (dataArray !== undefined && dataArray.length > 0) {
+    //         return await Promise.all(dataArray.map(async (item, index) => {
+    //             let processedItem = { ...item };
+    //             for (const field of fieldname) {
+    //                 processedItem[field] = await uploadImage(filesArray.find(img => img.fieldname === `${fieldname}[${index}][${field}]`));
+    //             }
+    //             return processedItem;
+    //         }));
+    //     }
+    //     return dataArray;
+    // }
 
-        let dataB1, dataB2, dataB3
-        // Process RegistrationB1
-        if (RegistrationB1 !== undefined && RegistrationB1.length > 0) {
-            dataB1 = await Promise.all(RegistrationB1.map(async (item, index) => ({
-                ...item,
-                nameimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][nameimage]`)),
-                dinimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][dinimage]`)),
-                panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][panimage]`)),
-                aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][aadhaarimage]`)),
-            })));
-        }
-        // Process RegistrationB2
-        if (RegistrationB2 !== undefined && RegistrationB2.length > 0) {
-            dataB2 = await Promise.all(RegistrationB2.map(async (item, index) => ({
-                ...item,
-                image: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][image]`)),
-                designationimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][designationimage]`)),
-                panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][panimage]`)),
-                aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][aadhaarimage]`)),
-            })));
-        }
-        // Process RegistrationB3
-        if (RegistrationB3 !== undefined && RegistrationB3.length > 0) {
-            dataB3 = await Promise.all(RegistrationB3.map(async (item, index) => ({
-                ...item,
-                panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][panimage]`)),
-                aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][aadhaarimage]`)),
-            })));
-        }
+    // // For B section
+    // dataB1 = await processDynamicImages(RegistrationB1, request.files, ['nameimage', 'dinimage', 'panimage', 'aadhaarimage']);
+    // dataB2 = await processDynamicImages(RegistrationB2, request.files, ['image', 'designationimage', 'panimage', 'aadhaarimage']);
+    // dataB3 = await processDynamicImages(RegistrationB3, request.files, ['panimage', 'aadhaarimage']);
 
-        // ***********************-------- C Dynamic Image Handling ----------***********************
+    // // For C section
+    // clientDataC1 = await processDynamicImages(ClientcontactC1, request.files, ['nameimage', 'designationimage']);
+    // clientDataC2 = await processDynamicImages(ClientcontactC2, request.files, ['nameimage', 'designationimage']);
+    // clientDataC3 = await processDynamicImages(ClientcontactC3, request.files, ['nameimage', 'designationimage']);
+    // clientDataC4 = await processDynamicImages(ClientcontactC4, request.files, ['nameimage', 'designationimage']);
 
-        let clientDataC1, clientDataC2, clientDataC3, clientDataC4
-        if (ClientcontactC1 !== undefined && ClientcontactC1.length > 0) {
-            clientDataC1 = await Promise.all(ClientcontactC1.map(async (item, index) => {
-                return {
-                    ...item,
-                    nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][nameimage]`)),
-                    designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][designationimage]`))
-                }
-            }))
-        }
-        if (ClientcontactC2 !== undefined && ClientcontactC2.length > 0) {
-            clientDataC2 = await Promise.all(ClientcontactC2.map(async (item, index) => {
-                return {
-                    ...item,
-                    nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][nameimage]`)),
-                    designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][designationimage]`))
-                }
-            }))
-        }
-        if (ClientcontactC3 !== undefined && ClientcontactC3.length > 0) {
-            clientDataC3 = await Promise.all(ClientcontactC3.map(async (item, index) => {
-                return {
-                    ...item,
-                    nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][nameimage]`)),
-                    designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][designationimage]`))
-                }
-            }))
-        }
-        if (ClientcontactC4 !== undefined && ClientcontactC4.length > 0) {
-            clientDataC4 = await Promise.all(ClientcontactC4.map(async (item, index) => {
-                return {
-                    ...item,
-                    nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][nameimage]`)),
-                    designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][designationimage]`))
-                }
-            }))
-        }
 
-        // ***********************-------- D Dynamic Image Handling ----------***********************
-
-        let dataPFsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
-        if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
-            dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(async (item, index) => {
-                return {
-                    ...item,
-                    regimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][regimage]`)),
-                    docimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][docimage]`)),
-                    offaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][offaddressimage]`))
-                }
-            }))
-        }
-        if (OtherRegsitrationD1ESIsubcodes !== undefined && OtherRegsitrationD1ESIsubcodes.length > 0) {
-            dataESIsubcodes = await Promise.all(OtherRegsitrationD1ESIsubcodes.map(async (item, index) => {
-                return {
-                    ...item,
-                    esiimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esiimage]`)),
-                    esidocimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esidocimage]`)),
-                    esioffaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esioffaddressimage]`))
-                }
-            }))
-        }
-        if (OtherRegsitrationD3FL !== undefined && OtherRegsitrationD3FL.length > 0) {
-            dataFL = await Promise.all(OtherRegsitrationD3FL.map(async (item, index) => {
-                return {
-                    ...item,
-                    managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][managerlicenseimage]`)),
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][issuingauthimage]`)),
-                }
-            }))
-        }
-        if (OtherRegsitrationD3NSP !== undefined && OtherRegsitrationD3NSP.length > 0) {
-            dataNSP = await Promise.all(OtherRegsitrationD3NSP.map(async (item, index) => {
-                return {
-                    ...item,
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3NSP[${index}][issuingauthimage]`)),
-                }
-            }))
-        }
-        if (OtherRegsitrationD3OTP !== undefined && OtherRegsitrationD3OTP.length > 0) {
-            dataOTP = await Promise.all(OtherRegsitrationD3OTP.map(async (item, index) => {
-                return {
-                    ...item,
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3OTP[${index}][issuingauthimage]`)),
-                }
-            }))
-        }
-        if (OtherRegsitrationD3WOE !== undefined && OtherRegsitrationD3WOE.length > 0) {
-            dataWOE = await Promise.all(OtherRegsitrationD3WOE.map(async (item, index) => {
-                return {
-                    ...item,
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3WOE[${index}][issuingauthimage]`)),
-                }
-            }))
-        }
-        if (OtherRegsitrationD3TD !== undefined && OtherRegsitrationD3TD.length > 0) {
-            dataTD = await Promise.all(OtherRegsitrationD3TD.map(async (item, index) => {
-                return {
-                    ...item,
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3TD[${index}][issuingauthimage]`)),
-                }
-            }))
-        }
-        if (OtherRegsitrationD3MSME !== undefined && OtherRegsitrationD3MSME.length > 0) {
-            dataMSME = await Promise.all(OtherRegsitrationD3MSME.map(async (item, index) => {
-                return {
-                    ...item,
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3MSME[${index}][issuingauthimage]`)),
-                }
-            }))
-        }
-        if (OtherRegsitrationD3BOCW !== undefined && OtherRegsitrationD3BOCW.length > 0) {
-            dataBOCW = await Promise.all(OtherRegsitrationD3BOCW.map(async (item, index) => {
-                return {
-                    ...item,
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3BOCW[${index}][issuingauthimage]`)),
-                }
-            }))
-        }
-        if (OtherRegsitrationD3IMW !== undefined && OtherRegsitrationD3IMW.length > 0) {
-            dataIMW = await Promise.all(OtherRegsitrationD3IMW.map(async (item, index) => {
-                return {
-                    ...item,
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3IMW[${index}][issuingauthimage]`)),
-                }
-            }))
-        }
-        // ***********************-------- F Dynamic Image Handling ----------***********************
-        let dataF1branch, dataF1RLicense, dataF1FL, dataF1FP, dataF54NSP, dataF54OTP, dataF54WOE, dataF54TL
-
-        if (F1branch !== undefined && F1branch.length > 0) {
-            dataF1branch = await Promise.all(F1branch.map(async (item, index) => {
-                return {
-                    ...item,
-                    image: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][image]`))
-                }
-            }))
-        }
-        if (F1RLicense !== undefined && F1RLicense.length > 0) {
-            dataF1RLicense = await Promise.all(F1RLicense.map(async (item, index) => {
-                return {
-                    ...item,
-                    managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1RLicense[${index}][managerlicenseimage]`)),
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1RLicense[${index}][issuingauthimage]`))
-                }
-            }))
-        }
-        if (F1FL !== undefined && F1FL.length > 0) {
-            dataF1FL = await Promise.all(F1FL.map(async (item, index) => {
-                return {
-                    ...item,
-                    managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1FL[${index}][managerlicenseimage]`)),
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1FL[${index}][issuingauthimage]`))
-                }
-            }))
-        }
-        if (F1FP !== undefined && F1FP.length > 0) {
-            dataF1FP = await Promise.all(F1FP.map(async (item, index) => {
-                return {
-                    ...item,
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1FP[${index}][issuingauthimage]`))
-                }
-            }))
-        }
-        if (F54NSP !== undefined && F54NSP.length > 0) {
-            dataF54NSP = await Promise.all(F54NSP.map(async (item, index) => {
-                return {
-                    ...item,
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54NSP[${index}][issuingauthimage]`))
-                }
-            }))
-        }
-        if (F54OTP !== undefined && F54OTP.length > 0) {
-            dataF54OTP = await Promise.all(F54OTP.map(async (item, index) => {
-                return {
-                    ...item,
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54OTP[${index}][issuingauthimage]`))
-                }
-            }))
-        }
-        if (F54WOE !== undefined && F54WOE.length > 0) {
-            dataF54WOE = await Promise.all(F54WOE.map(async (item, index) => {
-                return {
-                    ...item,
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54WOE[${index}][issuingauthimage]`))
-                }
-            }))
-        }
-        if (F54TL !== undefined && F54TL.length > 0) {
-            dataF54TL = await Promise.all(F54TL.map(async (item, index) => {
-                return {
-                    ...item,
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54TL[${index}][issuingauthimage]`))
-                }
-            }))
-        }
-        // ***********************-------- G Dynamic Image Handling ----------***********************
-        let dataGCC4TL
-        if (GCC4TL !== undefined && GCC4TL.length > 0) {
-            dataGCC4TL = await Promise.all(GCC4TL.map(async (item, index) => {
-                return {
-                    ...item,
-                    clientimage: await uploadImage(request.files.find(img => img.fieldname === `GCC4TL[${index}][clientimage]`)),
-                    clientaddressimage: await uploadImage(request.files.find(img => img.fieldname === `GCC4TL[${index}][clientaddressimage]`))
-                }
-            }))
-        }
-        if (companyname && companyaddress && companystate && companydistrict && companypin && companytype && companycategory && companynatureofbusiness) {
-            // A Starts
-            company = {
-                companyimage: await uploadImage(request.files.find(img => img.fieldname === "companyimage")),
-                companyaddressimage: await uploadImage(request.files.find(img => img.fieldname === "companyaddressimage")),
-                companytypeimage: await uploadImage(request.files.find(img => img.fieldname === "companytypeimage")),
-                companycategoryimage: await uploadImage(request.files.find(img => img.fieldname === "companycategoryimage")),
-                companynatureofbusinessimage: await uploadImage(request.files.find(img => img.fieldname === "companynatureofbusinessimage")),
-                companyname, companyremark, companyaddress, companystate, companydistrict, companypin, companyaddressremark, companytype, companytyperemark, companycategory, companycategoryremark, companynatureofbusiness, companynatureofbusinessremark,
-            }
-            newCompany = new Companydata(company);
-            await newCompany.save();
-        }
-        // console.log(companyregistration,companycin,companyissuedplace,companyauthority,companyregistrationdate,companypan,companytan,companytin,companygst)
-        const lastInsertedcompany = await Companydata.find({}).sort({ '_id': -1 }).limit(1)
-        const lastInsertedIdcompany = lastInsertedcompany.length > 0 ? lastInsertedcompany[0]._id : null;
-        // console.log(companyregistration ,  companycin , companyissuedplace, companyauthority, companyregistrationdate, companypan, companytan, companytin, companygst);return;
-        if (companyregistration && companycin && companyissuedplace && companyauthority && companyregistrationdate && companypan && companytan && companytin && companygst) {
-            company = {
-                // B Starts
-                companyregistrationimage: await uploadImage(request.files.find(img => img.fieldname === "companyregistrationimage")),
-                companyciniamge: await uploadImage(request.files.find(img => img.fieldname === "companyciniamge")),
-                companyissuedplaceimage: await uploadImage(request.files.find(img => img.fieldname === "companyissuedplaceimage")),
-                companyauthorityimage: await uploadImage(request.files.find(img => img.fieldname === "companyauthorityimage")),
-                companypanimage: await uploadImage(request.files.find(img => img.fieldname === "companypanimage")),
-                companytanimage: await uploadImage(request.files.find(img => img.fieldname === "companytanimage")),
-                companytinimage: await uploadImage(request.files.find(img => img.fieldname === "companytinimage")),
-                companygstimage: await uploadImage(request.files.find(img => img.fieldname === "companygstimage")), companyregistration, companyregistrationremark, companycin, companycinremark, companyissuedplace, companyissuedplaceremark, companyauthority, companyauthorityremark, companyregistrationdate, companypan, companypanremark, companytan, companytanremark, companytin, companytinremark, companygst, companygstremark,
-                RegistrationB1: dataB1,
-                RegistrationB2: dataB2,
-                RegistrationB3: dataB3,
-            }
-        }
-        if (clientDataC1 && clientDataC2 && clientDataC3 && clientDataC4) {
-            company = {
-                // // C Starts
-                ClientcontactC1: clientDataC1,
-                ClientcontactC2: clientDataC2,
-                ClientcontactC3: clientDataC3,
-                ClientcontactC4: clientDataC4,
-            }
-        }
-        if (pfnumber && doc && pfaddress && pfstate && pfdistrict && pfpin && esinumber && esidoc && esiaddress && esistate && esidistrict && esipin && registrationD3 && doregistrationD3 && doeregistrationD3 && doddrregistrationD3 && managernameD3 && noeD3 && noemD3 && noefD3 && issueauthfD3 && fpD3 && doapp && issueauthfpD3 && powerfpD3 && powerhpfpD3 && registrationlwfD3 && doregistrationlwfD3 && registrationptrD3 && doregistrationptrD3) {
-            company = {
-                // // D Starts
-                pfimage: await uploadImage(request.files.find(img => img.fieldname === "pfimage")),
-                pfaddressimage: await uploadImage(request.files.find(img => img.fieldname === "pfaddressimage")),
-                esiimage: await uploadImage(request.files.find(img => img.fieldname === "esiimage")),
-                esiaddressimage: await uploadImage(request.files.find(img => img.fieldname === "esiaddressimage")),
-                registrationD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationD3image")),
-                managernameD3image: await uploadImage(request.files.find(img => img.fieldname === "managernameD3image")),
-                issueauthfD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfD3image")),
-                fpD3image: await uploadImage(request.files.find(img => img.fieldname === "fpD3image")),
-                issueauthfpD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfpD3image")),
-                powerfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerfpD3image")),
-                powerhpfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerhpfpD3image")),
-                registrationlwfD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationlwfD3image")),
-                registrationptrD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationptrD3image")), pfnumber, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, esinumber, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressremark, registrationD3, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3remark, fpD3, fpD3remark, doapp, issueauthfpD3, issueauthfpD3remark, powerfpD3, powerfpD3remark, powerhpfpD3, powerhpfpD3remark, registrationlwfD3, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3remark, doregistrationptrD3,
-                OtherRegsitrationD1PFsubcodes: dataPFsubcodes,
-                OtherRegsitrationD1ESIsubcodes: dataESIsubcodes,
-                OtherRegsitrationD3NSP: dataNSP,
-                OtherRegsitrationD3OTP: dataOTP,
-                OtherRegsitrationD3WOE: dataWOE,
-                OtherRegsitrationD3TD: dataTD,
-                OtherRegsitrationD3MSME: dataMSME,
-                OtherRegsitrationD3BOCW: dataBOCW,
-                OtherRegsitrationD3IMW: dataIMW,
-                OtherRegsitrationD3FL: dataFL,
-            }
-        }
-        if ((contLabRegNoE && dateOfRegistrationE && noOfContractEmployeesE && noOfContractorsE && regAddContractorE1 && regStateContractorE1 && regDistContractorE1 && regPinContractorE1 && nameOfContractorE1 && nameOfEstablishmentE1 && agreementExpiryDateE2 && agreementRenewalDateE2 && natureOfWorkAgreementE2 && panContractorsE3 && gstContractorsE3 && pfRegContractorsE3 && esicRegContractorsE3 && shopsandEstContractorsE3 && lwfRegContractorsE3 && profTaxContractorsE3 && companyTypeLabourE3) || (noOfEmpDeployedAgreementE2 && contractLabourLicNoE3 && contractLicDateE3 && contractExpiryDateE3 && contractRenewalDueDateE3 && noOfWorkersContractE3)) {
-            ///E starts
-            company = {
-                // isEngagedFile: await uploadImage(request.files.find(img => img.fieldname === "isEngagedFile")),
-                contLabRegNoEFile: await uploadImage(request.files.find(img => img.fieldname === "contLabRegNoEFile")),
-                dateOfRegEFile: await uploadImage(request.files.find(img => img.fieldname === "dateOfRegEFile")),
-                noOfContractEmpEFile: await uploadImage(request.files.find(img => img.fieldname === "noOfContractEmpEFile")),
-                noOfContractorsEFile: await uploadImage(request.files.find(img => img.fieldname === "noOfContractorsEFile")),
-                nameOfContractorsE1File: await uploadImage(request.files.find(img => img.fieldname === "nameOfContractorsE1File")),
-                nameOfEstablishmentE1File: await uploadImage(request.files.find(img => img.fieldname === "nameOfEstablishmentE1File")),
-                regAddContractorE1File: await uploadImage(request.files.find(img => img.fieldname === "regAddContractorE1File")),
-                agreementExpiryDateE2File: await uploadImage(request.files.find(img => img.fieldname === "agreementExpiryDateE2File")),
-                agreementRenewalDateE2DetFile: await uploadImage(request.files.find(img => img.fieldname === "agreementRenewalDateE2DetFile")),
-                natureOfWorkAgreementE2File: await uploadImage(request.files.find(img => img.fieldname === "natureOfWorkAgreementE2File")),
-                noOfEmpDeployedAgreementE2File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmpDeployedAgreementE2File")),
-                companyTypeLabourE3File: await uploadImage(request.files.find(img => img.fieldname === "companyTypeLabourE3File")),
-                contractLabourLicNoE3File: await uploadImage(request.files.find(img => img.fieldname === "contractLabourLicNoE3File")),
-                contractLicDateE3File: await uploadImage(request.files.find(img => img.fieldname === "contractLicDateE3File")),
-                contractExpiryDateE3File: await uploadImage(request.files.find(img => img.fieldname === "contractExpiryDateE3File")),
-                contractRenewalDueDateE3File: await uploadImage(request.files.find(img => img.fieldname === "contractRenewalDueDateE3File")),
-                noOfWorkersContractE3File: await uploadImage(request.files.find(img => img.fieldname === "noOfWorkersContractE3File")),
-                panContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "panContractorsE3File")),
-                gstContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "gstContractorsE3File")),
-                pfRegContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "pfRegContractorsE3File")),
-                esicRegContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "esicRegContractorsE3File")),
-                shopsandEstContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "shopsandEstContractorsE3File")),
-                lwfRegContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "lwfRegContractorsE3File")),
-                profTaxContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "profTaxContractorsE3File")),
-                contLabRegNoE, contLabRegNoERemark, dateOfRegistrationE, dateOfRegERemark, noOfContractEmployeesE, noOfContractEmpERemark, noOfContractorsE, noOfContractorsERemark, nameOfContractorE1, nameOfContractorsE1Remark, nameOfEstablishmentE1, nameOfEstablishmentE1Remark, regAddContractorE1, regStateContractorE1, regDistContractorE1, regPinContractorE1, regAddContractorE1Remark, agreementExpiryDateE2, agreementExpiryDateE2Remark, agreementRenewalDateE2, agreementRenewalDateE2Remark, natureOfWorkAgreementE2, natureOfWorkAgreementE2Remark, noOfEmpDeployedAgreementE2, noOfEmpDeployedAgreementE2Remark, companyTypeLabourE3, companyTypeLabourE3Remark, contractLabourLicNoE3, contractLabourLicNoE3Remark, contractLicDateE3, contractLicDateE3Remark, contractExpiryDateE3, contractExpiryDateE3Remark, contractRenewalDueDateE3, contractRenewalDueDateE3Remark, noOfWorkersContractE3, noOfWorkersContractE3Remark, panContractorsE3, panContractorsE3Remark, gstContractorsE3, gstContractorsE3Remark, pfRegContractorsE3, pfRegContractorsE3Remark, esicRegContractorsE3, esicRegContractorsE3Remark, shopsandEstContractorsE3, shopsandEstContractorsE3Remark, lwfRegContractorsE3, lwfRegContractorsE3Remark, profTaxContractorsE3, profTaxContractorsE3Remark,
-
-            }
-        }
-        // /* F Starts */
-        if (contractorAddBranchF && contractorStateBranchF && contractorDistBranchF && contractorPinBranchF && branchOpeningDateF && noOfEmpBranchF && managerNameF1 && managerMobNoF1 && managerEmailF1 && managerAadharNoF1 && managerPanF1 && shopsEstLicenseF2 && regDateContractorF5 && noOfContractorsF5 && contractorNameF51 && establishmentNameF51 && regAddContractorF51 && regStateContractorF51 && regDistContractorF51 && regPinContractorF51 && expiryDateF52 && renewalDateF52 && natureOfWorkF52 && noOfEmpDeployedF52 && companyTypeF53 && contractLabLicNoF53 && licenseDateF53 && expiryDateF53 && renewalDateF53 && noOfWorkerF53 && panF53 && gstF53 && pfRegF53 && esicRegF53 && shopsEstF53 && lwfRegF53 && profTaxF53) {
-
-            company = {
-                managerNameF1File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF1File")),
-                managerMobNoF1File: await uploadImage(request.files.find(img => img.fieldname === "managerMobNoF1File")),
-                managerEmailF1File: await uploadImage(request.files.find(img => img.fieldname === "managerEmailF1File")),
-                managerAadharNoF1File: await uploadImage(request.files.find(img => img.fieldname === "managerAadharNoF1File")),
-                managerPanF1File: await uploadImage(request.files.find(img => img.fieldname === "managerPanF1File")),
-                shopsEstLicenseF2File: await uploadImage(request.files.find(img => img.fieldname === "shopsEstLicenseF2File")),
-                numberF2File: await uploadImage(request.files.find(img => img.fieldname === "numberF2File")),
-                regDateF2File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF2File")),
-                expiryDateF2File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF2File")),
-                renewalDateF2File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF2File")),
-                managerNameF2File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF2File")),
-                noOfEmployeesF2File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmployeesF2File")),
-                maleF2File: await uploadImage(request.files.find(img => img.fieldname === "maleF2File")),
-                issuingAuthorityF2File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF2File")),
-                numberF3File: await uploadImage(request.files.find(img => img.fieldname === "numberF3File")),
-                regDateF3File: await uploadImage(request.files.find(img => img.fieldname === "regDateF3File")),
-                expiryDateF3File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF3File")),
-                renewalDateF3File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF3File")),
-                managerNameF3File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF3File")),
-                noOfEmployeesF3File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmployeesF3File")),
-                maleF3File: await uploadImage(request.files.find(img => img.fieldname === "maleF3File")),
-                issuingAuthorityF3File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF3File")),
-                numberF4File: await uploadImage(request.files.find(img => img.fieldname === "numberF4File")),
-                regDateF4File: await uploadImage(request.files.find(img => img.fieldname === "regDateF4File")),
-                issuingAuthorityF4File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF4File")),
-                numberF5File: await uploadImage(request.files.find(img => img.fieldname === "numberF5File")),
-                regDateF5File: await uploadImage(request.files.find(img => img.fieldname === "regDateF5File")),
-                issuingAuthorityF5File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF5File")),
-                contractLabRegNoF5File: await uploadImage(request.files.find(img => img.fieldname === "contractLabRegNoF5File")),
-                regDateContractorF5File: await uploadImage(request.files.find(img => img.fieldname === "regDateContractorF5File")),
-                noOfContractEmpF5File: await uploadImage(request.files.find(img => img.fieldname === "noOfContractEmpF5File")),
-                noOfContractorsF5File: await uploadImage(request.files.find(img => img.fieldname === "noOfContractorsF5File")),
-                contractorNameF51File: await uploadImage(request.files.find(img => img.fieldname === "contractorNameF51File")),
-                establishmentNameF51File: await uploadImage(request.files.find(img => img.fieldname === "establishmentNameF51File")),
-                regAddContractorF51File: await uploadImage(request.files.find(img => img.fieldname === "regAddContractorF51File")),
-                expiryDateF52File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF52File")),
-                renewalDateF52File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF52File")),
-                natureOfWorkF52File: await uploadImage(request.files.find(img => img.fieldname === "natureOfWorkF52File")),
-                noOfEmpDeployedF52File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmpDeployedF52File")),
-                companyTypeF53File: await uploadImage(request.files.find(img => img.fieldname === "companyTypeF53File")),
-                contractLabLicNoF53File: await uploadImage(request.files.find(img => img.fieldname === "contractLabLicNoF53File")),
-                licenseDateF53File: await uploadImage(request.files.find(img => img.fieldname === "licenseDateF53File")),
-                expiryDateF53File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF53File")),
-                renewalDateF53File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF53File")),
-                noOfWorkerF53File: await uploadImage(request.files.find(img => img.fieldname === "noOfWorkerF53File")),
-                panF53File: await uploadImage(request.files.find(img => img.fieldname === "gstF53File")),
-                gstF53File: await uploadImage(request.files.find(img => img.fieldname === "gstF53File")),
-                pfRegF53File: await uploadImage(request.files.find(img => img.fieldname === "pfRegF53File")),
-                esicRegF53File: await uploadImage(request.files.find(img => img.fieldname === "esicRegF53File")),
-                shopsEstF53File: await uploadImage(request.files.find(img => img.fieldname === "shopsEstF53File")),
-                lwfRegF53File: await uploadImage(request.files.find(img => img.fieldname === "lwfRegF53File")),
-                profTaxF53File: await uploadImage(request.files.find(img => img.fieldname === "profTaxF53File")),
-                number54File: await uploadImage(request.files.find(img => img.fieldname === "number54File")),
-                regDate54File: await uploadImage(request.files.find(img => img.fieldname === "regDate54File")),
-                expiryDate54File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate54File")),
-                renewalDate54File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate54File")),
-                issuingAuthority54File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthority54File")),
-                number55File: await uploadImage(request.files.find(img => img.fieldname === "number55File")),
-                regDate55File: await uploadImage(request.files.find(img => img.fieldname === "regDate55File")),
-                expiryDate55File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate55File")),
-                renewalDate55File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate55File")),
-                issuingAuthoritye55File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthoritye55File")),
-                number56File: await uploadImage(request.files.find(img => img.fieldname === "number56File")),
-                regDate56File: await uploadImage(request.files.find(img => img.fieldname === "regDate56File")),
-                expiryDate56File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate56File")),
-                renewalDate56File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate56File")),
-                issuingAuthority56File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthority56File")),
-                number57File: await uploadImage(request.files.find(img => img.fieldname === "number57File")),
-                regDate57File: await uploadImage(request.files.find(img => img.fieldname === "regDate57File")),
-                expiryDate57File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate57File")),
-                renewalDate57File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate57File")),
-                issuingAuthority57File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthority57File")), regAddContractorF51, regStateContractorF51, regDistContractorF51, regPinContractorF51, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Remark, managerMobNoF1, managerMobNoF1Remark, managerEmailF1, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Remark, managerPanF1, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Remark, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Remark, gstF53, gstF53Remark, pfRegF53, pfRegF53Remark, esicRegF53, esicRegF53Remark, shopsEstF53, shopsEstF53Remark, lwfRegF53, lwfRegF53Remark, profTaxF53, profTaxF53Remark,
-                F1branch: dataF1branch,
-                F1RLicense: dataF1RLicense,
-                F1FL: dataF1FL,
-                F1FP: dataF1FP,
-                F54NSP: dataF54NSP,
-                F54OTP: dataF54OTP,
-                F54WOE: dataF54WOE,
-                F54TL: dataF54TL
-
-            }
-        }
-        // G Starts
-        if (g12ncw && g12ncwdate && g12ncwdatevalid && g12ncwnow && g12ncwcoe && g13form && g13form5date && g13form5dateofcommence && g13form5licenece && g13form5licensedol && g13form5licensedolvalid && g13form5licensedoldor && g13form5licenseworkers && g13form5licensemanresp && g13form5licensefee && g13form5securityfee && g14dcwc && g14dncc && g14dars && g14dls) {
-            company = {
-                g12ncwimage: await uploadImage(request.files.find(img => img.fieldname === "g12ncwimage")),
-                g12ncwcoeimage: await uploadImage(request.files.find(img => img.fieldname === "g12ncwcoeimage")),
-                g13formimage: await uploadImage(request.files.find(img => img.fieldname === "g13formimage")),
-                g13form5liceneceimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5liceneceimage")),
-                g13form5licensefeeimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5licensefeeimage")),
-                g13form5securityfeeimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5securityfeeimage")),
-                g12ncw, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoeremark, g13form, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls, created_at,
-                GCC4TL: dataGCC4TL
-            }
-        }
-        // Save company data to database
-        // const newCompany = new Companys(company);
-        // await newCompany.save();
-        newCompany = await Companydata.findOneAndUpdate({ _id: lastInsertedIdcompany }, company, { new: true })
-        response.status(201).json(newCompany);
-    } catch (error) {
-        next(error);
+    let dataB1, dataB2, dataB3
+    // Process RegistrationB1
+    if (RegistrationB1 !== undefined && RegistrationB1.length > 0) {
+        dataB1 = await Promise.all(RegistrationB1.map(async (item, index) => ({
+            ...item,
+            nameimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][nameimage]`)),
+            dinimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][dinimage]`)),
+            panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][panimage]`)),
+            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB1[${index}][aadhaarimage]`)),
+        })));
     }
+    // Process RegistrationB2
+    if (RegistrationB2 !== undefined && RegistrationB2.length > 0) {
+        dataB2 = await Promise.all(RegistrationB2.map(async (item, index) => ({
+            ...item,
+            image: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][image]`)),
+            designationimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][designationimage]`)),
+            panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][panimage]`)),
+            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB2[${index}][aadhaarimage]`)),
+        })));
+    }
+    // Process RegistrationB3
+    if (RegistrationB3 !== undefined && RegistrationB3.length > 0) {
+        dataB3 = await Promise.all(RegistrationB3.map(async (item, index) => ({
+            ...item,
+            panimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][panimage]`)),
+            aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][aadhaarimage]`)),
+        })));
+    }
+
+    // ***********************-------- C Dynamic Image Handling ----------***********************
+
+    let clientDataC1, clientDataC2, clientDataC3, clientDataC4
+    if (ClientcontactC1 !== undefined && ClientcontactC1.length > 0) {
+        clientDataC1 = await Promise.all(ClientcontactC1.map(async (item, index) => {
+            return {
+                ...item,
+                nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][nameimage]`)),
+                designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC1[${index}][designationimage]`))
+            }
+        }))
+    }
+    if (ClientcontactC2 !== undefined && ClientcontactC2.length > 0) {
+        clientDataC2 = await Promise.all(ClientcontactC2.map(async (item, index) => {
+            return {
+                ...item,
+                nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][nameimage]`)),
+                designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC2[${index}][designationimage]`))
+            }
+        }))
+    }
+    if (ClientcontactC3 !== undefined && ClientcontactC3.length > 0) {
+        clientDataC3 = await Promise.all(ClientcontactC3.map(async (item, index) => {
+            return {
+                ...item,
+                nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][nameimage]`)),
+                designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC3[${index}][designationimage]`))
+            }
+        }))
+    }
+    if (ClientcontactC4 !== undefined && ClientcontactC4.length > 0) {
+        clientDataC4 = await Promise.all(ClientcontactC4.map(async (item, index) => {
+            return {
+                ...item,
+                nameimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][nameimage]`)),
+                designationimage: await uploadImage(request.files.find(img => img.fieldname === `ClientcontactC4[${index}][designationimage]`))
+            }
+        }))
+    }
+
+    // ***********************-------- D Dynamic Image Handling ----------***********************
+
+    let dataPFsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
+    if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
+        dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(async (item, index) => {
+            return {
+                ...item,
+                regimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][regimage]`)),
+                docimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][docimage]`)),
+                offaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1PFsubcodes[${index}][offaddressimage]`))
+            }
+        }))
+    }
+    if (OtherRegsitrationD1ESIsubcodes !== undefined && OtherRegsitrationD1ESIsubcodes.length > 0) {
+        dataESIsubcodes = await Promise.all(OtherRegsitrationD1ESIsubcodes.map(async (item, index) => {
+            return {
+                ...item,
+                esiimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esiimage]`)),
+                esidocimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esidocimage]`)),
+                esioffaddressimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD1ESIsubcodes[${index}][esioffaddressimage]`))
+            }
+        }))
+    }
+    if (OtherRegsitrationD3FL !== undefined && OtherRegsitrationD3FL.length > 0) {
+        dataFL = await Promise.all(OtherRegsitrationD3FL.map(async (item, index) => {
+            return {
+                ...item,
+                managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][managerlicenseimage]`)),
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3FL[${index}][issuingauthimage]`)),
+            }
+        }))
+    }
+    if (OtherRegsitrationD3NSP !== undefined && OtherRegsitrationD3NSP.length > 0) {
+        dataNSP = await Promise.all(OtherRegsitrationD3NSP.map(async (item, index) => {
+            return {
+                ...item,
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3NSP[${index}][issuingauthimage]`)),
+            }
+        }))
+    }
+    if (OtherRegsitrationD3OTP !== undefined && OtherRegsitrationD3OTP.length > 0) {
+        dataOTP = await Promise.all(OtherRegsitrationD3OTP.map(async (item, index) => {
+            return {
+                ...item,
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3OTP[${index}][issuingauthimage]`)),
+            }
+        }))
+    }
+    if (OtherRegsitrationD3WOE !== undefined && OtherRegsitrationD3WOE.length > 0) {
+        dataWOE = await Promise.all(OtherRegsitrationD3WOE.map(async (item, index) => {
+            return {
+                ...item,
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3WOE[${index}][issuingauthimage]`)),
+            }
+        }))
+    }
+    if (OtherRegsitrationD3TD !== undefined && OtherRegsitrationD3TD.length > 0) {
+        dataTD = await Promise.all(OtherRegsitrationD3TD.map(async (item, index) => {
+            return {
+                ...item,
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3TD[${index}][issuingauthimage]`)),
+            }
+        }))
+    }
+    if (OtherRegsitrationD3MSME !== undefined && OtherRegsitrationD3MSME.length > 0) {
+        dataMSME = await Promise.all(OtherRegsitrationD3MSME.map(async (item, index) => {
+            return {
+                ...item,
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3MSME[${index}][issuingauthimage]`)),
+            }
+        }))
+    }
+    if (OtherRegsitrationD3BOCW !== undefined && OtherRegsitrationD3BOCW.length > 0) {
+        dataBOCW = await Promise.all(OtherRegsitrationD3BOCW.map(async (item, index) => {
+            return {
+                ...item,
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3BOCW[${index}][issuingauthimage]`)),
+            }
+        }))
+    }
+    if (OtherRegsitrationD3IMW !== undefined && OtherRegsitrationD3IMW.length > 0) {
+        dataIMW = await Promise.all(OtherRegsitrationD3IMW.map(async (item, index) => {
+            return {
+                ...item,
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `OtherRegsitrationD3IMW[${index}][issuingauthimage]`)),
+            }
+        }))
+    }
+    // ***********************-------- E Dynamic Image Handling ----------***********************
+    let dataTab5E
+    if (Tab5E !== undefined && Tab5E.length > 0) {
+        dataTab5E = await Promise.all(Tab5E.map(async (item, index) => {
+            return {
+                ...item,
+
+            }
+        }))
+    }
+
+    // ***********************-------- F Dynamic Image Handling ----------***********************
+    let dataF1branch, dataF1RLicense, dataF1FL, dataF1FP, dataF54NSP, dataF54OTP, dataF54WOE, dataF54TL
+
+    if (F1branch !== undefined && F1branch.length > 0) {
+        dataF1branch = await Promise.all(F1branch.map(async (item, index) => {
+            return {
+                ...item,
+                image: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][image]`))
+            }
+        }))
+    }
+    if (F1RLicense !== undefined && F1RLicense.length > 0) {
+        dataF1RLicense = await Promise.all(F1RLicense.map(async (item, index) => {
+            return {
+                ...item,
+                managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1RLicense[${index}][managerlicenseimage]`)),
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1RLicense[${index}][issuingauthimage]`))
+            }
+        }))
+    }
+    if (F1FL !== undefined && F1FL.length > 0) {
+        dataF1FL = await Promise.all(F1FL.map(async (item, index) => {
+            return {
+                ...item,
+                managerlicenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1FL[${index}][managerlicenseimage]`)),
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1FL[${index}][issuingauthimage]`))
+            }
+        }))
+    }
+    if (F1FP !== undefined && F1FP.length > 0) {
+        dataF1FP = await Promise.all(F1FP.map(async (item, index) => {
+            return {
+                ...item,
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1FP[${index}][issuingauthimage]`))
+            }
+        }))
+    }
+    if (F54NSP !== undefined && F54NSP.length > 0) {
+        dataF54NSP = await Promise.all(F54NSP.map(async (item, index) => {
+            return {
+                ...item,
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54NSP[${index}][issuingauthimage]`))
+            }
+        }))
+    }
+    if (F54OTP !== undefined && F54OTP.length > 0) {
+        dataF54OTP = await Promise.all(F54OTP.map(async (item, index) => {
+            return {
+                ...item,
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54OTP[${index}][issuingauthimage]`))
+            }
+        }))
+    }
+    if (F54WOE !== undefined && F54WOE.length > 0) {
+        dataF54WOE = await Promise.all(F54WOE.map(async (item, index) => {
+            return {
+                ...item,
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54WOE[${index}][issuingauthimage]`))
+            }
+        }))
+    }
+    if (F54TL !== undefined && F54TL.length > 0) {
+        dataF54TL = await Promise.all(F54TL.map(async (item, index) => {
+            return {
+                ...item,
+                issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54TL[${index}][issuingauthimage]`))
+            }
+        }))
+    }
+    // ***********************-------- G Dynamic Image Handling ----------***********************
+    let dataGCC4TL
+    if (GCC4TL !== undefined && GCC4TL.length > 0) {
+        dataGCC4TL = await Promise.all(GCC4TL.map(async (item, index) => {
+            return {
+                ...item,
+                clientimage: await uploadImage(request.files.find(img => img.fieldname === `GCC4TL[${index}][clientimage]`)),
+                clientaddressimage: await uploadImage(request.files.find(img => img.fieldname === `GCC4TL[${index}][clientaddressimage]`))
+            }
+        }))
+    }
+    if (companyname && companyaddress && companystate && companydistrict && companypin && companytype && companycategory && companynatureofbusiness) {
+        // A Starts
+        company = {
+            companyimage: await uploadImage(request.files.find(img => img.fieldname === "companyimage")),
+            companyaddressimage: await uploadImage(request.files.find(img => img.fieldname === "companyaddressimage")),
+            companytypeimage: await uploadImage(request.files.find(img => img.fieldname === "companytypeimage")),
+            companycategoryimage: await uploadImage(request.files.find(img => img.fieldname === "companycategoryimage")),
+            companynatureofbusinessimage: await uploadImage(request.files.find(img => img.fieldname === "companynatureofbusinessimage")),
+            companyname, companyremark, companyaddress, companystate, companydistrict, companypin, companyaddressremark, companytype, companytyperemark, companycategory, companycategoryremark, companynatureofbusiness, companynatureofbusinessremark,
+        }
+        newCompany = new Companydata(company);
+        await newCompany.save();
+    }
+    // console.log(companyregistration,companycin,companyissuedplace,companyauthority,companyregistrationdate,companypan,companytan,companytin,companygst)
+    const lastInsertedcompany = await Companydata.find({}).sort({ '_id': -1 }).limit(1)
+    const lastInsertedIdcompany = lastInsertedcompany.length > 0 ? lastInsertedcompany[0]._id : null;
+    // console.log(companyregistration ,  companycin , companyissuedplace, companyauthority, companyregistrationdate, companypan, companytan, companytin, companygst);return;
+    if (companyregistration && companycin && companyissuedplace && companyauthority && companyregistrationdate && companypan && companytan && companytin && companygst) {
+        company = {
+            // B Starts
+            companyregistrationimage: await uploadImage(request.files.find(img => img.fieldname === "companyregistrationimage")),
+            companyciniamge: await uploadImage(request.files.find(img => img.fieldname === "companyciniamge")),
+            companyissuedplaceimage: await uploadImage(request.files.find(img => img.fieldname === "companyissuedplaceimage")),
+            companyauthorityimage: await uploadImage(request.files.find(img => img.fieldname === "companyauthorityimage")),
+            companypanimage: await uploadImage(request.files.find(img => img.fieldname === "companypanimage")),
+            companytanimage: await uploadImage(request.files.find(img => img.fieldname === "companytanimage")),
+            companytinimage: await uploadImage(request.files.find(img => img.fieldname === "companytinimage")),
+            companygstimage: await uploadImage(request.files.find(img => img.fieldname === "companygstimage")), companyregistration, companyregistrationremark, companycin, companycinremark, companyissuedplace, companyissuedplaceremark, companyauthority, companyauthorityremark, companyregistrationdate, companypan, companypanremark, companytan, companytanremark, companytin, companytinremark, companygst, companygstremark,
+            RegistrationB1: dataB1,
+            RegistrationB2: dataB2,
+            RegistrationB3: dataB3,
+        }
+    }
+    if (clientDataC1 && clientDataC2 && clientDataC3 && clientDataC4) {
+        company = {
+            // // C Starts
+            ClientcontactC1: clientDataC1,
+            ClientcontactC2: clientDataC2,
+            ClientcontactC3: clientDataC3,
+            ClientcontactC4: clientDataC4,
+        }
+    }
+    if (pfnumber && doc && pfaddress && pfstate && pfdistrict && pfpin && esinumber && esidoc && esiaddress && esistate && esidistrict && esipin && registrationD3 && doregistrationD3 && doeregistrationD3 && doddrregistrationD3 && managernameD3 && noeD3 && noemD3 && noefD3 && issueauthfD3 && fpD3 && doapp && issueauthfpD3 && powerfpD3 && powerhpfpD3 && registrationlwfD3 && doregistrationlwfD3 && registrationptrD3 && doregistrationptrD3) {
+        company = {
+            // // D Starts
+            pfimage: await uploadImage(request.files.find(img => img.fieldname === "pfimage")),
+            pfaddressimage: await uploadImage(request.files.find(img => img.fieldname === "pfaddressimage")),
+            esiimage: await uploadImage(request.files.find(img => img.fieldname === "esiimage")),
+            esiaddressimage: await uploadImage(request.files.find(img => img.fieldname === "esiaddressimage")),
+            registrationD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationD3image")),
+            managernameD3image: await uploadImage(request.files.find(img => img.fieldname === "managernameD3image")),
+            issueauthfD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfD3image")),
+            fpD3image: await uploadImage(request.files.find(img => img.fieldname === "fpD3image")),
+            issueauthfpD3image: await uploadImage(request.files.find(img => img.fieldname === "issueauthfpD3image")),
+            powerfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerfpD3image")),
+            powerhpfpD3image: await uploadImage(request.files.find(img => img.fieldname === "powerhpfpD3image")),
+            registrationlwfD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationlwfD3image")),
+            registrationptrD3image: await uploadImage(request.files.find(img => img.fieldname === "registrationptrD3image")), pfnumber, pfdremark, doc, pfaddress, pfstate, pfdistrict, pfpin, esinumber, esidremark, esidoc, esiaddress, esistate, esidistrict, esipin, esiaddressremark, registrationD3, registrationD3remark, doregistrationD3, doeregistrationD3, doddrregistrationD3, managernameD3, managernameD3remark, noeD3, noemD3, noefD3, issueauthfD3, issueauthfD3remark, fpD3, fpD3remark, doapp, issueauthfpD3, issueauthfpD3remark, powerfpD3, powerfpD3remark, powerhpfpD3, powerhpfpD3remark, registrationlwfD3, registrationlwfD3remark, doregistrationlwfD3, registrationptrD3, registrationptrD3remark, doregistrationptrD3,
+            OtherRegsitrationD1PFsubcodes: dataPFsubcodes,
+            OtherRegsitrationD1ESIsubcodes: dataESIsubcodes,
+            OtherRegsitrationD3NSP: dataNSP,
+            OtherRegsitrationD3OTP: dataOTP,
+            OtherRegsitrationD3WOE: dataWOE,
+            OtherRegsitrationD3TD: dataTD,
+            OtherRegsitrationD3MSME: dataMSME,
+            OtherRegsitrationD3BOCW: dataBOCW,
+            OtherRegsitrationD3IMW: dataIMW,
+            OtherRegsitrationD3FL: dataFL,
+        }
+    }
+    if (Tab5E) {
+        company = {
+            Tab5E: dataTab5E
+        }
+    }
+    // if ((contLabRegNoE && dateOfRegistrationE && noOfContractEmployeesE && noOfContractorsE && regAddContractorE1 && regStateContractorE1 && regDistContractorE1 && regPinContractorE1 && nameOfContractorE1 && nameOfEstablishmentE1 && agreementExpiryDateE2 && agreementRenewalDateE2 && natureOfWorkAgreementE2 && panContractorsE3 && gstContractorsE3 && pfRegContractorsE3 && esicRegContractorsE3 && shopsandEstContractorsE3 && lwfRegContractorsE3 && profTaxContractorsE3 && companyTypeLabourE3) || (noOfEmpDeployedAgreementE2 && contractLabourLicNoE3 && contractLicDateE3 && contractExpiryDateE3 && contractRenewalDueDateE3 && noOfWorkersContractE3)) {
+    //     ///E starts
+    //     company = {
+    //         // isEngagedFile: await uploadImage(request.files.find(img => img.fieldname === "isEngagedFile")),
+    //         contLabRegNoEFile: await uploadImage(request.files.find(img => img.fieldname === "contLabRegNoEFile")),
+    //         dateOfRegEFile: await uploadImage(request.files.find(img => img.fieldname === "dateOfRegEFile")),
+    //         noOfContractEmpEFile: await uploadImage(request.files.find(img => img.fieldname === "noOfContractEmpEFile")),
+    //         noOfContractorsEFile: await uploadImage(request.files.find(img => img.fieldname === "noOfContractorsEFile")),
+    //         nameOfContractorsE1File: await uploadImage(request.files.find(img => img.fieldname === "nameOfContractorsE1File")),
+    //         nameOfEstablishmentE1File: await uploadImage(request.files.find(img => img.fieldname === "nameOfEstablishmentE1File")),
+    //         regAddContractorE1File: await uploadImage(request.files.find(img => img.fieldname === "regAddContractorE1File")),
+    //         agreementExpiryDateE2File: await uploadImage(request.files.find(img => img.fieldname === "agreementExpiryDateE2File")),
+    //         agreementRenewalDateE2DetFile: await uploadImage(request.files.find(img => img.fieldname === "agreementRenewalDateE2DetFile")),
+    //         natureOfWorkAgreementE2File: await uploadImage(request.files.find(img => img.fieldname === "natureOfWorkAgreementE2File")),
+    //         noOfEmpDeployedAgreementE2File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmpDeployedAgreementE2File")),
+    //         companyTypeLabourE3File: await uploadImage(request.files.find(img => img.fieldname === "companyTypeLabourE3File")),
+    //         contractLabourLicNoE3File: await uploadImage(request.files.find(img => img.fieldname === "contractLabourLicNoE3File")),
+    //         contractLicDateE3File: await uploadImage(request.files.find(img => img.fieldname === "contractLicDateE3File")),
+    //         contractExpiryDateE3File: await uploadImage(request.files.find(img => img.fieldname === "contractExpiryDateE3File")),
+    //         contractRenewalDueDateE3File: await uploadImage(request.files.find(img => img.fieldname === "contractRenewalDueDateE3File")),
+    //         noOfWorkersContractE3File: await uploadImage(request.files.find(img => img.fieldname === "noOfWorkersContractE3File")),
+    //         panContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "panContractorsE3File")),
+    //         gstContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "gstContractorsE3File")),
+    //         pfRegContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "pfRegContractorsE3File")),
+    //         esicRegContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "esicRegContractorsE3File")),
+    //         shopsandEstContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "shopsandEstContractorsE3File")),
+    //         lwfRegContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "lwfRegContractorsE3File")),
+    //         profTaxContractorsE3File: await uploadImage(request.files.find(img => img.fieldname === "profTaxContractorsE3File")),
+    //         contLabRegNoE, contLabRegNoERemark, dateOfRegistrationE, dateOfRegERemark, noOfContractEmployeesE, noOfContractEmpERemark, noOfContractorsE, noOfContractorsERemark, nameOfContractorE1, nameOfContractorsE1Remark, nameOfEstablishmentE1, nameOfEstablishmentE1Remark, regAddContractorE1, regStateContractorE1, regDistContractorE1, regPinContractorE1, regAddContractorE1Remark, agreementExpiryDateE2, agreementExpiryDateE2Remark, agreementRenewalDateE2, agreementRenewalDateE2Remark, natureOfWorkAgreementE2, natureOfWorkAgreementE2Remark, noOfEmpDeployedAgreementE2, noOfEmpDeployedAgreementE2Remark, companyTypeLabourE3, companyTypeLabourE3Remark, contractLabourLicNoE3, contractLabourLicNoE3Remark, contractLicDateE3, contractLicDateE3Remark, contractExpiryDateE3, contractExpiryDateE3Remark, contractRenewalDueDateE3, contractRenewalDueDateE3Remark, noOfWorkersContractE3, noOfWorkersContractE3Remark, panContractorsE3, panContractorsE3Remark, gstContractorsE3, gstContractorsE3Remark, pfRegContractorsE3, pfRegContractorsE3Remark, esicRegContractorsE3, esicRegContractorsE3Remark, shopsandEstContractorsE3, shopsandEstContractorsE3Remark, lwfRegContractorsE3, lwfRegContractorsE3Remark, profTaxContractorsE3, profTaxContractorsE3Remark,
+
+    //     }
+    // }
+    // /* F Starts */
+    if (contractorAddBranchF && contractorStateBranchF && contractorDistBranchF && contractorPinBranchF && branchOpeningDateF && noOfEmpBranchF && managerNameF1 && managerMobNoF1 && managerEmailF1 && managerAadharNoF1 && managerPanF1 && shopsEstLicenseF2 && regDateContractorF5 && noOfContractorsF5 && contractorNameF51 && establishmentNameF51 && regAddContractorF51 && regStateContractorF51 && regDistContractorF51 && regPinContractorF51 && expiryDateF52 && renewalDateF52 && natureOfWorkF52 && noOfEmpDeployedF52 && companyTypeF53 && contractLabLicNoF53 && licenseDateF53 && expiryDateF53 && renewalDateF53 && noOfWorkerF53 && panF53 && gstF53 && pfRegF53 && esicRegF53 && shopsEstF53 && lwfRegF53 && profTaxF53) {
+
+        company = {
+            managerNameF1File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF1File")),
+            managerMobNoF1File: await uploadImage(request.files.find(img => img.fieldname === "managerMobNoF1File")),
+            managerEmailF1File: await uploadImage(request.files.find(img => img.fieldname === "managerEmailF1File")),
+            managerAadharNoF1File: await uploadImage(request.files.find(img => img.fieldname === "managerAadharNoF1File")),
+            managerPanF1File: await uploadImage(request.files.find(img => img.fieldname === "managerPanF1File")),
+            shopsEstLicenseF2File: await uploadImage(request.files.find(img => img.fieldname === "shopsEstLicenseF2File")),
+            numberF2File: await uploadImage(request.files.find(img => img.fieldname === "numberF2File")),
+            regDateF2File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF2File")),
+            expiryDateF2File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF2File")),
+            renewalDateF2File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF2File")),
+            managerNameF2File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF2File")),
+            noOfEmployeesF2File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmployeesF2File")),
+            maleF2File: await uploadImage(request.files.find(img => img.fieldname === "maleF2File")),
+            issuingAuthorityF2File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF2File")),
+            numberF3File: await uploadImage(request.files.find(img => img.fieldname === "numberF3File")),
+            regDateF3File: await uploadImage(request.files.find(img => img.fieldname === "regDateF3File")),
+            expiryDateF3File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF3File")),
+            renewalDateF3File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF3File")),
+            managerNameF3File: await uploadImage(request.files.find(img => img.fieldname === "managerNameF3File")),
+            noOfEmployeesF3File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmployeesF3File")),
+            maleF3File: await uploadImage(request.files.find(img => img.fieldname === "maleF3File")),
+            issuingAuthorityF3File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF3File")),
+            numberF4File: await uploadImage(request.files.find(img => img.fieldname === "numberF4File")),
+            regDateF4File: await uploadImage(request.files.find(img => img.fieldname === "regDateF4File")),
+            issuingAuthorityF4File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF4File")),
+            numberF5File: await uploadImage(request.files.find(img => img.fieldname === "numberF5File")),
+            regDateF5File: await uploadImage(request.files.find(img => img.fieldname === "regDateF5File")),
+            issuingAuthorityF5File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthorityF5File")),
+            contractLabRegNoF5File: await uploadImage(request.files.find(img => img.fieldname === "contractLabRegNoF5File")),
+            regDateContractorF5File: await uploadImage(request.files.find(img => img.fieldname === "regDateContractorF5File")),
+            noOfContractEmpF5File: await uploadImage(request.files.find(img => img.fieldname === "noOfContractEmpF5File")),
+            noOfContractorsF5File: await uploadImage(request.files.find(img => img.fieldname === "noOfContractorsF5File")),
+            contractorNameF51File: await uploadImage(request.files.find(img => img.fieldname === "contractorNameF51File")),
+            establishmentNameF51File: await uploadImage(request.files.find(img => img.fieldname === "establishmentNameF51File")),
+            regAddContractorF51File: await uploadImage(request.files.find(img => img.fieldname === "regAddContractorF51File")),
+            expiryDateF52File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF52File")),
+            renewalDateF52File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF52File")),
+            natureOfWorkF52File: await uploadImage(request.files.find(img => img.fieldname === "natureOfWorkF52File")),
+            noOfEmpDeployedF52File: await uploadImage(request.files.find(img => img.fieldname === "noOfEmpDeployedF52File")),
+            companyTypeF53File: await uploadImage(request.files.find(img => img.fieldname === "companyTypeF53File")),
+            contractLabLicNoF53File: await uploadImage(request.files.find(img => img.fieldname === "contractLabLicNoF53File")),
+            licenseDateF53File: await uploadImage(request.files.find(img => img.fieldname === "licenseDateF53File")),
+            expiryDateF53File: await uploadImage(request.files.find(img => img.fieldname === "expiryDateF53File")),
+            renewalDateF53File: await uploadImage(request.files.find(img => img.fieldname === "renewalDateF53File")),
+            noOfWorkerF53File: await uploadImage(request.files.find(img => img.fieldname === "noOfWorkerF53File")),
+            panF53File: await uploadImage(request.files.find(img => img.fieldname === "gstF53File")),
+            gstF53File: await uploadImage(request.files.find(img => img.fieldname === "gstF53File")),
+            pfRegF53File: await uploadImage(request.files.find(img => img.fieldname === "pfRegF53File")),
+            esicRegF53File: await uploadImage(request.files.find(img => img.fieldname === "esicRegF53File")),
+            shopsEstF53File: await uploadImage(request.files.find(img => img.fieldname === "shopsEstF53File")),
+            lwfRegF53File: await uploadImage(request.files.find(img => img.fieldname === "lwfRegF53File")),
+            profTaxF53File: await uploadImage(request.files.find(img => img.fieldname === "profTaxF53File")),
+            number54File: await uploadImage(request.files.find(img => img.fieldname === "number54File")),
+            regDate54File: await uploadImage(request.files.find(img => img.fieldname === "regDate54File")),
+            expiryDate54File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate54File")),
+            renewalDate54File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate54File")),
+            issuingAuthority54File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthority54File")),
+            number55File: await uploadImage(request.files.find(img => img.fieldname === "number55File")),
+            regDate55File: await uploadImage(request.files.find(img => img.fieldname === "regDate55File")),
+            expiryDate55File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate55File")),
+            renewalDate55File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate55File")),
+            issuingAuthoritye55File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthoritye55File")),
+            number56File: await uploadImage(request.files.find(img => img.fieldname === "number56File")),
+            regDate56File: await uploadImage(request.files.find(img => img.fieldname === "regDate56File")),
+            expiryDate56File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate56File")),
+            renewalDate56File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate56File")),
+            issuingAuthority56File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthority56File")),
+            number57File: await uploadImage(request.files.find(img => img.fieldname === "number57File")),
+            regDate57File: await uploadImage(request.files.find(img => img.fieldname === "regDate57File")),
+            expiryDate57File: await uploadImage(request.files.find(img => img.fieldname === "expiryDate57File")),
+            renewalDate57File: await uploadImage(request.files.find(img => img.fieldname === "renewalDate57File")),
+            issuingAuthority57File: await uploadImage(request.files.find(img => img.fieldname === "issuingAuthority57File")), regAddContractorF51, regStateContractorF51, regDistContractorF51, regPinContractorF51, contractorAddBranchFRemark, branchOpeningDateF, noOfEmpBranchF, managerNameF1, managerNameF1Remark, managerMobNoF1, managerMobNoF1Remark, managerEmailF1, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Remark, managerPanF1, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Remark, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Remark, gstF53, gstF53Remark, pfRegF53, pfRegF53Remark, esicRegF53, esicRegF53Remark, shopsEstF53, shopsEstF53Remark, lwfRegF53, lwfRegF53Remark, profTaxF53, profTaxF53Remark,
+            F1branch: dataF1branch,
+            F1RLicense: dataF1RLicense,
+            F1FL: dataF1FL,
+            F1FP: dataF1FP,
+            F54NSP: dataF54NSP,
+            F54OTP: dataF54OTP,
+            F54WOE: dataF54WOE,
+            F54TL: dataF54TL
+
+        }
+    }
+    // G Starts
+    if (g12ncw && g12ncwdate && g12ncwdatevalid && g12ncwnow && g12ncwcoe && g13form && g13form5date && g13form5dateofcommence && g13form5licenece && g13form5licensedol && g13form5licensedolvalid && g13form5licensedoldor && g13form5licenseworkers && g13form5licensemanresp && g13form5licensefee && g13form5securityfee && g14dcwc && g14dncc && g14dars && g14dls) {
+        company = {
+            g12ncwimage: await uploadImage(request.files.find(img => img.fieldname === "g12ncwimage")),
+            g12ncwcoeimage: await uploadImage(request.files.find(img => img.fieldname === "g12ncwcoeimage")),
+            g13formimage: await uploadImage(request.files.find(img => img.fieldname === "g13formimage")),
+            g13form5liceneceimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5liceneceimage")),
+            g13form5licensefeeimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5licensefeeimage")),
+            g13form5securityfeeimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5securityfeeimage")),
+            g12ncw, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoeremark, g13form, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls, created_at,
+            GCC4TL: dataGCC4TL
+        }
+    }
+    // Save company data to database
+    // const newCompany = new Companys(company);
+    // await newCompany.save();
+    newCompany = await Companydata.findOneAndUpdate({ _id: lastInsertedIdcompany }, company, { new: true })
+    response.status(201).json(newCompany);
+} catch (error) {
+    next(error);
+}
 }
 export const gettingCompany = async (request, response, next) => {
     try {
@@ -6237,7 +6279,7 @@ export const updateCompanyById = async (request, response, next) => {
             }
             return imageUrl;
         };
-        
+
         // ***********************-------- B Dynamic Image Handling ----------***********************
 
         let dataB1, dataB2, dataB3
@@ -6269,7 +6311,7 @@ export const updateCompanyById = async (request, response, next) => {
                 aadhaarimage: await uploadImage(request.files.find(img => img.fieldname === `RegistrationB3[${index}][aadhaarimage]`)),
             })));
         }
-        
+
         // ***********************-------- C Dynamic Image Handling ----------***********************
 
         let clientDataC1, clientDataC2, clientDataC3, clientDataC4
@@ -6311,7 +6353,7 @@ export const updateCompanyById = async (request, response, next) => {
         }
 
         // ***********************-------- D Dynamic Image Handling ----------***********************
-        
+
         let dataPFsubcodes, dataESIsubcodes, dataFL, dataNSP, dataOTP, dataWOE, dataTD, dataMSME, dataIMW, dataBOCW
         if (OtherRegsitrationD1PFsubcodes !== undefined && OtherRegsitrationD1PFsubcodes.length > 0) {
             dataPFsubcodes = await Promise.all(OtherRegsitrationD1PFsubcodes.map(async (item, index) => {
@@ -6400,7 +6442,7 @@ export const updateCompanyById = async (request, response, next) => {
         }
         // ***********************-------- F Dynamic Image Handling ----------***********************
         let dataF1branch, dataF1RLicense, dataF1FL, dataF1FP, dataF54NSP, dataF54OTP, dataF54WOE, dataF54TL
-        
+
         if (F1branch !== undefined && F1branch.length > 0) {
             dataF1branch = await Promise.all(F1branch.map(async (item, index) => {
                 return {
@@ -6478,10 +6520,10 @@ export const updateCompanyById = async (request, response, next) => {
                 }
             }))
         }
-        
+
         // **************----------- SAVING STATIC DATA ------------*****************
-        const checkCompanyName = await Companydata.findOne({id : companyId})
-        if(checkCompanyName.companyname === companyname){
+        const checkCompanyName = await Companydata.findOne({ id: companyId })
+        if (checkCompanyName.companyname === companyname) {
             response.status(409).json("Company name already exists or you cannot update")
         }
 
@@ -6506,10 +6548,10 @@ export const updateCompanyById = async (request, response, next) => {
         // newCompany = new Companydata(company);
         // await newCompany.save();
         // console.log(companyregistration,companycin,companyissuedplace,companyauthority,companyregistrationdate,companypan,companytan,companytin,companygst)
-        
+
         // const lastInsertedcompany = await Companydata.find({}).sort({ '_id': -1 }).limit(1)
         // const lastInsertedIdcompany = lastInsertedcompany.length > 0 ? lastInsertedcompany[0]._id : null;
-        
+
         // console.log(companyregistration ,  companycin , companyissuedplace, companyauthority, companyregistrationdate, companypan, companytan, companytin, companygst);return;
         if (companyregistration && companycin && companyissuedplace && companyauthority && companyregistrationdate && companypan && companytan && companytin && companygst || request.files.fieldname === "companyregistrationimage" || request.files.fieldname === "companyciniamge" || request.files.fieldname === "companyissuedplaceimage" || request.files.fieldname === "companyauthorityimage" || request.files.fieldname === "companypanimage" || request.files.fieldname === "companytanimage" || request.files.fieldname === "companytinimage" || request.files.fieldname === "companygstimage" || RegistrationB1 || RegistrationB2 || RegistrationB3) {
             company = {

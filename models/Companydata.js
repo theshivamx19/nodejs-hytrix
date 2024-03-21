@@ -589,549 +589,555 @@ const companySchema = new mongoose.Schema({
     },
     /***D ends */
     /***E starts */
-    isEngaged: {
-        type: Boolean,
-        default: false,
-        trim: true,
-        default: null,
-        index: true
-    },
-    isEngagedFile: {
-        type: Object,
-        default: null
-    },
-    isEngagedRemark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    contLabRegNoE: {
-        type: String,
 
-        trim: true,
+    Tab5E: {
+        type: Array,
         default: null,
-        index: true
     },
-    contLabRegNoEFile: {
-        type: Object,
-        default: null
-    },
-    contLabRegNoERemark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    dateOfRegistrationE: {
-        type: Date,
+    
+    // isEngaged: {
+    //     type: Boolean,
+    //     default: false,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // isEngagedFile: {
+    //     type: Object,
+    //     default: null
+    // },
+    // isEngagedRemark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // contLabRegNoE: {
+    //     type: String,
 
-        trim: true,
-        default: null,
-        index: true
-    },
-    dateOfRegEFile: {
-        type: Object,
-        default: null
-    },
-    dateOfRegERemark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    noOfContractEmployeesE: {
-        type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // contLabRegNoEFile: {
+    //     type: Object,
+    //     default: null
+    // },
+    // contLabRegNoERemark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // dateOfRegistrationE: {
+    //     type: Date,
 
-        trim: true,
-        default: null,
-        index: true
-    },
-    noOfContractEmpEFile: {
-        type: Object,
-        default: null
-    },
-    noOfContractEmpERemark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    noOfContractorsE: {
-        type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // dateOfRegEFile: {
+    //     type: Object,
+    //     default: null
+    // },
+    // dateOfRegERemark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // noOfContractEmployeesE: {
+    //     type: String,
 
-        trim: true,
-        default: null,
-        index: true
-    },
-    noOfContractorsEFile: {
-        type: Object,
-        default: null
-    },
-    noOfContractorsERemark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // -------------- E.1. Details of the Labor Contractotrs---------------------
-    nameOfContractorE1: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
-    },
-    nameOfContractorsE1File: {
-        type: Object,
-        default: null
-    },
-    nameOfContractorsE1Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    nameOfEstablishmentE1: {
-        type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // noOfContractEmpEFile: {
+    //     type: Object,
+    //     default: null
+    // },
+    // noOfContractEmpERemark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // noOfContractorsE: {
+    //     type: String,
 
-        trim: true,
-        default: null,
-        index: true
-    },
-    nameOfEstablishmentE1File: {
-        type: Object,
-        default: null
-    },
-    nameOfEstablishmentE1Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    regAddContractorE1: {
-        type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // noOfContractorsEFile: {
+    //     type: Object,
+    //     default: null
+    // },
+    // noOfContractorsERemark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // -------------- E.1. Details of the Labor Contractotrs---------------------
+    // nameOfContractorE1: {
+    //     type: String,
+    //     // required: true,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // nameOfContractorsE1File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // nameOfContractorsE1Remark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // nameOfEstablishmentE1: {
+    //     type: String,
 
-        trim: true,
-        default: null,
-        index: true
-    },
-    regStateContractorE1: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "State"
-    },
-    regDistContractorE1: {
-        type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // nameOfEstablishmentE1File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // nameOfEstablishmentE1Remark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // regAddContractorE1: {
+    //     type: String,
 
-        trim: true,
-        default: null,
-        index: true
-    },
-    regPinContractorE1: {
-        type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // regStateContractorE1: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "State"
+    // },
+    // regDistContractorE1: {
+    //     type: String,
 
-        trim: true,
-        default: null,
-        index: true
-    },
-    regAddContractorE1File: {
-        type: Object,
-        default: null
-    },
-    regAddContractorE1Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // ----------------- E.2. Agreement Date -----------------------
-    agreementExpiryDateE2: {
-        type: Date,
-        // required: true,
-        default: null,
-        index: true
-    },
-    // agreementExpiryDateE2Det: {
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // regPinContractorE1: {
+    //     type: String,
+
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // regAddContractorE1File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // regAddContractorE1Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    agreementExpiryDateE2File: {
-        type: Object,
-        default: null
-    },
-    agreementExpiryDateE2Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    agreementRenewalDateE2: {
-        type: Date,
-        // required: true,
-        index: true,
-        default: null,
-    },
-    // agreementRenewalDateE2Det: {
+    // // ----------------- E.2. Agreement Date -----------------------
+    // agreementExpiryDateE2: {
+    //     type: Date,
+    //     // required: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // agreementExpiryDateE2Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // agreementExpiryDateE2File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // agreementExpiryDateE2Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    agreementRenewalDateE2DetFile: {
-        type: Object,
-        default: null
-    },
-    agreementRenewalDateE2Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    natureOfWorkAgreementE2: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // natureOfWorkAgreementE2Det: {
+    // agreementRenewalDateE2: {
+    //     type: Date,
+    //     // required: true,
+    //     index: true,
+    //     default: null,
+    // },
+    // // agreementRenewalDateE2Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // agreementRenewalDateE2DetFile: {
+    //     type: Object,
+    //     default: null
+    // },
+    // agreementRenewalDateE2Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    natureOfWorkAgreementE2File: {
-        type: Object,
-        default: null
-    },
-    natureOfWorkAgreementE2Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    noOfEmpDeployedAgreementE2: {
-        type: String,
-        // required: true,
-        default: null,
-        trim: true,
-        index: true
-    },
-    // noOfEmpDeployedAgreementE2Det: {
+    // natureOfWorkAgreementE2: {
+    //     type: String,
+    //     // required: true,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // natureOfWorkAgreementE2Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // natureOfWorkAgreementE2File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // natureOfWorkAgreementE2Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    noOfEmpDeployedAgreementE2File: {
-        type: Object,
-        default: null
-    },
-    noOfEmpDeployedAgreementE2Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // -------------------------- E.3. Contractors Registration Details -------------------------
-    companyTypeLabourE3: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // companyTypeLabourE3Det: {
+    // noOfEmpDeployedAgreementE2: {
+    //     type: String,
+    //     // required: true,
+    //     default: null,
+    //     trim: true,
+    //     index: true
+    // },
+    // // noOfEmpDeployedAgreementE2Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // noOfEmpDeployedAgreementE2File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // noOfEmpDeployedAgreementE2Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    companyTypeLabourE3File: {
-        type: Object,
-        default: null
-    },
-    companyTypeLabourE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    contractLabourLicNoE3: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // contractLabourLicNoE3Det: {
+    // // -------------------------- E.3. Contractors Registration Details -------------------------
+    // companyTypeLabourE3: {
+    //     type: String,
+    //     // required: true,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // companyTypeLabourE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // companyTypeLabourE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // companyTypeLabourE3Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    contractLabourLicNoE3File: {
-        type: Object,
-        default: null
-    },
-    contractLabourLicNoE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    contractLicDateE3: {
-        type: Date,
-        // required: true,
-        default: null,
-        index: true
-    },
-    // contractLicDateE3Det: {
+    // contractLabourLicNoE3: {
+    //     type: String,
+    //     // required: true,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // contractLabourLicNoE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // contractLabourLicNoE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // contractLabourLicNoE3Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    contractLicDateE3File: {
-        type: Object,
-        default: null
-    },
-    contractLicDateE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    contractExpiryDateE3: {
-        type: Date,
-        // required: true,
-        default: null,
-        index: true
-    },
-    // contractExpiryDateE3Det: {
+    // contractLicDateE3: {
+    //     type: Date,
+    //     // required: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // contractLicDateE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // contractLicDateE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // contractLicDateE3Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    contractExpiryDateE3File: {
-        type: Object,
-        default: null
-    },
-    contractExpiryDateE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    contractRenewalDueDateE3: {
-        type: Date,
-        // required: true,
-        default: null,
-        index: true
-    },
-    // contractRenewalDueDateE3Det: {
+    // contractExpiryDateE3: {
+    //     type: Date,
+    //     // required: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // contractExpiryDateE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // contractExpiryDateE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // contractExpiryDateE3Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    contractRenewalDueDateE3File: {
-        type: Object,
-        default: null
-    },
-    contractRenewalDueDateE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    noOfWorkersContractE3: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // noOfWorkersContractE3Det: {
+    // contractRenewalDueDateE3: {
+    //     type: Date,
+    //     // required: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // contractRenewalDueDateE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // contractRenewalDueDateE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // contractRenewalDueDateE3Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    noOfWorkersContractE3File: {
-        type: Object,
-        default: null
-    },
-    noOfWorkersContractE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    panContractorsE3: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // panContractorsE3Det: {
+    // noOfWorkersContractE3: {
+    //     type: String,
+    //     // required: true,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // noOfWorkersContractE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // noOfWorkersContractE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // noOfWorkersContractE3Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    panContractorsE3File: {
-        type: Object,
-        default: null
-    },
-    panContractorsE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    gstContractorsE3: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // gstContractorsE3Det: {
+    // panContractorsE3: {
+    //     type: String,
+    //     // required: true,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // panContractorsE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // panContractorsE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // panContractorsE3Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    gstContractorsE3File: {
-        type: Object,
-        default: null
-    },
-    gstContractorsE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    pfRegContractorsE3: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // pfRegContractorsE3Det: {
+    // gstContractorsE3: {
+    //     type: String,
+    //     // required: true,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // gstContractorsE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // gstContractorsE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // gstContractorsE3Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    pfRegContractorsE3File: {
-        type: Object,
-        default: null
-    },
-    pfRegContractorsE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    esicRegContractorsE3: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // esicRegContractorsE3Det: {
+    // pfRegContractorsE3: {
+    //     type: String,
+    //     // required: true,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // pfRegContractorsE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // pfRegContractorsE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // pfRegContractorsE3Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    esicRegContractorsE3File: {
-        type: Object,
-        default: null
-    },
-    esicRegContractorsE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    shopsandEstContractorsE3: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // shopsandEstContractorsE3Det: {
+    // esicRegContractorsE3: {
+    //     type: String,
+    //     // required: true,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // esicRegContractorsE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // esicRegContractorsE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // esicRegContractorsE3Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    shopsandEstContractorsE3File: {
-        type: Object,
-        default: null
-    },
-    shopsandEstContractorsE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    lwfRegContractorsE3: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // lwfRegContractorsE3Det: {
+    // shopsandEstContractorsE3: {
+    //     type: String,
+    //     // required: true,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // shopsandEstContractorsE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // shopsandEstContractorsE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // shopsandEstContractorsE3Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    lwfRegContractorsE3File: {
-        type: Object,
-        default: null
-    },
-    lwfRegContractorsE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
-    profTaxContractorsE3: {
-        type: String,
-        // required: true,
-        trim: true,
-        default: null,
-        index: true
-    },
-    // profTaxContractorsE3Det: {
+    // lwfRegContractorsE3: {
+    //     type: String,
+    //     // required: true,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // lwfRegContractorsE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // lwfRegContractorsE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // lwfRegContractorsE3Remark: {
     //     type: String,
     //     trim: true,
     //     default: null,
     //     index: true
     // },
-    profTaxContractorsE3File: {
-        type: Object,
-        default: null
-    },
-    profTaxContractorsE3Remark: {
-        type: String,
-        trim: true,
-        default: null,
-        index: true
-    },
+    // profTaxContractorsE3: {
+    //     type: String,
+    //     // required: true,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
+    // // profTaxContractorsE3Det: {
+    // //     type: String,
+    // //     trim: true,
+    // //     default: null,
+    // //     index: true
+    // // },
+    // profTaxContractorsE3File: {
+    //     type: Object,
+    //     default: null
+    // },
+    // profTaxContractorsE3Remark: {
+    //     type: String,
+    //     trim: true,
+    //     default: null,
+    //     index: true
+    // },
     /***E ends */
     /***F starts */
 
