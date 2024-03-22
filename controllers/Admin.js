@@ -7000,3 +7000,88 @@ export const companyProfileUpdateById = async (request, response, next) => {
         next(error)
     }
 }
+
+export const companyProfileFilter = async (request, response, next) => {
+    try {
+        const data = request.body
+        const { company, state, branch, executive, date } = data
+        const matchStage = {}
+        if (company !== undefined && company !== "" && state !== undefined && state !== "" && branch !== undefined && branch !== "" && executive !== undefined && executive !== "" && date !== undefined && date !== "") {
+            matchStage['company'] = new mongoose.Types.ObjectId(company.toString())
+            matchStage['branch'] = new mongoose.Types.ObjectId(branch.toString())
+            matchStage['state'] = new mongoose.Types.ObjectId(state.toString())
+            matchStage['executive'] = new mongoose.Types.ObjectId(executive.toString())
+            const dateObject = new Date(date);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage['created_at'] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+        if(company !== undefined && company !== "" && state !== undefined && state !== "" && branch !== undefined && branch !== "" ){
+            matchStage['company'] = new mongoose.Types.ObjectId(company.toString())
+        }
+
+        const dataFilter = function(){
+            
+        }
+
+
+
+        const filter = await Companydata.aggregate([
+            {
+                $match: matchStage
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "company",
+                    foreignField: "_id",
+                    as: "companyData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "branches",
+                    localField: "branch",
+                    foreignField: "_id",
+                    as: "branchData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "state",
+                    foreignField: "_id",
+                    as: "stateData"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "executive",
+                    foreignField: "_id",
+                    as: "executiveData"
+                }
+            },
+            {
+                $project: {
+                    company: { $arrayElemAt: ["$companyData.name", 0] },
+                    branch: { $arrayElemAt: ["$branchData.name", 0] },
+                    state: { $arrayElemAt: ["$stateData.name", 0] },
+                    executive: {
+                        $concat: [
+                            { $arrayElemAt: ["$executiveData.firstName", 0] },
+                            " ",
+                            { $arrayElemAt: ["$executiveData.lastName", 0] }
+                        ]
+                    }
+                }
+            }
+        ])
+        response.status(200).json(filter)
+    } catch (error) {
+        next(error)
+    }
+}
