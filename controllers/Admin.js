@@ -5416,8 +5416,6 @@ export const createCompany = async (request, response, next) => {
                     ...item,
                     licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F54NSP[${index}][licenseimage]`)),
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54NSP[${index}][issuingauthimage]`)),
-                    licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F54NSP[${index}][licenseimage]`)),
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54NSP[${index}][issuingauthimage]`)),
                 }
             }))
             dataF54WOE = await Promise.all(F54WOE.map(async (item, index) => {
@@ -5436,7 +5434,9 @@ export const createCompany = async (request, response, next) => {
             }))
             dataF54OTP = await Promise.all(F54OTP.map(async (item, index) => {
                 return {
-                    ...item
+                    ...item,
+                    licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F54OTP[${index}][licenseimage]`)),
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54OTP[${index}][issuingauthimage]`)),
                 }
             }))
         }
@@ -5467,7 +5467,6 @@ export const createCompany = async (request, response, next) => {
         // else {
         //     return res.send("409")
         // }
-
 
         // ***********************-------- G Dynamic Image Handling ----------***********************
         let dataGCC4TL
