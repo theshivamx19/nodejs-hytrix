@@ -150,7 +150,7 @@ const uri = "https://api.github.com/users/theshivamx19"
 //     // Convert start_date and end_date to Date objects
 //     const startDate = new Date(start_date);
 //     const endDate = new Date(end_date);
-    
+
 //     // Get the current date
 //     const currentDate = new Date();
 
@@ -174,11 +174,87 @@ const uri = "https://api.github.com/users/theshivamx19"
 // const overdueDays = calculateOverdueDays(start_date, end_date);
 // console.log("Overdue Days:", overdueDays-1);
 
+// const data = [
+//     {
+//         company: "Maurya Industries",
+//         state: "Uttar Pradesh",
+//         city: "Lucknow",
+//         status: "Verfied"
+//     },
+// const data = {
+//     company: "Shivam Industries",
+//     state: "Karnataka",
+//     city: "Bangalore",
+//     status: "Pending"
+// }
+// // ]
+
+// for (let item of data) {
+//     console.log(item);
+// }
 
 
+//     // const result = data.find(item => item.company === "Maurya Industries")
+//     // if(!result){
+//     //     console.log(false);
+//     // }
+//     // else {
+//     //     console.log(true);
+//     // }
 
-const dob = new Date()
-const nowDate = Date.now()
+//     function checkcompany(companyname){
+//         if(companyname){
+//            const result = data.find(item=>item.company === companyname)
+//            if(result){
+//             return result
+//            }
+//            else {
+//             return false
+//            }
+//         }
+//     }
 
-console.log(dob);
-console.log(nowDate.toLocaleString());
+// console.log(checkcompany('Shivam Industries'));
+
+const dataObj = {company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk}
+
+let data = dataObj
+const { company, state, branch, executive, auditor, start_date, end_date, overdue, auditstatus, risk } = data;
+let auditDataFilter
+
+// Define filters
+const filters = {
+    company: company,
+    state: state,
+    branch: branch,
+    executive: executive,
+    auditor: auditor,
+    start_date: start_date,
+    end_date: end_date,
+    auditstatus: auditstatus,
+    risk: risk
+};
+const filterKeys = Object.keys(filters).filter(key => filters[key] !== undefined && filters[key] !== "");
+
+// Build match stage based on filters
+if (filterKeys.length > 0) {
+    for (const key of filterKeys) {
+        if (key === "company" || key === "state" || key === "branch" || key === "executive" || key === "auditor") {
+            matchStage[key] = new mongoose.Types.ObjectId(filters[key]);
+        } else if (key === "auditstatus" || key === "risk") {
+            matchStage[key] = filters[key];
+        }
+        // else if(key === "overdue"){
+
+        // }
+        else if (key === "start_date" || key === "end_date") {
+            const dateObject = new Date(filters[key]);
+            const nextDay = new Date(dateObject);
+            nextDay.setDate(dateObject.getDate() + 1);
+            matchStage[key] = {
+                $gte: dateObject,
+                $lt: nextDay
+            };
+        }
+    }
+}
