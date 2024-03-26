@@ -4990,135 +4990,135 @@ export const createCompany = async (request, response, next) => {
 
             // contractorAddBranchF, contractorStateBranchF, contractorDistBranchF, contractorPinBranchF, branchOpeningDateF, contractorAddBranchFRemark, noOfEmpBranchF, managerNameF1, managerNameF1Remark, managerMobNoF1, managerMobNoF1Remark, managerEmailF1, managerEmailF1Remark, managerAadharNoF1, managerAadharNoF1Remark, managerPanF1, managerPanF1Remark, shopsEstLicenseF2, shopsEstLicenseF2Remark, contractLabRegNoF5, contractLabRegNoF5Remark, regDateContractorF5, coOfContractEmpF5, noOfContractorsF5, contractorNameF51, contractorNameF51Remark, establishmentNameF51, establishmentNameF51Remark, regAddContractorF51, regStateContractorF51, regDistContractorF51, regPinContractorF51, regAddContractorF51Remark, expiryDateF52, renewalDateF52, natureOfWorkF52, natureOfWorkF52Remark, noOfEmpDeployedF52, companyTypeF53, companyTypeF53Remark, contractLabLicNoF53, contractLabLicNoF53Remark, licenseDateF53, expiryDateF53, renewalDateF53, noOfWorkerF53, panF53, panF53Remark, gstF53, gstF53Remark, pfRegF53, pfRegF53Remark, esicRegF53, esicRegF53Remark, shopsEstF53, shopsEstF53Remark, lwfRegF53, lwfRegF53Remark, profTaxF53, profTaxF53Remark, F1branch, F1RLicense, F1FL, F1FP, F54NSP, F54OTP, F54WOE, F54TL,
 
-// F1branch[0][id]: 1711437540093
-// F1branch[0][name]: isVisible
-// F1branch[0][details]: 
-// F1branch[0][remarks]: isVisible
-// F1branch[0][branchaddress]: Krishna Mandir
-// F1branch[0][branchstate]: 65ad3a1d01dca0d198df2638
-// F1branch[0][branchdistrict]: Mumbai
-// F1branch[0][branchpin]: 2323
-// F1branch[0][contractorAddBranchFRemark]: isVisible
-// F1branch[0][branchOpeningDateF]: 2024-03-26
-// F1branch[0][noOfEmpBranchF]: 1
-// F1branch[0][managerNameF1]: isVisible
-// F1branch[0][managerNameF1Remark]: isVisible
-// F1branch[0][managerMobNoF1]: 07784942637
-// F1branch[0][managerMobNoF1Remark]: isVisible
-// F1branch[0][managerEmailF1]: pradeepmaurya@yahoo.com
-// F1branch[0][managerEmailF1Remark]: pradeepmaurya@yahoo.com
-// F1branch[0][managerAadharNoF1]: isVisible
-// F1branch[0][managerAadharNoF1Remark]: isVisible
-// F1branch[0][managerPanF1]: isVisible
-// F1branch[0][managerPanF1Remark]: isVisible
-// F1branch[0][shopsEstLicenseF2]: 
-// F1branch[0][shopsEstLicenseF2image]: 
-// F1branch[0][shopsEstLicenseF2Remark]: 
-// F1branch[0][contractLabRegNoF5]: isVisible
-// F1branch[0][contractLabRegNoF5Remark]: isVisible
-// F1branch[0][regDateContractorF5]: 2024-03-26
-// F1branch[0][coOfContractEmpF5]: 1
-// F1branch[0][noOfContractorsF5]: 1
-// F1branch[0][contractorNameF51]: isVisible
-// F1branch[0][contractorNameF51Remark]: isVisible
-// F1branch[0][establishmentNameF51]: isVisible
-// F1branch[0][establishmentNameF51Remark]: isVisible
-// F1branch[0][regisocontractaddress]: Prateekhsa
-// F1branch[0][regStateContractorF51]: 65ad3a1d01dca0d198df2626
-// F1branch[0][regDistContractorF51]: Mumbai
-// F1branch[0][regPinContractorF51]: 323232
-// F1branch[0][regAddContractorF51Remark]: isVisible
-// F1branch[0][expiryDateF52]: 2024-03-26
-// F1branch[0][renewalDateF52]: 2024-03-26
-// F1branch[0][natureOfWorkF52]: isVisible
-// F1branch[0][natureOfWorkF52Remark]: isVisible
-// F1branch[0][noOfEmpDeployedF52]: 1
-// F1branch[0][companyTypeF53]: Pradeep Maurya
-// F1branch[0][companyTypeF53Remark]: isVisible
-// F1branch[0][contractLabLicNoF53]: isVisible
-// F1branch[0][contractLabLicNoF53Remark]: isVisible
-// F1branch[0][licenseDateF53]: 2024-03-26
-// F1branch[0][expiryDateF53]: 2024-03-26
-// F1branch[0][renewalDateF53]: 2024-03-26
-// F1branch[0][noOfWorkerF53]: 2
-// F1branch[0][panF53]: isVisible
-// F1branch[0][panF53Remark]: isVisible
-// F1branch[0][gstF53]: isVisible
-// F1branch[0][gstF53Remark]: isVisible
-// F1branch[0][esicRegF53]: isVisible
-// F1branch[0][esicRegF53Remark]: isVisible
-// F1branch[0][pfRegContractorsE3]: isVisible
-// F1branch[0][pfRegContractorsE3Remark]: isVisible
-// F1branch[0][shopsandEstContractorsE3]: isVisible
-// F1branch[0][shopsandEstContractorsE3Remark]: isVisible
-// F1branch[0][lwfRegContractorsE3]: isVisible
-// F1branch[0][lwfRegContractorsE3Remark]: isVisible
-// F1branch[0][profTaxContractorsE3]: isVisible
-// F1branch[0][profTaxContractorsE3Remark]: isVisible
-// F1branch[0][licensenumber]: 
-// F1branch[0][licenseimage]: 
-// F1branch[0][licenseremark]: 
-// F1branch[0][dor]: 
-// F1branch[0][doe]: 
-// F1branch[0][doddr]: 
-// F1branch[0][managernamelicense]: 
-// F1branch[0][managerlicenseimage]: 
-// F1branch[0][managerlicenseremark]: 
-// F1branch[0][noe]: 
-// F1branch[0][nom]: 
-// F1branch[0][nof]: 
-// F1branch[0][issuingauth]: 
-// F1branch[0][issuingauthimage]: 
-// F1branch[0][issuingauthremark]: 
-// F1branch[0][licensenumber1]: isVisible
-// F1branch[0][licenseremark1]: isVisible
-// F1branch[0][dor1]: 2024-03-26
-// F1branch[0][doe1]: 2024-03-26
-// F1branch[0][doddr1]: 2024-03-26
-// F1branch[0][managernamelicense1]: isVisible
-// F1branch[0][managerlicenseremark1]: isVisible
-// F1branch[0][noe1]: 1
-// F1branch[0][nom1]: 1
-// F1branch[0][nof1]: 0
-// F1branch[0][issuingauth1]: isVisible
-// F1branch[0][issuingauthremark1]: isVisible
-// F1branch[0][licensenumber2]: isVisible
-// F1branch[0][licenseremark2]: isVisible
-// F1branch[0][dor2]: 2024-03-26
-// F1branch[0][issuingauth2]: isVisible
-// F1branch[0][issuingauthremark2]: isVisible
-// F54NSP[0][licensenumber]: isVisible
-// F54NSP[0][licenseremark]: isVisible
-// F54NSP[0][dor]: 2024-03-26
-// F54NSP[0][doe]: 2024-03-26
-// F54NSP[0][doddr]: 2024-03-26
-// F54NSP[0][issuingauth]: isVisible
-// F54NSP[0][issuingauthdetails]: 
-// F54NSP[0][issuingauthremark]: isVisible
-// F54OTP[0][licensenumber]: isVisible
-// F54OTP[0][licenseremark]: isVisible
-// F54OTP[0][dor]: 2024-03-26
-// F54OTP[0][doe]: 2024-03-26
-// F54OTP[0][doddr]: 2024-03-26
-// F54OTP[0][issuingauth]: isVisible
-// F54OTP[0][issuingauthdetails]: 
-// F54OTP[0][issuingauthremark]: isVisible
-// F54WOE[0][licensenumber]: isVisible
-// F54WOE[0][licenseremark]: isVisible
-// F54WOE[0][dor]: 2024-03-26
-// F54WOE[0][doe]: 2024-03-26
-// F54WOE[0][doddr]: 2024-03-26
-// F54WOE[0][issuingauth]: isVisible
-// F54WOE[0][issuingauthdetails]: 
-// F54WOE[0][issuingauthremark]: isVisible
-// F54TL[0][licensenumber]: isVisible
-// F54TL[0][licenseremark]: isVisible
-// F54TL[0][dor]: 2024-03-26
-// F54TL[0][doe]: 2024-03-26
-// F54TL[0][doddr]: 2024-03-26
-// F54TL[0][issuingauth]: isVisible
-// F54TL[0][issuingauthdetails]: 
-// F54TL[0][issuingauthremark]: isVisible
+            // F1branch[0][id]: 1711437540093
+            // F1branch[0][name]: isVisible
+            // F1branch[0][details]: 
+            // F1branch[0][remarks]: isVisible
+            // F1branch[0][branchaddress]: Krishna Mandir
+            // F1branch[0][branchstate]: 65ad3a1d01dca0d198df2638
+            // F1branch[0][branchdistrict]: Mumbai
+            // F1branch[0][branchpin]: 2323
+            // F1branch[0][contractorAddBranchFRemark]: isVisible
+            // F1branch[0][branchOpeningDateF]: 2024-03-26
+            // F1branch[0][noOfEmpBranchF]: 1
+            // F1branch[0][managerNameF1]: isVisible
+            // F1branch[0][managerNameF1Remark]: isVisible
+            // F1branch[0][managerMobNoF1]: 07784942637
+            // F1branch[0][managerMobNoF1Remark]: isVisible
+            // F1branch[0][managerEmailF1]: pradeepmaurya@yahoo.com
+            // F1branch[0][managerEmailF1Remark]: pradeepmaurya@yahoo.com
+            // F1branch[0][managerAadharNoF1]: isVisible
+            // F1branch[0][managerAadharNoF1Remark]: isVisible
+            // F1branch[0][managerPanF1]: isVisible
+            // F1branch[0][managerPanF1Remark]: isVisible
+            // F1branch[0][shopsEstLicenseF2]: 
+            // F1branch[0][shopsEstLicenseF2image]: 
+            // F1branch[0][shopsEstLicenseF2Remark]: 
+            // F1branch[0][contractLabRegNoF5]: isVisible
+            // F1branch[0][contractLabRegNoF5Remark]: isVisible
+            // F1branch[0][regDateContractorF5]: 2024-03-26
+            // F1branch[0][coOfContractEmpF5]: 1
+            // F1branch[0][noOfContractorsF5]: 1
+            // F1branch[0][contractorNameF51]: isVisible
+            // F1branch[0][contractorNameF51Remark]: isVisible
+            // F1branch[0][establishmentNameF51]: isVisible
+            // F1branch[0][establishmentNameF51Remark]: isVisible
+            // F1branch[0][regisocontractaddress]: Prateekhsa
+            // F1branch[0][regStateContractorF51]: 65ad3a1d01dca0d198df2626
+            // F1branch[0][regDistContractorF51]: Mumbai
+            // F1branch[0][regPinContractorF51]: 323232
+            // F1branch[0][regAddContractorF51Remark]: isVisible
+            // F1branch[0][expiryDateF52]: 2024-03-26
+            // F1branch[0][renewalDateF52]: 2024-03-26
+            // F1branch[0][natureOfWorkF52]: isVisible
+            // F1branch[0][natureOfWorkF52Remark]: isVisible
+            // F1branch[0][noOfEmpDeployedF52]: 1
+            // F1branch[0][companyTypeF53]: Pradeep Maurya
+            // F1branch[0][companyTypeF53Remark]: isVisible
+            // F1branch[0][contractLabLicNoF53]: isVisible
+            // F1branch[0][contractLabLicNoF53Remark]: isVisible
+            // F1branch[0][licenseDateF53]: 2024-03-26
+            // F1branch[0][expiryDateF53]: 2024-03-26
+            // F1branch[0][renewalDateF53]: 2024-03-26
+            // F1branch[0][noOfWorkerF53]: 2
+            // F1branch[0][panF53]: isVisible
+            // F1branch[0][panF53Remark]: isVisible
+            // F1branch[0][gstF53]: isVisible
+            // F1branch[0][gstF53Remark]: isVisible
+            // F1branch[0][esicRegF53]: isVisible
+            // F1branch[0][esicRegF53Remark]: isVisible
+            // F1branch[0][pfRegContractorsE3]: isVisible
+            // F1branch[0][pfRegContractorsE3Remark]: isVisible
+            // F1branch[0][shopsandEstContractorsE3]: isVisible
+            // F1branch[0][shopsandEstContractorsE3Remark]: isVisible
+            // F1branch[0][lwfRegContractorsE3]: isVisible
+            // F1branch[0][lwfRegContractorsE3Remark]: isVisible
+            // F1branch[0][profTaxContractorsE3]: isVisible
+            // F1branch[0][profTaxContractorsE3Remark]: isVisible
+            // F1branch[0][licensenumber]: 
+            // F1branch[0][licenseimage]: 
+            // F1branch[0][licenseremark]: 
+            // F1branch[0][dor]: 
+            // F1branch[0][doe]: 
+            // F1branch[0][doddr]: 
+            // F1branch[0][managernamelicense]: 
+            // F1branch[0][managerlicenseimage]: 
+            // F1branch[0][managerlicenseremark]: 
+            // F1branch[0][noe]: 
+            // F1branch[0][nom]: 
+            // F1branch[0][nof]: 
+            // F1branch[0][issuingauth]: 
+            // F1branch[0][issuingauthimage]: 
+            // F1branch[0][issuingauthremark]: 
+            // F1branch[0][licensenumber1]: isVisible
+            // F1branch[0][licenseremark1]: isVisible
+            // F1branch[0][dor1]: 2024-03-26
+            // F1branch[0][doe1]: 2024-03-26
+            // F1branch[0][doddr1]: 2024-03-26
+            // F1branch[0][managernamelicense1]: isVisible
+            // F1branch[0][managerlicenseremark1]: isVisible
+            // F1branch[0][noe1]: 1
+            // F1branch[0][nom1]: 1
+            // F1branch[0][nof1]: 0
+            // F1branch[0][issuingauth1]: isVisible
+            // F1branch[0][issuingauthremark1]: isVisible
+            // F1branch[0][licensenumber2]: isVisible
+            // F1branch[0][licenseremark2]: isVisible
+            // F1branch[0][dor2]: 2024-03-26
+            // F1branch[0][issuingauth2]: isVisible
+            // F1branch[0][issuingauthremark2]: isVisible
+            // F54NSP[0][licensenumber]: isVisible
+            // F54NSP[0][licenseremark]: isVisible
+            // F54NSP[0][dor]: 2024-03-26
+            // F54NSP[0][doe]: 2024-03-26
+            // F54NSP[0][doddr]: 2024-03-26
+            // F54NSP[0][issuingauth]: isVisible
+            // F54NSP[0][issuingauthdetails]: 
+            // F54NSP[0][issuingauthremark]: isVisible
+            // F54OTP[0][licensenumber]: isVisible
+            // F54OTP[0][licenseremark]: isVisible
+            // F54OTP[0][dor]: 2024-03-26
+            // F54OTP[0][doe]: 2024-03-26
+            // F54OTP[0][doddr]: 2024-03-26
+            // F54OTP[0][issuingauth]: isVisible
+            // F54OTP[0][issuingauthdetails]: 
+            // F54OTP[0][issuingauthremark]: isVisible
+            // F54WOE[0][licensenumber]: isVisible
+            // F54WOE[0][licenseremark]: isVisible
+            // F54WOE[0][dor]: 2024-03-26
+            // F54WOE[0][doe]: 2024-03-26
+            // F54WOE[0][doddr]: 2024-03-26
+            // F54WOE[0][issuingauth]: isVisible
+            // F54WOE[0][issuingauthdetails]: 
+            // F54WOE[0][issuingauthremark]: isVisible
+            // F54TL[0][licensenumber]: isVisible
+            // F54TL[0][licenseremark]: isVisible
+            // F54TL[0][dor]: 2024-03-26
+            // F54TL[0][doe]: 2024-03-26
+            // F54TL[0][doddr]: 2024-03-26
+            // F54TL[0][issuingauth]: isVisible
+            // F54TL[0][issuingauthdetails]: 
+            // F54TL[0][issuingauthremark]: isVisible
 
             // G Starts
             g12ncw, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoeremark, g13form, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls, GCC4TL,
@@ -5380,7 +5380,7 @@ export const createCompany = async (request, response, next) => {
         // ***********************-------- F Dynamic Image Handling ----------***********************
         let dataF1branch, dataF54NSP, dataF54OTP, dataF54WOE, dataF54TL
 
-        if (F1branch !== undefined && F1branch.length > 0) {
+        if (F1branch !== undefined && F1branch.length > 0 && F54NSP !== undefined && F54NSP.length > 0 && F54WOE !== undefined && F54WOE.length > 0 && F54TL !== undefined && F54TL.length > 0 && F54OTP !== undefined && F54OTP.length > 0) {
             dataF1branch = await Promise.all(F1branch.map(async (item, index) => {
                 return {
                     ...item,
@@ -5408,42 +5408,15 @@ export const createCompany = async (request, response, next) => {
                     issuingauthimage1: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage1]`)),
                     licenseimage2: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][licenseimage2]`)),
                     issuingauthimage2: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage2]`)),
-                }
-            }))
-        }
-        else {
-            return res.send("409")
-        }
-        if (F54NSP !== undefined && F54NSP.length > 0) {
-            dataF54NSP = await Promise.all(F54NSP.map(async (item, index) => {
-                return {
-                    ...item,
+
                     licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][licenseimage]`)),
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage]`)),
                     licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][licenseimage]`)),
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage]`)),
-                }
-            }))
-        }
-        else {
-            return res.send("409")
-        }
-        if (F54WOE !== undefined && F54WOE.length > 0) {
-            dataF54WOE = await Promise.all(F54WOE.map(async (item, index) => {
-                return {
-                    ...item,
+
                     licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][licenseimage]`)),
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage]`)),
-                }
-            }))
-        }
-        else {
-            return res.send("409")
-        }
-        if (F54TL !== undefined && F54TL.length > 0) {
-            dataF54TL = await Promise.all(F54TL.map(async (item, index) => {
-                return {
-                    ...item,
+
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage]`)),
                     licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][licenseimage]`))
                 }
@@ -5452,16 +5425,49 @@ export const createCompany = async (request, response, next) => {
         else {
             return res.send("409")
         }
-        if (F54OTP !== undefined && F54OTP.length > 0) {
-            dataF54OTP = await Promise.all(F54OTP.map(async (item, index) => {
-                return {
-                    ...item
-                }
-            }))
-        }
-        else {
-            return res.send("409")
-        }
+        // if (F54NSP !== undefined && F54NSP.length > 0) {
+        //     dataF54NSP = await Promise.all(F54NSP.map(async (item, index) => {
+        //         return {
+        //             ...item,
+
+        //         }
+        //     }))
+        // }
+        // else {
+        //     return res.send("409")
+        // }
+        // if (F54WOE !== undefined && F54WOE.length > 0) {
+        //     dataF54WOE = await Promise.all(F54WOE.map(async (item, index) => {
+        //         return {
+        //             ...item,
+
+        //         }
+        //     }))
+        // }
+        // else {
+        //     return res.send("409")
+        // }
+        // if (F54TL !== undefined && F54TL.length > 0) {
+        //     dataF54TL = await Promise.all(F54TL.map(async (item, index) => {
+        //         return {
+        //             ...item,
+
+        //         }
+        //     }))
+        // }
+        // else {
+        //     return res.send("409")
+        // }
+        // if (F54OTP !== undefined && F54OTP.length > 0) {
+        //     dataF54OTP = await Promise.all(F54OTP.map(async (item, index) => {
+        //         return {
+        //             ...item
+        //         }
+        //     }))
+        // }
+        // else {
+        //     return res.send("409")
+        // }
 
 
         // ***********************-------- G Dynamic Image Handling ----------***********************
