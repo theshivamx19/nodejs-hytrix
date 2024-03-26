@@ -5380,6 +5380,7 @@ export const createCompany = async (request, response, next) => {
         // ***********************-------- F Dynamic Image Handling ----------***********************
         let dataF1branch, dataF54NSP, dataF54OTP, dataF54WOE, dataF54TL
 
+
         if (F1branch !== undefined && F1branch.length > 0 && F54NSP !== undefined && F54NSP.length > 0 && F54WOE !== undefined && F54WOE.length > 0 && F54TL !== undefined && F54TL.length > 0 && F54OTP !== undefined && F54OTP.length > 0) {
             dataF1branch = await Promise.all(F1branch.map(async (item, index) => {
                 return {
@@ -5408,17 +5409,34 @@ export const createCompany = async (request, response, next) => {
                     issuingauthimage1: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage1]`)),
                     licenseimage2: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][licenseimage2]`)),
                     issuingauthimage2: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage2]`)),
-
-                    licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][licenseimage]`)),
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage]`)),
-                    licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][licenseimage]`)),
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage]`)),
-
-                    licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][licenseimage]`)),
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage]`)),
-
-                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage]`)),
-                    licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][licenseimage]`))
+                }
+            }))
+            dataF54NSP = await Promise.all(F54NSP.map(async (item, index) => {
+                return {
+                    ...item,
+                    licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F54NSP[${index}][licenseimage]`)),
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54NSP[${index}][issuingauthimage]`)),
+                    licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F54NSP[${index}][licenseimage]`)),
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54NSP[${index}][issuingauthimage]`)),
+                }
+            }))
+            dataF54WOE = await Promise.all(F54WOE.map(async (item, index) => {
+                return {
+                    ...item,
+                    licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F54WOE[${index}][licenseimage]`)),
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54WOE[${index}][issuingauthimage]`)),
+                }
+            }))
+            dataF54TL = await Promise.all(F54TL.map(async (item, index) => {
+                return {
+                    ...item,
+                    issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F54TL[${index}][issuingauthimage]`)),
+                    licenseimage: await uploadImage(request.files.find(img => img.fieldname === `F54TL[${index}][licenseimage]`))
+                }
+            }))
+            dataF54OTP = await Promise.all(F54OTP.map(async (item, index) => {
+                return {
+                    ...item
                 }
             }))
         }
@@ -5426,44 +5444,25 @@ export const createCompany = async (request, response, next) => {
             return res.send("409")
         }
         // if (F54NSP !== undefined && F54NSP.length > 0) {
-        //     dataF54NSP = await Promise.all(F54NSP.map(async (item, index) => {
-        //         return {
-        //             ...item,
 
-        //         }
-        //     }))
         // }
         // else {
         //     return res.send("409")
         // }
         // if (F54WOE !== undefined && F54WOE.length > 0) {
-        //     dataF54WOE = await Promise.all(F54WOE.map(async (item, index) => {
-        //         return {
-        //             ...item,
 
-        //         }
-        //     }))
         // }
         // else {
         //     return res.send("409")
         // }
         // if (F54TL !== undefined && F54TL.length > 0) {
-        //     dataF54TL = await Promise.all(F54TL.map(async (item, index) => {
-        //         return {
-        //             ...item,
 
-        //         }
-        //     }))
         // }
         // else {
         //     return res.send("409")
         // }
         // if (F54OTP !== undefined && F54OTP.length > 0) {
-        //     dataF54OTP = await Promise.all(F54OTP.map(async (item, index) => {
-        //         return {
-        //             ...item
-        //         }
-        //     }))
+
         // }
         // else {
         //     return res.send("409")
