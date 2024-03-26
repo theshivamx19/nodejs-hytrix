@@ -5654,7 +5654,7 @@ export const createCompany = async (request, response, next) => {
                 g13form5licensefeeimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5licensefeeimage")),
                 g13form5securityfeeimage: await uploadImage(request.files.find(img => img.fieldname === "g13form5securityfeeimage")),
                 g12ncw, g12ncwremark, g12ncwdate, g12ncwdatevalid, g12ncwnow, g12ncwcoe, g12ncwcoeremark, g13form, g13formremark, g13form5date, g13form5dateofcommence, g13form5licenece, g13form5liceneceremark, g13form5licensedol, g13form5licensedolvalid, g13form5licensedoldor, g13form5licenseworkers, g13form5licensemanresp, g13form5licensefee, g13form5licensefeeremark, g13form5securityfee, g13form5securityfeeremark, g14dcwc, g14dncc, g14dars, g14dls, created_at,
-                GCC4TL: dataGCC4TL, created_at
+                GCC4TL: dataGCC4TL, created_at : new Date()
             }
         }
         // Save company data to database
