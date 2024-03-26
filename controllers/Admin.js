@@ -5412,7 +5412,7 @@ export const createCompany = async (request, response, next) => {
             }))
         }
         else {
-            response.status(408).json('There is no data to save')
+            return res.send("409")
         }
         if (F54NSP !== undefined && F54NSP.length > 0) {
             dataF54NSP = await Promise.all(F54NSP.map(async (item, index) => {
@@ -5425,6 +5425,9 @@ export const createCompany = async (request, response, next) => {
                 }
             }))
         }
+        else {
+            return res.send("409")
+        }
         if (F54WOE !== undefined && F54WOE.length > 0) {
             dataF54WOE = await Promise.all(F54WOE.map(async (item, index) => {
                 return {
@@ -5433,6 +5436,9 @@ export const createCompany = async (request, response, next) => {
                     issuingauthimage: await uploadImage(request.files.find(img => img.fieldname === `F1branch[${index}][issuingauthimage]`)),
                 }
             }))
+        }
+        else {
+            return res.send("409")
         }
         if (F54TL !== undefined && F54TL.length > 0) {
             dataF54TL = await Promise.all(F54TL.map(async (item, index) => {
@@ -5443,12 +5449,18 @@ export const createCompany = async (request, response, next) => {
                 }
             }))
         }
+        else {
+            return res.send("409")
+        }
         if (F54OTP !== undefined && F54OTP.length > 0) {
             dataF54OTP = await Promise.all(F54OTP.map(async (item, index) => {
                 return {
                     ...item
                 }
             }))
+        }
+        else {
+            return res.send("409")
         }
 
 
